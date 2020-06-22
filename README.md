@@ -21,5 +21,5 @@ iwa-miRNA: Interactive web-based annotation of plant miRNAs
 ### How to access help
 
 - For any feedback and tool suggestions, please feel free to leave a message at Github [issues](https://github.com/cma2015/iwa-miRNA/issues). We will try our best to deal with all issues as soon as possible.
-- In addition, if any suggestions are available, feel free to contact: **Zhang Ting** zting135@gmail.com](mailto:zting135@gmail.com) or ***Ma Chuang*** [chuangma2006@gmail.com](mailto:chuangma2006@gmail.com)
+- In addition, if any suggestions are available, feel free to contact: **Zhang Ting** [zting135@gmail.com](mailto:zting135@gmail.com) or ***Ma Chuang*** [chuangma2006@gmail.com](mailto:chuangma2006@gmail.com)
 
