@@ -10,8 +10,6 @@ iwa-miRNA: Interactive web-based annotation of plant miRNAs
 
 - iwa-miRNA is easiest to use as a web-based implementation based on Galaxy, Rmarkdown, and Docker images.
 
-<img src="https://galaxyproject.org/images/logos/DockerInGalaxyAnnotated.png" alt=" " style="zoom:50%;" />
-
 - iwa-miRNA is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). The webpage of iwa-miRNA project is available at https://deepngs.nwafu.edu.cn/. We suggest users to run iwa-miRNA locally using the Docker image (https://hub.docker.com/r/malab/iwa-mirna).
 
 ### Changelog
