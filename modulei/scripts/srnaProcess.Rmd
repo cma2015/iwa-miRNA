@@ -1,0 +1,112 @@
+---
+title: "NCBI SRA data"
+date: '(`r format(Sys.time(), format = "%Y-%m-%d")`)'
+output:
+  flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "About", href: "http://bioinfo.nwafu.edu.cn:4005/" }
+    vertical_layout: scroll
+    social: menu
+    source_code: embed
+    theme: cosmo
+---
+
+```{r setup, include = FALSE}
+library(DT)
+library(ggplot2)
+library(purrr)
+library(highcharter)
+options(stringsAsFactors = F)
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.align='center',fig.pos='H',
+                      fig.path = "output_plots/",
+                      dev = "svg")
+```
+
+<div id="preloader"></div>
+
+```{js, echo=FALSE}
+$(function() {
+  $(window).load(function() {
+    $('#preloader').fadeOut('slow',function(){$(this).remove();});
+  });
+});
+```
+
+```{css, echo=FALSE}
+#row-4 .chart-stage,
+#row-5 .chart-stage {
+width:1475px !important;
+overflow-x:scroll !important;
+}
+```
+
+Length-limited read  {data-orientation=rows data-icon="fa-table"}
+=====================================
+
+### Fetch large-scale small RNA-seq data from NCBI and filter the raw data.
+Besides analyzing individual data, users can collect public data from NCBI (https://www.ncbi.nlm.nih.gov/). Samples with low data quality will be excluded. The remaining samples were analyzed and indicated in the following tables and figures. For more detailed processing procedure, please visit *Tutorial* section.
+
+### Results
+Row {data-width=850}
+--------------------------------------
+
+### Table1 Summary table contains sample information
+```{r}
+inputMat <- read.table("00Table_Summary_of_sRNA-seq_data.txt", stringsAsFactors = F, sep = "\t", row.names = 1)
+adapter <- read.table("Adapter.txt", row.names = 1)
+inputMat <- cbind(adapter[rownames(inputMat),], inputMat)
+colnames(inputMat) <- c("Adapter", 'Phred','Barcode',  "Raw reads", "Clean reads", "Ratio(%)", "Length limited","Unique reads","Most abundance read", "Most abundance read count")
+
+datatable(data = inputMat, extensions = 'Buttons', class="compact cell-border", options = list( dom = "Blfrtip", buttons = list("copy",list(extend = "collection", buttons = c("csv", "excel", "pdf"), text = "Download") ),lengthMenu = list( c(10, 20, -1), c(10, 20, "All") ), pageLength = 10, autoWidth = TRUE), rownames = TRUE)%>%
+formatStyle(TRUE, `text-align` = 'right')
+```
+
+> The table displays read number, adaptors, and barcode information associated with the remaining samples in public small RNA-seq data. These advanced features, such as filtering, pagination, sorting in the tables to make it easier to understand.
+
+Row {data-width=850}
+--------------------------------------
+
+### Figure1 Length distribution of all small RNAs
+
+```{r}
+Length_count <- read.table("Length_count.txt", sep = "\t")
+Length_count <- Length_count[Length_count[,1]=="All", ]
+Length_count <- Length_count[order(Length_count[,3]), ]
+ds <- map(unique(Length_count[,2]), function(x){
+    dt <- Length_count[Length_count[,2] == x, 3:4]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>% 
+    hc_add_series_list(ds)%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution of distinct small RNAs")
+
+```
+
+> The figure displays an interactive line chart which contains the length distribution of all reads in each small RNA-seq sample. The sample information is available by hovering over the points.
+
+### Figure2 Length distribution of distinct small RNAs
+
+```{r}
+Length_count <- read.table("Length_count.txt", sep = "\t")
+Length_count <- Length_count[Length_count[,1]=="Unique", ]
+Length_count <- Length_count[order(Length_count[,3]), ]
+ds <- map(unique(Length_count[,2]), function(x){
+    dt <- Length_count[Length_count[,2] == x, 3:4]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>% 
+    hc_add_series_list(ds)%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution of distinct small RNAs")
+
+```
+
+> The figure displays an interactive line chart which contains the length distribution of unique reads in each small RNA-seq sample. The sample information is available by hovering over the points.

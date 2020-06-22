@@ -1,0 +1,288 @@
+---
+title: "Results for miRNA(Pre-miRNA)"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    social: menu
+    source_code: embed
+    theme: journal
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(knitr)
+library(DT)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(highcharter)
+library(patchwork)
+library(ggsci)
+```
+
+```{r import, include=FALSE}
+options(stringsAsFactors = F)
+data <- read.csv("miRNA_intersect_out.txt", sep = "\t", header = F)
+uni_index <- vector()
+for(i in unique(data[,4])){
+  uni_index <- c(uni_index, which(unique(data[,4])%in%i)[1])
+}
+data <- data[uni_index,]
+colnames(data)[c(5, 7, 14, 15)] <- c("Len", "CPM", "Type", "Subtype")
+data[data[,14]==".", 14] <- "Intergenic"
+data[data[,15]==".",15] <- "Intergenic"
+data[data[,15]=="LTR_retrotransposon",15] <- "LTR"
+data[data[,15]=="solo_LTR",15] <- "LTR"
+data[data[,15]=="terminal_inverted_repeat_element",15] <- "TIR"
+
+theme_Publication <- function(base_size=14, base_family="sans") {
+      library(grid)
+      library(ggthemes)
+      (theme_foundation(base_size=base_size, base_family=base_family)
+       + theme(plot.title = element_text(face = "bold",
+                                         size = rel(1.2), hjust = 0.5),
+               text = element_text(),
+               panel.background = element_rect(colour = NA),
+               plot.background = element_rect(colour = NA),
+               panel.border = element_rect(colour = NA),
+               axis.title = element_text(face = "bold",size = rel(1)),
+               axis.title.y = element_text(angle=90,vjust =2),
+               axis.title.x = element_text(vjust = -0.2),
+               axis.text = element_text(), 
+               axis.line.x = element_line(colour="black"),
+               axis.line.y = element_line(colour="black"),
+               axis.ticks = element_line(),
+               panel.grid.major = element_line(colour="#f0f0f0"),
+               panel.grid.minor = element_blank(),
+               legend.key = element_rect(colour = NA),
+               # legend.position = "bottom",
+               # legend.direction = "horizontal",
+               legend.key.size= unit(0.2, "cm"),
+               legend.margin = unit(0, "cm"),
+               legend.title = element_text(face="italic"),
+               # plot.margin=unit(c(10,5,5,5),"mm"),
+               strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
+               strip.text = element_text(face="bold")
+       ))
+      
+}
+```
+
+miRNAs
+=====================================
+
+Row
+-------------------------------------
+
+### miRNA(Pre-miRNA) number
+
+```{r}
+valueBox(length(data[,4]),
+         icon = "fa-user")
+```
+
+### genome features
+
+```{r}
+valueBox(length(unique(data[,14])),
+         icon = 'fa-building')
+```
+
+```{r}
+mycolors <- c("blue", "#FFC125", "darkgreen", "darkorange")
+```
+
+Row
+-------------------------------------
+
+### Length Count
+
+```{r}
+p1 <- data %>%
+         group_by(Len) %>%
+         summarise(count = n()) %>%
+         plot_ly(labels = ~Len,
+                 values = ~count,
+                 marker = list(colors = mycolors)) %>%
+         add_pie(hole = 0.5) %>%
+         layout(xaxis = list(zeroline = F,
+                             showline = F,
+                             showticklabels = F,
+                             showgrid = F),
+                yaxis = list(zeroline = F,
+                             showline = F,
+                             showticklabels=F,
+                             showgrid=F))
+p1 %>%
+  config(
+    toImageButtonOptions = list(
+      filename = "Length count",
+      format = "svg",
+      width = 200,
+      height = 100
+    )
+  )
+
+```
+
+### Total CPM of different length
+
+```{r}
+p2 <- data %>%
+         group_by(Len) %>%
+         summarise(count = sum(CPM)) %>%
+         plot_ly(labels = ~Len,
+                 values = ~count,
+                 marker = list(colors = mycolors)) %>%
+         add_pie(hole = 0.5) %>%
+         layout(xaxis = list(zeroline = F,
+                             showline = F,
+                             showticklabels = F,
+                             showgrid = F),
+                yaxis = list(zeroline = F,
+                             showline = F,
+                             showticklabels=F,
+                             showgrid=F))
+
+p2 %>%
+  config(
+    toImageButtonOptions = list(
+      filename = "Total CPM of different length",
+      format = "svg",
+      width = 200,
+      height = 100
+    )
+  )
+
+# subplot(plot_spacer(), p1, p2, p3,
+#         nrows = 2, margin = 0.04, heights = c(0.7, 0.3))
+
+```
+
+Row {data-height=100px}
+-------------------------------------
+
+To reduce false positives, the potential 'noise' reads can be filtered according to the R package *Threshold-seq*. The remaining contigs were normalized to reads per million (RPM). Sum of RPM and maximum RPM of each sample were used to assess overall abundance and further filter low abundance. For more detailed processing procedure, please visit *Tutorial* section.
+
+Row
+-------------------------------------
+
+### Distribution
+
+```{r}
+data_count <- table(data[,c(5,14)])
+data_count <- reshape2::melt(data_count)
+colnames(data_count) <- c("Length", "Regions", "Count") 
+
+p3 <- ggplot()+geom_bar(data = data, aes(x=Type, fill=Subtype)) +
+  theme_Publication() + theme(axis.ticks.x = element_blank(), 
+                          axis.title.x = element_blank(),
+                          axis.line.x = element_blank(),
+                          axis.text.x = element_blank(),
+                          axis.line.y = element_line(colour = "black", size = 0.5))+
+  scale_y_continuous(breaks=seq(0, max(table(data[,14])), 20)) +
+  scale_fill_jama()
+  
+
+p4 <- ggplot() + 
+  geom_point(data = data_count, 
+             aes(x=Regions, y=Length, 
+                 size = Count), color="#4B6370") +
+  scale_size(range = c(0, 8)) +
+  theme_Publication() +
+  theme(panel.grid.major = element_line(colour = NA)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.line = element_line(colour = "black", size = 0.5))+
+  scale_y_continuous(breaks = seq(min(data_count$Length),
+                                  max(data_count$Length),
+                                  1))
+
+p5 <- ggplot()+geom_bar(data = data, aes(x=Len), width=0.5) + 
+  coord_flip() + theme_Publication() +
+  theme(axis.ticks.y = element_blank(), axis.title.y = element_blank(),
+        axis.line.y = element_blank(),axis.text.y = element_blank(),
+        axis.line.x = element_line(colour = "black", size = 0.5))
+
+design <- "A#
+           BC"
+wrap_plots(A = p3, B = p4, C = p5, 
+           design = design, heights = c(1.5,1), guides = "collect")
+
+```
+
+### TE
+
+```{r}
+TE_data <- data[data$Type=="TE", ]
+if(nrow(TE_data)>0){
+  TE_data_mat <- table(TE_data[,c(5,15)])
+  TE_data_mat <- reshape2::melt(TE_data_mat)
+  colnames(TE_data_mat) <- c("Length", "Subtype", "Count") 
+  
+  p6 <- ggplot()+geom_bar(data = TE_data, aes(x=Subtype, fill=Subtype)) +
+    theme_Publication() + theme(axis.ticks.x = element_blank(), 
+                            axis.title.x = element_blank(),
+                            axis.line.x = element_blank(),
+                            axis.text.x = element_blank(),
+                            axis.line.y = element_line(colour = "black", size = 0.5))+
+    scale_y_continuous(breaks=seq(0, max(table(data[,14])), 20)) +
+    scale_fill_lancet()
+    
+  
+  p7 <- ggplot() + 
+    geom_point(data = TE_data_mat, 
+               aes(x=Subtype, y=Length, 
+                   size = Count), color="#4B6370") +
+    scale_size(range = c(0, 8)) +
+    theme_Publication() +
+    theme(panel.grid.major = element_line(colour = NA)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          axis.line = element_line(colour = "black", size = 0.5))+
+      scale_y_continuous(breaks = seq(min(TE_data_mat$Length),
+                                    max(TE_data_mat$Length),
+                                    1))
+  
+  p8 <- ggplot()+geom_bar(data = TE_data, aes(x=Len), width=0.5) + 
+    coord_flip() + theme_Publication() +
+    theme(axis.ticks.y = element_blank(), axis.title.y = element_blank(),
+          axis.line.y = element_blank(),axis.text.y = element_blank(),
+          axis.line.x = element_line(colour = "black", size = 0.5))
+  
+  # subplot(plot_spacer(), p1, p2, p3,
+  #         nrows = 2, margin = 0.04, heights = c(0.7, 0.3))
+  
+  design <- "A#
+             BC"
+  wrap_plots(A = p6, B = p7, C = p8, 
+             design = design, heights = c(1.5,1), guides = "collect")
+
+}
+```
+
+### RPM frequency
+
+```{r}
+raw_df <- matrix(ncol = 3)
+breaks = c(0,100,1000,10000,floor(max(data[,7])))
+for(i in 1:length(breaks)-1){
+  index_tmp <- data[,7]>=breaks[i]&data[,7]<breaks[i+1]
+  index_tmp <- table(data[index_tmp,5])
+  for(j in names(index_tmp)){
+   raw_df <- rbind(raw_df, c(paste0(breaks[i], "-", breaks[i+1]),
+                             j, as.numeric(index_tmp[j])))
+  }}
+
+raw_df <- as.data.frame(raw_df[-1,])
+raw_df[,3] <- as.numeric(raw_df[,3])
+raw_df[,1] <- factor(raw_df[,1],levels=unique(raw_df[,1]))
+colnames(raw_df) <- c("region", "length", "percentage")
+#dlast <- as.data.frame(table(cut(data[,7], breaks = c(0,100,1000,10000,max(data[,7])))))
+
+ggplot(raw_df,aes(region,percentage,fill=length))+
+  geom_bar(stat="identity",position="fill")+
+  theme_Publication()+
+  theme(axis.line = element_line(colour = "black", size = 0.5))+
+  guides(fill=guide_legend(title=NULL))+coord_flip()+
+  scale_fill_uchicago()
+```

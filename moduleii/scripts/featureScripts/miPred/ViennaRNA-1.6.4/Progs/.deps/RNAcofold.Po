@@ -1,0 +1,44 @@
+RNAcofold.o : \
+ RNAcofold.c /usr/include/stdio.h /usr/include/_ansi.h \
+ /usr/include/sys/config.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h \
+ /usr/include/sys/reent.h /usr/include/sys/_types.h \
+ /usr/include/stdlib.h /usr/include/alloca.h /usr/include/math.h \
+ /usr/include/machine/ieeefp.h /usr/include/ctype.h \
+ /usr/include/unistd.h /usr/include/sys/unistd.h \
+ /usr/include/sys/types.h /usr/include/machine/types.h \
+ /usr/include/sys/features.h /usr/include/cygwin/types.h \
+ /usr/include/getopt.h /usr/include/string.h ../H/PS_dot.h \
+ ../H/cofold.h ../H/subopt.h ../H/fold.h ../H/part_func_co.h \
+ ../H/part_func.h ../H/fold_vars.h ../H/utils.h ../config.h
+RNAcofold.c :
+/usr/include/stdio.h :
+/usr/include/_ansi.h :
+/usr/include/sys/config.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h :
+/usr/include/sys/reent.h :
+/usr/include/sys/_types.h :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/math.h :
+/usr/include/machine/ieeefp.h :
+/usr/include/ctype.h :
+/usr/include/unistd.h :
+/usr/include/sys/unistd.h :
+/usr/include/sys/types.h :
+/usr/include/machine/types.h :
+/usr/include/sys/features.h :
+/usr/include/cygwin/types.h :
+/usr/include/getopt.h :
+/usr/include/string.h :
+../H/PS_dot.h :
+../H/cofold.h :
+../H/subopt.h :
+../H/fold.h :
+../H/part_func_co.h :
+../H/part_func.h :
+../H/fold_vars.h :
+../H/utils.h :
+../config.h :

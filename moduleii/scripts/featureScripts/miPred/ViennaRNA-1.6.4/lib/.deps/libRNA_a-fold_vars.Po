@@ -1,0 +1,18 @@
+libRNA_a-fold_vars.o : \
+ fold_vars.c /usr/include/string.h /usr/include/_ansi.h \
+ /usr/include/sys/config.h /usr/include/sys/reent.h \
+ /usr/include/sys/_types.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h \
+ /usr/include/stdio.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h \
+ ../H/fold_vars.h
+fold_vars.c :
+/usr/include/string.h :
+/usr/include/_ansi.h :
+/usr/include/sys/config.h :
+/usr/include/sys/reent.h :
+/usr/include/sys/_types.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h :
+/usr/include/stdio.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h :
+../H/fold_vars.h :

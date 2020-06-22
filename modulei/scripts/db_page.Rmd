@@ -1,0 +1,128 @@
+---
+title: "Analysis"
+date: '(`r format(Sys.time(), format = "%Y-%m-%d")`)'
+output:
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
+    source_code: embed
+    theme: cosmo
+---
+
+```{css}
+.correct:before {
+  content: '\2611';
+  color: #008100;
+  font-style:normal;
+  font-weight:bold;
+  font-size: 150%;
+
+}
+.incorrect:before {
+  content: '\2612';
+  font-style:normal;    
+  color: #b20610;
+  font-size: 150%;
+}
+
+.zoom {
+  width: 100%; 
+  height: 400px; 
+	margin: 0 auto;
+	display:block;  
+  text-align:center;
+  border: 0px solid black;
+  transition: transform .2s;
+}
+
+.zoom:hover {
+  -ms-transform: scale(2); /* IE 9 */
+  -webkit-transform: scale(2); /* Safari 3-8 */
+  transform: scale(2); 
+}
+```
+
+```{r setup, include = FALSE}
+library(DT)
+library(dplyr)
+library(tibble)
+library(formattable)
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE,
+                      warning = FALSE)
+
+options(stringsAsFactors = F)
+options(digits=3)
+premirTab <- read.table("00merge.txt", sep = "\t", header = T)
+premirTab <- premirTab[, -ncol(premirTab)]
+premirTab <- cbind(premirTab, Delete="<button class=\"btnDelete\">Delete</button>")
+linkname <- gsub(":", "_", premirTab[,2])
+premirTab[,1] <- paste0("<a href=\"javascript:void(0)\" onclick=\"mirnaplot('",linkname,"')\">", premirTab[,1],"</a>")
+dbsum <- sum(colnames(premirTab)%in%c("miRBase", "PmiREN", "sRNAanno", "Psgenes"))
+dbloc <- ncol(premirTab)-dbsum-1
+premirTab <- premirTab[,c(1:4,dbloc:ncol(premirTab))]
+```
+
+Quality control  {data-orientation=columns data-icon="fa-area-chart"}
+================================
+
+Column 1 {data-width=400}
+-------------------------------------
+
+### Overview and Summary Information 
+
+```{r outdata}
+premirTab <- premirTab %>% rowid_to_column("Row") %>% mutate(Row = "")
+
+datatable(
+    premirTab,
+    elementId = "linktable",
+    class="compact cell-border",
+    filter = 'top',
+    extensions = c("Select", "Buttons", 'ColReorder'),
+    options = list(
+        autoWidth = TRUE,
+        dom = 'Bfrtip',
+        buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+        columnDefs = list(list(className = "select-checkbox",targets = 0, orderable = FALSE),
+                          list(targets = 2:4,render = JS("function(data, type, row, meta) {",
+                                                       "return type === 'display' && data.length > 10 ?",
+                                                       "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
+                                                       "}")),
+                          list(width = '2px', targets = "_all")),
+        select = list(style = "multi", selector = "td:first-child"),
+        searchHighlight = TRUE,
+        colReorder = TRUE,
+        scrollX = TRUE,
+        fixedColumns = TRUE,
+        extensions = 'Responsive',
+        pageLength = 15),
+    escape = FALSE,
+    rownames = FALSE,
+    callback = JS("$('#linktable tbody').on('click','.btnDelete',function(){table.row( $(this).parents('tr') ).remove().draw();});"))%>%
+  formatStyle(TRUE, `text-align` = 'center')
+```
+
+> The table displays the overview information of Precursor miRNAs. Each row presents one candidate pre-miRNAs with name, location in genome, strand information, abundance, and bias.
+
+Column 2 
+--------------------------------------------
+
+### RNAfold
+
+<div>
+  <iframe id="content1" class="zoom" src="png/`r linkname[1]`_r.png"></iframe>
+</div>
+
+### CentroidFold
+
+<div>
+  <iframe id="content2" class="zoom" src="png/`r linkname[1]`_c.png"></iframe>
+</div>
+
+```{js}
+function mirnaplot(event)
+{
+document.getElementById("content1").src= "png/" + event + "_r.png";
+document.getElementById("content2").src= "png/" + event + "_c.png";
+}
+```

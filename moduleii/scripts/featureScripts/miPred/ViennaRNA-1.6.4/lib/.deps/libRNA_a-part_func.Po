@@ -1,0 +1,32 @@
+libRNA_a-part_func.o : \
+ part_func.c ../config.h /usr/include/stdio.h \
+ /usr/include/_ansi.h /usr/include/sys/config.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h \
+ /usr/include/sys/reent.h /usr/include/sys/_types.h \
+ /usr/include/stdlib.h /usr/include/alloca.h /usr/include/string.h \
+ /usr/include/math.h /usr/include/machine/ieeefp.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/float.h ../H/utils.h \
+ ../H/energy_par.h ../H/energy_const.h ../H/fold_vars.h \
+ ../H/pair_mat.h /usr/include/ctype.h
+part_func.c :
+../config.h :
+/usr/include/stdio.h :
+/usr/include/_ansi.h :
+/usr/include/sys/config.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h :
+/usr/include/sys/reent.h :
+/usr/include/sys/_types.h :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/string.h :
+/usr/include/math.h :
+/usr/include/machine/ieeefp.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/float.h :
+../H/utils.h :
+../H/energy_par.h :
+../H/energy_const.h :
+../H/fold_vars.h :
+../H/pair_mat.h :
+/usr/include/ctype.h :

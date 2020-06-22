@@ -1,0 +1,48 @@
+rna_alphabet.o : \
+ rna_alphabet.cpp rna_alphabet.h \
+ /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h \
+ /usr/include/g++-3/cstddef \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h \
+ /usr/include/g++-3/std/straits.h /usr/include/g++-3/cctype \
+ /usr/include/ctype.h /usr/include/_ansi.h /usr/include/sys/config.h \
+ /usr/include/g++-3/cstring /usr/include/string.h \
+ /usr/include/sys/reent.h /usr/include/sys/_types.h \
+ /usr/include/g++-3/alloc.h /usr/include/g++-3/stl_config.h \
+ /usr/include/_G_config.h /usr/include/g++-3/stl_alloc.h \
+ /usr/include/g++-3/iostream.h /usr/include/g++-3/streambuf.h \
+ /usr/include/g++-3/libio.h /usr/include/sys/cdefs.h \
+ /usr/include/stdlib.h /usr/include/alloca.h /usr/include/assert.h \
+ /usr/include/g++-3/iterator /usr/include/g++-3/stl_relops.h \
+ /usr/include/g++-3/stl_iterator.h /usr/include/g++-3/std/bastring.cc \
+ /usr/include/g++-3/cassert
+rna_alphabet.cpp :
+rna_alphabet.h :
+/usr/include/g++-3/string :
+/usr/include/g++-3/std/bastring.h :
+/usr/include/g++-3/cstddef :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h :
+/usr/include/g++-3/std/straits.h :
+/usr/include/g++-3/cctype :
+/usr/include/ctype.h :
+/usr/include/_ansi.h :
+/usr/include/sys/config.h :
+/usr/include/g++-3/cstring :
+/usr/include/string.h :
+/usr/include/sys/reent.h :
+/usr/include/sys/_types.h :
+/usr/include/g++-3/alloc.h :
+/usr/include/g++-3/stl_config.h :
+/usr/include/_G_config.h :
+/usr/include/g++-3/stl_alloc.h :
+/usr/include/g++-3/iostream.h :
+/usr/include/g++-3/streambuf.h :
+/usr/include/g++-3/libio.h :
+/usr/include/sys/cdefs.h :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/include/assert.h :
+/usr/include/g++-3/iterator :
+/usr/include/g++-3/stl_relops.h :
+/usr/include/g++-3/stl_iterator.h :
+/usr/include/g++-3/std/bastring.cc :
+/usr/include/g++-3/cassert :
