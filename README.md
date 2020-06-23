@@ -2,7 +2,7 @@
 
 # iwa-miRNA
 
-[![web](https://img.shields.io/badge/Web server-ready-blue.svg)](https://deepngs.nwafu.edu.cn/) [![web](https://img.shields.io/badge/docker-ready-yellow.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) 
+[![web](https://img.shields.io/badge/docker-ready-yellow.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) [![web](https://img.shields.io/badge/Web server-ready-blue.svg)](https://deepngs.nwafu.edu.cn/) 
 
 ## User-friendly framework for interactive web-based annotation of plant miRNAs
 
