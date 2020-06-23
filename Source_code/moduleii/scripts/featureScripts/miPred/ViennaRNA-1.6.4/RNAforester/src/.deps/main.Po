@@ -1,0 +1,153 @@
+main.o : \
+ main.cpp /usr/include/g++-3/deque \
+ /usr/include/g++-3/stl_algobase.h /usr/include/g++-3/stl_config.h \
+ /usr/include/_G_config.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h \
+ /usr/include/g++-3/stl_relops.h /usr/include/g++-3/stl_pair.h \
+ /usr/include/g++-3/type_traits.h /usr/include/string.h \
+ /usr/include/_ansi.h /usr/include/sys/config.h \
+ /usr/include/sys/reent.h /usr/include/sys/_types.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/limits.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/syslimits.h \
+ /usr/include/limits.h /usr/include/stdlib.h /usr/include/alloca.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/new.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/new \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/exception \
+ /usr/include/g++-3/iostream.h /usr/include/g++-3/streambuf.h \
+ /usr/include/g++-3/libio.h /usr/include/sys/cdefs.h \
+ /usr/include/g++-3/stl_iterator.h /usr/include/g++-3/stl_alloc.h \
+ /usr/include/assert.h /usr/include/g++-3/stl_construct.h \
+ /usr/include/g++-3/stl_uninitialized.h /usr/include/g++-3/stl_deque.h \
+ /usr/include/g++-3/functional /usr/include/g++-3/stl_function.h \
+ /usr/include/g++-3/fstream /usr/include/g++-3/fstream.h \
+ /usr/include/g++-3/iomanip /usr/include/g++-3/iomanip.h \
+ /usr/include/g++-3/iostream /usr/include/g++-3/list \
+ /usr/include/g++-3/stl_list.h /usr/include/g++-3/sstream \
+ /usr/include/g++-3/string /usr/include/g++-3/std/bastring.h \
+ /usr/include/g++-3/cstddef /usr/include/g++-3/std/straits.h \
+ /usr/include/g++-3/cctype /usr/include/ctype.h \
+ /usr/include/g++-3/cstring /usr/include/g++-3/alloc.h \
+ /usr/include/g++-3/iterator /usr/include/g++-3/std/bastring.cc \
+ /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h \
+ /usr/include/g++-3/stl_map.h /usr/include/g++-3/stl_multimap.h \
+ /usr/include/sys/times.h /usr/include/machine/types.h \
+ /usr/include/unistd.h /usr/include/sys/unistd.h \
+ /usr/include/sys/types.h /usr/include/sys/features.h \
+ /usr/include/cygwin/types.h /usr/include/getopt.h \
+ /usr/include/stdio.h \
+ /usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h ../config.h \
+ Arguments.h /usr/include/g++-3/vector /usr/include/g++-3/stl_vector.h \
+ /usr/include/g++-3/stl_bvector.h alignment.h \
+ /usr/include/g++-3/cassert types.h algebra.h ppforest.h misc.h \
+ ppforestbase.h /usr/include/g++-3/algorithm \
+ /usr/include/g++-3/stl_tempbuf.h /usr/include/g++-3/stl_algo.h \
+ /usr/include/g++-3/stl_heap.h ppforestali.h debug.h treeedit.h \
+ ppforestsz.h progressive_align.h graphtypes.h matrix.h \
+ rnaforester_options.h rna_profile_alignment.h rna_algebra.h \
+ /usr/include/g++-3/climits rna_alphabet.h wmatch.h rna_alignment.h \
+ rnaforest.h rnafuncs.h alignment.t.cpp misc.t.cpp ppforest.t.cpp \
+ rnaforestsz.h treeedit.t.cpp ppforestsz.t.cpp
+main.cpp :
+/usr/include/g++-3/deque :
+/usr/include/g++-3/stl_algobase.h :
+/usr/include/g++-3/stl_config.h :
+/usr/include/_G_config.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stddef.h :
+/usr/include/g++-3/stl_relops.h :
+/usr/include/g++-3/stl_pair.h :
+/usr/include/g++-3/type_traits.h :
+/usr/include/string.h :
+/usr/include/_ansi.h :
+/usr/include/sys/config.h :
+/usr/include/sys/reent.h :
+/usr/include/sys/_types.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/limits.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/syslimits.h :
+/usr/include/limits.h :
+/usr/include/stdlib.h :
+/usr/include/alloca.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/new.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/new :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/exception :
+/usr/include/g++-3/iostream.h :
+/usr/include/g++-3/streambuf.h :
+/usr/include/g++-3/libio.h :
+/usr/include/sys/cdefs.h :
+/usr/include/g++-3/stl_iterator.h :
+/usr/include/g++-3/stl_alloc.h :
+/usr/include/assert.h :
+/usr/include/g++-3/stl_construct.h :
+/usr/include/g++-3/stl_uninitialized.h :
+/usr/include/g++-3/stl_deque.h :
+/usr/include/g++-3/functional :
+/usr/include/g++-3/stl_function.h :
+/usr/include/g++-3/fstream :
+/usr/include/g++-3/fstream.h :
+/usr/include/g++-3/iomanip :
+/usr/include/g++-3/iomanip.h :
+/usr/include/g++-3/iostream :
+/usr/include/g++-3/list :
+/usr/include/g++-3/stl_list.h :
+/usr/include/g++-3/sstream :
+/usr/include/g++-3/string :
+/usr/include/g++-3/std/bastring.h :
+/usr/include/g++-3/cstddef :
+/usr/include/g++-3/std/straits.h :
+/usr/include/g++-3/cctype :
+/usr/include/ctype.h :
+/usr/include/g++-3/cstring :
+/usr/include/g++-3/alloc.h :
+/usr/include/g++-3/iterator :
+/usr/include/g++-3/std/bastring.cc :
+/usr/include/g++-3/map :
+/usr/include/g++-3/stl_tree.h :
+/usr/include/g++-3/stl_map.h :
+/usr/include/g++-3/stl_multimap.h :
+/usr/include/sys/times.h :
+/usr/include/machine/types.h :
+/usr/include/unistd.h :
+/usr/include/sys/unistd.h :
+/usr/include/sys/types.h :
+/usr/include/sys/features.h :
+/usr/include/cygwin/types.h :
+/usr/include/getopt.h :
+/usr/include/stdio.h :
+/usr/lib/gcc-lib/i686-pc-cygwin/2.95.3-5/include/stdarg.h :
+../config.h :
+Arguments.h :
+/usr/include/g++-3/vector :
+/usr/include/g++-3/stl_vector.h :
+/usr/include/g++-3/stl_bvector.h :
+alignment.h :
+/usr/include/g++-3/cassert :
+types.h :
+algebra.h :
+ppforest.h :
+misc.h :
+ppforestbase.h :
+/usr/include/g++-3/algorithm :
+/usr/include/g++-3/stl_tempbuf.h :
+/usr/include/g++-3/stl_algo.h :
+/usr/include/g++-3/stl_heap.h :
+ppforestali.h :
+debug.h :
+treeedit.h :
+ppforestsz.h :
+progressive_align.h :
+graphtypes.h :
+matrix.h :
+rnaforester_options.h :
+rna_profile_alignment.h :
+rna_algebra.h :
+/usr/include/g++-3/climits :
+rna_alphabet.h :
+wmatch.h :
+rna_alignment.h :
+rnaforest.h :
+rnafuncs.h :
+alignment.t.cpp :
+misc.t.cpp :
+ppforest.t.cpp :
+rnaforestsz.h :
+treeedit.t.cpp :
+ppforestsz.t.cpp :

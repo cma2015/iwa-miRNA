@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<toolbox monitor="true">
+<tool file="module0/upload.xml" />
+<section id="getext" name="iwa-miRNA">
+    <label text="i) MicroRNA Compilation" id="modulei"/>
+        <tool file="modulei/speciesObtain.xml" />
+        <tool file="modulei/miRNARetrieval.xml" />
+		<tool file="modulei/miRNAPredict.xml" />
+		<tool file="modulei/miRNATranslate.xml" />
+    <label text="ii) MiRNA Selection" id="moduleii"/>
+        <tool file="moduleii/miRNAnnotation.xml" />
+    <label text="iii) Manual Curation" id="moduleiii"/>
+        <tool file="moduleiii/Curation.xml" />
+    <label text="iV)Exploratory analysis" id="explor"/>
+        <tool file="moduleiv/0associationAnalysis.xml" />
+        <tool file="moduleiv/1mirnaDuplication.xml" />
+        <tool file="moduleiv/2sequenceVariation.xml" />
+        <!-- <tool file="module0/4-srnaSpecificity.xml" /> -->
+    <label text="Useful tool" id="useful"/>
+        <tool file="moduleiv/gff2bed.xml" />
+</section>        
+</toolbox>
