@@ -2,7 +2,7 @@
 
 # iwa-miRNA
 
-[![docker](https://img.shields.io/badge/docker-ready-yellow.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) [![web](https://img.shields.io/badge/Web server-ready-blue.svg)](https://deepngs.nwafu.edu.cn/) 
+[![docker](https://img.shields.io/badge/docker-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) ![webserver](https://img.shields.io/badge/Web_server-ready-blue.svg)
 
 ## User-friendly platform for interactively web-based annotation of plant miRNAs
 
@@ -25,6 +25,7 @@ Step 2: Docker Image Installation
 docker pull malab/iwa-mirna
 docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
 sh /home/galaxy-release_20.05/run.sh
+# Please open http://127.0.0.1:4000 from your browser to use iwa-miRNA
 ```
 
 ## Overview of functional modules in iwa-miRNA
@@ -42,7 +43,7 @@ iwa-miRNA consists of three primary modules:
 
 ## Changelog
 
-- 2020-06-24: A demo server of iwa-miRNA was released for users running small small RNA sequencing datasets.
+- 2020-06-24: A demo server of iwa-miRNA was released for users running small RNA sequencing datasets.
 - 2020-06-20: Source code and Docker image of of iwa-miRNA were released for the first time.
 
 ## How to access help
