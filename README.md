@@ -2,13 +2,13 @@
 
 # iwa-miRNA
 
-[![web](https://img.shields.io/badge/docker-ready-yellow.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) [![web](https://img.shields.io/badge/Web server-ready-blue.svg)](https://deepngs.nwafu.edu.cn/) 
+[![docker](https://img.shields.io/badge/docker-ready-yellow.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) [![web](https://img.shields.io/badge/Web server-ready-blue.svg)](https://deepngs.nwafu.edu.cn/) 
 
-## User-friendly framework for interactive web-based annotation of plant miRNAs
+## User-friendly platform for interactively web-based annotation of plant miRNAs
 
 - iwa-miRNA is a Galaxy-based bioinformatics platform for interactively annotating miRNAs from plant genomes. It can be used to generate a comprehensive collection of miRNA candidates, and allows users to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
-- The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). We suggest users to run iwa-miRNA locally using the Docker image (https://hub.docker.com/r/malab/iwa-mirna). This repository contains source code, and example data to help users run and test iwa-miRNA.
+- The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA), which contains source code and example data to help users run and test iwa-miRNA. A demo server is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). We suggest users to run iwa-miRNA locally using the Docker image (https://hub.docker.com/r/malab/iwa-mirna).
 
 The following figure shows the main components of the analysis process:
 
