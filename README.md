@@ -4,7 +4,7 @@
 
 [![docker](https://img.shields.io/badge/docker-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) ![webserver](https://img.shields.io/badge/Web_server-ready-blue.svg)
 
-## User-friendly platform for interactively web-based annotation of plant miRNAs
+## iwa-miRNA: A Web-based Platform for Interactive Annotation of Plant MiRNAs
 
 - iwa-miRNA is a Galaxy-based bioinformatics platform for interactively annotating miRNAs from plant genomes. It can be used to generate a comprehensive collection of miRNA candidates, and allows users to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
