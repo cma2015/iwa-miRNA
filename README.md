@@ -6,9 +6,9 @@
 
 - iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
-- The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server of iwa-miRNA is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). The iwa-miRNA Docker image can be obtained from (https://hub.docker.com/r/malab/iwa-mirna). We suggest users to run iwa-miRNA locally using the Docker image.
+- The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server of iwa-miRNA is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). The iwa-miRNA Docker image can be obtained from (https://hub.docker.com/r/malab/iwa-mirna). We suggest users to run iwa-miRNA locally using the Docker image. Source codes and Test datacan be downloaded from https://github.com/cma2015/iwa-miRNA.
 
-- The iwa-miRNA is composed with three functional modules: MiRNA Compliation, MiRNA Selection, and Manual Curation. More details regarding to these functional modules can be found here.
+- The iwa-miRNA is composed with three functional modules: MiRNA Compliation, MiRNA Selection, and Manual Curation. More details regarding these functional modules can be found here.
 
 <img src="assets/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:25%">
 
