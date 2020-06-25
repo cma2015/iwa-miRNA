@@ -8,7 +8,7 @@
 
 - The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server of iwa-miRNA is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). The iwa-miRNA Docker image can be obtained from (https://hub.docker.com/r/malab/iwa-mirna). We suggest users to run iwa-miRNA locally using the Docker image.
 
-- The iwa-miRNA is composed with three modules: MiRNA Compliation, MiRNA Selection, Manual Curation. 
+- The iwa-miRNA is composed with three functional modules: MiRNA Compliation, MiRNA Selection, and Manual Curation. More details regarding to these functional modules can be found here.
 
 <img src="assets/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:25%">
 
@@ -25,15 +25,6 @@ docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
 sh /home/galaxy-release_20.05/run.sh
 # Please open http://127.0.0.1:4000 from your browser to use iwa-miRNA
 ```
-
-## Overview of functional modules in iwa-miRNA
-
-iwa-miRNA consists of three primary modules: 
-
-- [**Module I: MiRNA Compilation**](Tutorials/ModuleI.md)
-- [**Module II: MiRNA Selection**](Tutorials/ModuleII.md)
-- [**Module III: Manual Curation**](Tutorials/ModuleIII.md)
-
 ## How to use iwa-miRNA
 
 - Tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials
