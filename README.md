@@ -1,16 +1,14 @@
 
 
-# iwa-miRNA
+# iwa-miRNA:  A Web-based Platform for Interactive Annotation of Plant MiRNAs
 
 [![docker](https://img.shields.io/badge/docker-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) ![webserver](https://img.shields.io/badge/Web_server-ready-blue.svg)
-
-## iwa-miRNA: A Web-based Platform for Interactive Annotation of Plant MiRNAs
 
 - iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
 - The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server of iwa-miRNA is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). The iwa-miRNA Docker image can be obtained from (https://hub.docker.com/r/malab/iwa-mirna). We suggest users to run iwa-miRNA locally using the Docker image.
 
-- The iwa-miRNA is composed with three modules: MiRNA Compliation, MiRNA Selection; Manual Curation. 
+- The iwa-miRNA is composed with three modules: MiRNA Compliation, MiRNA Selection, Manual Curation. 
 
 <img src="assets/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:25%">
 
