@@ -1,5 +1,19 @@
+<div id="top"></div>
 <h1>Tutorial</h1>
-[TOC]
+
+- [Brief introduction](#brief-introduction)
+- [Getting started](#getting-started)
+  - [The Galaxy interface of iwa-miRNA](#the-galaxy-interface-of-iwa-mirna)
+  - [Download and upload data](#download-and-upload-data)
+- [Module I](#module-i)
+  - [genomeRetrival](#genomeretrival)
+  - [miRNARetrival](#mirnaretrival)
+  - [miRNAPredict](#mirnapredict)
+  - [miRNATranslate](#mirnatranslate)
+- [Module II](#module-ii)
+  - [miRNASelection](#mirnaselection)
+- [Module III](#module-iii)
+  - [manualCuration](#manualcuration)
 
 ## Brief introduction
 
@@ -22,6 +36,8 @@ User can download test data from [GitHub project](https://github.com/cma2015/iwa
 
 User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/upload.png)
 
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+
 ## Module I
 
 In this module, we provide detailed examples for each function to show how to obtain a comprehensive collection of miRNA candidates.
@@ -37,6 +53,8 @@ In this function, we aim at obtain the sequence and annotation of species. In ad
 - **Built-in species:** 
 
   We use *Arabidopsis thaliana* as a sample. A file containing the species path (e.g. `Index/arabidopsis_thaliana_47`) will be returned.![built-in](img/1.1.2.png)
+
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
 ### miRNARetrival
 
@@ -61,6 +79,8 @@ In this function, we aim at obtain annotated miRNAs provided by different miRNA 
    An HTML document recording the merged miRNAs and the RNA secondary structure plot of miRNA precursors was returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The web server provides a complete preview of the results ([Output2 in miRNARetrival](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_Aggregation.html)).
 
    ![output](img/1.2.5.png)
+
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
 ### miRNAPredict
 
@@ -98,6 +118,8 @@ In this function, we aim at predict miRNAs from small RNA sequencing data. We pr
 
    ![output](img/1.3.5.png)
 
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+
 ### miRNATranslate
 
 In this function, we aim at aggregate annotated and predicted miRNAs into the genomic coordinate system. The output of this function includes a list of miRNA candidates with 12 columns containing the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source.
@@ -114,7 +136,7 @@ A list of miRNA candidates with 12 columns containing the location, sequence, le
 
 ![output](img/1.4.2.png)
 
-
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
 ## Module II
 
@@ -136,7 +158,7 @@ The annotation file containing the information of miRNA precursors and mature mi
 
 ![output](img/2.1.2.png)
 
-
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
 ## Module III
 
@@ -163,3 +185,6 @@ The summary and report pages containing the information of miRNA precursors and 
 Each miRNA has a report page that contains detailed information customized by feature types, making it easy to understand this miRNA during manual curation. A secondary structure plot is generated to display the location of a mature miRNA within the precursor sequence and quality-profiling results. Read stacks are plotted to show the read support of identified miRNAs. A boxplot is used to visualize miRNA expression patterns and arm selection events across different samples. A bipartite network is constructed to depict miRNA-target interactions predicted by [psRNAtarget](http://plantgrn.noble.org/psRNATarget/). Users can quickly browse this miRNA and further decide which features make this miRNA candidate not actually a *bona fide* miRNA. The web server provides a complete preview of the results ([Output in manualCuration](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/III_manualCuration_output.html)).
 
 ![output](img/3.1.4.png)
+
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+
