@@ -6,8 +6,7 @@
             --curpath ${__tool_directory__}
             --pcgfasta $pcgfasta
             --pcggff $pcggff
-            --mirfasta $mirfasta
-            --mirbed $mirbed
+            --mirAnno $mirAnno
             --output1 $output1
             --output2 $output2
             --output3 $output3
@@ -17,13 +16,13 @@
     <inputs>
         <param name="pcgfasta" type="data" format="fasta" label="Inpput the protein sequences of protein-coding genes"/>
         <param name="pcggff" type="data" format="gff3" label="Inpput the GFF3 annotation of protein-coding genes"/>
-        <param name="mirfasta" type="data" format="fasta" label="Inpput the sequences of miRNA precursors"/>
-        <param name="mirbed" type="data" format="bed" label="Inpput the BED file of miRNA precursors"/>
+        <param name="mirAnno" format="tsv" type="data" label="Input miRNA annotation"
+            help="Note: The annotation file can be obtained from miRNACuration, miRNASelection, or miRNARetrieval tool."/>
     </inputs>
 
     <outputs>  
-        <data name="output1" format="pdf" label="Output | miRNA duplication events"/>
-        <data name="output2" format="tsv" label="Output | The plot of miRNA duplication events"/>
+        <data name="output1" format="tsv" label="Output | miRNA duplication events"/>
+        <data name="output2" format="pdf" label="Output | The plot of miRNA duplication events"/>
         <data name="output3" format="tsv" label="Output | miRNA duplication in syntenic blocks"/>
     </outputs>    
 

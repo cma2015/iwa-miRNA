@@ -1,44 +1,30 @@
 
-
 # iwa-miRNA:  A Web-based Platform for Interactive Annotation of Plant MiRNAs
 
-[![docker](https://img.shields.io/badge/docker-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) ![docker pull](https://img.shields.io/docker/pulls/malab/iwa-mirna.svg) ![webserver](https://img.shields.io/badge/Web_server-ready-blue.svg)
+[![webserver](https://img.shields.io/badge/Web_server-ready-red.svg)](https://deepngs.nwafu.edu.cn/) [![docker](https://img.shields.io/badge/Docker_image-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) [![source](https://img.shields.io/badge/Source_code-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Source_code) [![testdata](https://img.shields.io/badge/Test_data-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Test_data)
 
 - iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
-- The iwa-miRNA project is hosted on GitHub (https://github.com/cma2015/iwa-miRNA). A demo server of iwa-miRNA is available at [https://deepngs.nwafu.edu.cn](https://deepngs.nwafu.edu.cn/). The iwa-miRNA Docker image can be obtained from (https://hub.docker.com/r/malab/iwa-mirna). We suggest users to run iwa-miRNA locally using the Docker image. Source codes and Test datacan be downloaded from https://github.com/cma2015/iwa-miRNA.
+- iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
 
-- The iwa-miRNA is composed with three functional modules: MiRNA Compliation, MiRNA Selection, and Manual Curation. More details regarding these functional modules can be found here.
+- The iwa-miRNA is composed with three functional modules: MiRNA Compilation, MiRNA Selection, and Manual Curation. It also provides users with some useful tools for downstream exploratory analysis. More details regarding these functional modules can be found [here](https://github.com/cma2015/iwa-miRNA/blob/master/Tutorials/Modules.md).
 
-<img src="assets/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:25%">
+<img src="Tutorials/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:18%">
 
-## Installation
-
-Step 1: [Docker installation](https://github.com/cma2015/PEA/blob/master/tutorial/docker_installation.md)
-
-Step 2: Docker Image Installation
-
-```bash
-# pull image from docker hub
-docker pull malab/iwa-mirna
-docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
-sh /home/galaxy-release_20.05/run.sh
-# Please open http://127.0.0.1:4000 from your browser to use iwa-miRNA
-```
 ## How to use iwa-miRNA
 
-- Tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials
+- Tutorial for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials/User_manual.md
 - Test datasets referred in the tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Test_data
 
 ## Changelog
 
 - 2020-06-24: A demo server of iwa-miRNA was released for users running small RNA sequencing datasets.
-- 2020-06-20: Source code and Docker image of of iwa-miRNA were released for the first time.
+- 2020-06-20: Source codes and Docker image of iwa-miRNA were released for the first time.
 
 ## How to access help
 
 - For any feedback and tool suggestions, please feel free to leave a message at Github [issues](https://github.com/cma2015/iwa-miRNA/issues). We will try our best to deal with all issues as soon as possible.
-- In addition, if any suggestions are available, feel free to contact: **Ting Zhang** [zting135@gmail.com](mailto:zting135@gmail.com) or ***Chuang Ma*** [chuangma2006@gmail.com](mailto:chuangma2006@gmail.com)
+- In addition, if any suggestions are available, feel free to contact: **Ting Zhang** [zting135@gmail.com](mailto:zting135@gmail.com) or **Chuang Ma** [chuangma2006@gmail.com](mailto:chuangma2006@gmail.com)
 
 ## Citation
 

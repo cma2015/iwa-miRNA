@@ -2,7 +2,7 @@
     <!-- <description> shows the effects of variation site on pre-miRNAs structure and mature miRNAs</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        bash ${__tool_directory__}/35-sequenceVariation.sh 
+        bash ${__tool_directory__}/sequenceVariation.sh 
             ${__tool_directory__}
             $premirnaBed 
             $premirnaSeq 
@@ -23,7 +23,7 @@
     </outputs>    
 
     <help><![CDATA[
-.. class:: infomark
+.. class:: donemark
 
 **What it does**
 
