@@ -6,23 +6,6 @@
 - MicroRNAs (miRNAs), a class of short noncoding RNA, play fundamental roles in most biological processes at posttranscriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. We present iwa-miRNA which establishes linkages between already annotations in public miRNA databases (including four existing plant databases) and new predictions from rapid accumulated sRNA-Seq data. iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills. In addition, iwa-miRNA performs a series of accessible, reproducible, easily sharable analyses based on powerful Galaxy platform and implements interactive HTML reports for supporting decision making in manual inspection. 
 - iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
 
-## Docker image installation
-
-- Step 1: [Docker installation on Windows, macOS, or Linux](https://github.com/github.com/cma2015/CAFU/blob/master/Tutorial/Docker_installation.md)
-
-- Step 2: iwa-miRNA installation from Docker Hub  
-
-  `docker pull malab/iwa-mirna`
-
-- Step 3: Quickly start
-
-  ```bash
-  docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
-  sh /home/galaxy-release_20.05/run.sh
-  ```
-
-Then you can access iwa-miRNA instance via http://localhost:4000
-
 ## Getting started
 
 ### The Galaxy interface of iwa-miRNA
