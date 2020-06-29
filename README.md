@@ -11,21 +11,6 @@
 
 <img src="Tutorials/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:18%">
 
-## Installation
-
-Step 1: [Docker installation on Windows, macOS, or Linux](https://github.com/cma2015/PEA/blob/master/tutorial/docker_installation.md)
-
-Step 2: Docker Image Installation
-
-```bash
-# pull image from docker hub
-docker pull malab/iwa-mirna
-# Quickly start
-docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
-sh /home/galaxy-release_20.05/run.sh
-# Please open http://localhost:4000 from your browser to use iwa-miRNA
-```
-
 ## How to use iwa-miRNA
 
 - Tutorial for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials/User_manual.md
