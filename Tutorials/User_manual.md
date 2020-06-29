@@ -1,184 +1,148 @@
 <div id="top"></div>
 <h1>Tutorial</h1>
-
 - [Brief introduction](#brief-introduction)
-- [Getting started](#getting-started)
-  - [The Galaxy interface of iwa-miRNA](#the-galaxy-interface-of-iwa-mirna)
-  - [Download and upload data](#download-and-upload-data)
-- [Module I](#module-i)
+- [iwa-miRNA installation](#iwa-mirna-installation)
+- [microRNA compilation](#microRNA-compilation)
   - [genomeRetrival](#genomeretrival)
   - [miRNARetrival](#mirnaretrival)
   - [miRNAPredict](#mirnapredict)
   - [miRNATranslate](#mirnatranslate)
-- [Module II](#module-ii)
-  - [miRNASelection](#mirnaselection)
-- [Module III](#module-iii)
-  - [manualCuration](#manualcuration)
+- [miRNA selection](#mirna-selectioni)
+- [Manual curation](#manual-curation)
 
 ## Brief introduction
 
 - MicroRNAs (miRNAs), a class of short noncoding RNA, play fundamental roles in most biological processes at posttranscriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. We present iwa-miRNA which establishes linkages between already annotations in public miRNA databases (including four existing plant databases) and new predictions from rapid accumulated sRNA-Seq data. iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills. In addition, iwa-miRNA performs a series of accessible, reproducible, easily sharable analyses based on powerful Galaxy platform and implements interactive HTML reports for supporting decision making in manual inspection. 
 - iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
 
-## Getting started
+## iwa-miRNA installation
+- **Step 1**: [Docker installation](./Docker_installation.md)
+- **Step 2**: iwa-miRNA installation from Docker Hub
+```bash
+# pull latest iwa-miRNA Docker image from docker hub
+$ docker pull malab/iwa-mirna
+```
+- **Step 3**: Launch iwa-miRNA local server
+```bash
+$ docker run -it -p 4000:8080 malab/iwa-mirna /bin/bash
+$ sh /home/galaxy-release_20.05/run.sh
+```
+Then, iwa-miRNA local server can be accessed via http://localhost:4000
 
-### The Galaxy interface of iwa-miRNA
+![start](img/0.1.1.png)
 
-The Galaxy interface of iwa-miRNA is separated into 3 parts. The tools list on the left, the introduction and usage of iwa-miRNA in the middle and the analysis results as history on the right. The middle interface mainly includes the home page and the tutorial page. On the homepage, there are a series of sections, such as results presentation, detailed tool descriptions, test data, useful links, etc.![start](img/0.png)
+## Upload data to your local iwa-miRNA server
+### Download test data
 
-### Download and upload data
+Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma2015/iwa-miRNA/tree/master/Test_data)  and  [Web server](https://deepngs.nwafu.edu.cn). 
 
-User can download test data from [GitHub project](https://github.com/cma2015/iwa-miRNA) or [Web server](https://deepngs.nwafu.edu.cn/). 
+- **For GitHub**, click "**Clone**" (see the figure below), and then download the ZIP compressed file into your local device, and then unzip the file.![github](img/github.png)
 
-- In GitHub, click "**Clone**" (see the figure below), and then download the ZIP compressed file into your local device, and then unzip the file.![github](img/github.png)
+- **For web server**, click **the link** (see the figure below), and then save the file into your local device, and then unzip the file.
 
-- In the web server, click **the link in table** (see the figure below), and then save the file into your local device.![server](img/download.png)
+	![server](img/0.1.2.png)
+	
+	A detailed list of sample data is shown below.
 
-User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/upload.png)
+![files](img/0.1.3.png)
+
+### Upload test data to your local iwa-miRNA server
+
+User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/0.1.4.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
-## Module I
-
-In this module, we provide detailed examples for each function to show how to obtain a comprehensive collection of miRNA candidates.
+## miRNA compilation
+This module generates a comprehensive collection of miRNA candidates by aggregating already annotated miRNAs from four plant miRNA databases (i.e., [miRBase](http://www.mirbase.org), [PmiREN](http://www.pmiren.com), [sRNAanno](http://plantsrnas.org), and [PsRNA](http://plantsmallrnagenes.science.psu.edu)) and predicted miRNAs from user-submitted sRNA-Seq data. In the following, we will use screenshots to show how to use this module correctly.
 
 ### genomeRetrival
 
-In this function, we aim at obtain the sequence and annotation of species. In addition, the sequence indexes were built for miRNA prediction. We provide two ways for extracting the genome and related sequences and annotation (upload your own data or use built-in species). 
+This function was designed to fetch genome sequences in FASTA format and corresponding annotations in GFF3/GTF format automatically, and then building index for the genome sequences. To run this function, users can choose **Upload your own genome** or **Built-in species**:
 
-- **Upload your own genome:** 
+- For **Upload your own genome:** users are required to input the Latin species name and choose uploading data from FTP link (see following figure), the required input for t/r/sn/snoRNA sequences are available at `iwa-miRNA/Test_data/I_Arabidopsis_trsnsnoRNAs.fa.gz`
+![genomeRetrival](img/1.1.1.png)
 
-  We use a list of FTP link and  t/r/sn/snoRNA.fa (GitHub: `iwa-miRNA/Test_data/I_Arabidopsis_trsnsnoRNAs.fa.gz` or web server: [data link](https://deepngs.nwafu.edu.cn/static/welcome/testData/I_Arabidopsis_trsnsnoRNAs.fa.gz))  to build index. A file containing the path of species (e.g. `Index/Arabidopsis_thaliana_XXXX`) will be returned.![genomeRetrival](img/1.1.1.png)
-
-- **Built-in species:** 
-
-  We use *Arabidopsis thaliana* as a sample. A file containing the species path (e.g. `Index/arabidopsis_thaliana_47`) will be returned.![built-in](img/1.1.2.png)
+- For **Built-in species:** 
+If users choose **Built-in species**, genome sequences and corresponding annotation file will be automatically downloaded from Ensembl Plants with user-specifc version, here, we take *Arabidopsis thaliana* as an example to show how to use this function (see following figure):
+![built-in](img/1.1.2.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNARetrival
+This function aims to retrive miRNA annotations (e.g., name, sequence, genomic coordinates, and so on) automatically from four miRNA databases  ([miRBase](http://www.mirbase.org/), [PmiREN](http://www.pmiren.com/), [sRNAanno](http://plantsrnas.org/), and [Plant small RNA genes](http://plantsmallrnagenes.science.psu.edu/)). Users can choose **Overview of four representative miRNA databases** or **Aggregating already annotated miRNAs**
 
-In this function, we aim at obtain annotated miRNAs provided by different miRNA databases. We provide two ways for database research:
+- For **Overview of four representative miRNA databases**, users only need to select a species (e.g., **Arabidopsis_thaliana**) and sRNA databases (e.g., airbase, PmiREN, sRNAanno and PlantsmallRNAgenes), then click `Execute` button to run this function (see following figure)
+![built-in](img/1.2.1.png)
+Then an interactive HTML document will be returned to users, the example output for this function is available at [here](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_Overview.html), the following figure shows a screenshot for the output of this function.
+ ![output1](img/1.2.3.png)
 
-1. Integrating four representative miRNA databases ([miRBase](http://www.mirbase.org/), [PmiREN](http://www.pmiren.com/), [sRNAanno](http://plantsrnas.org/), and [Plant small RNA genes](http://plantsmallrnagenes.science.psu.edu/)) into a unified HTML document containing miRNA family size, length distribution, and composition of the first base, enabling users performing comparative analysis easily.
+- For **Aggregating already annotated miRNAs**, this sub-function are designed to unify genome version by remapping miRNA sequences to a latest reference genome by using  [GMAP](https://academic.oup.com/bioinformatics/article/21/9/1859/409207). To run this sub-function, users are required to provide the genome index path which can be generated by function **genomeRetrival**, and then selecting the species (see following figure):
+![input](img/1.2.4.png)
 
-   **Input:**
+	Once finishing running,  an HTML document recording the merged miRNAs and the RNA secondary structure plot of miRNA precursors will be returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The web server provides a complete preview of the results ([Output2 in miRNARetrival](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_Aggregation.html)).
+![output](img/1.2.5.png)
 
-   Use species and database as input and click execute to get the results.![built-in](img/1.2.1.png)
-
-   **Output:**
-
-   An HTML document recording the comprehensive information of miRNAs reported in selected databases will be returned (see the figure below). The web server provides a complete preview of the results ([Output2 in miRNARetrival](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_Overview.html)).
-
-   ![output1](img/1.2.3.png)
-
-2. Aggregating already annotated miRNAs provided by four representative miRNA repositories. Considering that the databases may come from different versions, the outputs can be unified by providing a genome and re-mapping using [GMAP](https://academic.oup.com/bioinformatics/article/21/9/1859/409207)). It was found that the genome versions of *Arabidopsis thaliana* in the four databases are the same from the results of previous step. Therefore, we directly aggregate the results of the four databases.![input](img/1.2.4.png)
-
-   **Output:**
-
-   An HTML document recording the merged miRNAs and the RNA secondary structure plot of miRNA precursors was returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The web server provides a complete preview of the results ([Output2 in miRNARetrival](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_Aggregation.html)).
-
-   ![output](img/1.2.5.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNAPredict
 
-In this function, we aim at predict miRNAs from small RNA sequencing data. We provide two sections for data processing:
+This function provided two sub-functions (**Raw sequencing data preprocessing** and **miRNA identification and quantification**) to predict miRNAs from raw small RNA sequencing data.
 
-1. **Raw sequencing data preprocessing:** This sub-function will download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database and/or private datasets.
+- For **Raw sequencing data preprocessing:** this sub-function will download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database and/or private datasets. Users are required to input the SRA accession number or upload raw sequencing data in FASTQ format  (see following figure), the SRA accessions used in this tutorial are listed in `iwa-miRNA/Test_data/I_miRNAPredict_input.txt`
+  ![input](img/1.3.1.png)
+  **Note**: iwa-miRNA can automatically search for adapter sequences, but for large-scale data processing, **we recommend that users provide adapter sequences to prevent erroneous results**.
 
-   **Input:** 
+  Then two HTML documents will returned:
+	**i)** Quality control report generated by  [multiQC](https://multiqc.info/)
+  ![output1](img/1.3.2.png)
+  **ii)** An HTML document recording a summary table and line chart of the number of reads in data processing will be returned (see the figure below).
+  ![output2](img/1.3.3.png)
 
-   In the current version of iwa-miRNA, users can flexibly choose to fetch public data (Test data in GitHub: `iwa-miRNA/Test_data/I_miRNAPredict_input.txt` or web server: [data link](https://deepngs.nwafu.edu.cn/static/welcome/testData/I_miRNAPredict_input.txt)) and/or upload private data to iwa-miRNA. In addition, iwa-miRNA can automatically search for adapter sequences, but for large-scale data processing, we recommend that users provide adapter sequences to prevent erroneous results.
-
-   ![input](img/1.3.1.png)
-
-   **Output:** 
-
-   1. iwa-miRNA uses [multiQC](https://multiqc.info/) to aggregate quality control results into one HTML document for inspection of data processing.
-
-   ![output1](img/1.3.2.png)
-
-   2. An HTML document recording a summary table and line chart of the number of reads in data processing will be returned (see the figure below).
-
-   ![output2](img/1.3.3.png)
-
-2. **miRNA identification and quantification:** This sub-function was used to predict miRNA candidates.
-
-   **Input:** 
-
-   The compressed fasta file from 'Raw sequencing data preprocessing' in **miRNAPredict** and path of species from **genomeRetrival** were as the input. 
-
+- For **miRNA identification and quantification:** this sub-function was used to predict miRNA candidates. Users are required to input the compressed fasta file (generated by last sub-function **Raw sequencing data preprocessing** in **miRNAPredict**) and the path of genome index (generated by function **genomeRetrival**) to run this sub-function.
    ![input](img/1.3.4.png)
-
-   **Output:**
-
-   The location, sequence, length of miRNA candidates, miRNA precursors, 5' arm, and 3'arm were returned (see the figure below). The web server provides a complete preview of the results ([Output in miRNAPredict](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt)).
+   Then, the location, sequences, length of miRNA candidates, miRNA precursors, 5' arm, and 3'arm will be returned (see the figure below). We also provided a complete preview of the results ([Output in miRNAPredict](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt)).
 
    ![output](img/1.3.5.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNATranslate
 
-In this function, we aim at aggregate annotated and predicted miRNAs into the genomic coordinate system. The output of this function includes a list of miRNA candidates with 12 columns containing the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source.
-
-**Input:** 
-
-miRNA candidates from **miRNARetrival** and **miRNAPredict**.
-
+**miRNATranslate** can be used to translate annotated miRNAs into the genomic coordinate system of the target genome by performing miRNA precursor-to-genomic alignment using GMAP. This function takes miRNA candidates from **miRNARetrival** and **miRNAPredict** as inputs (see following figure) and outputs a TAB seperated matrix with 12 columns: the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source.
 ![input](img/1.4.1.png)
-
-**Output:**
-
-A list of miRNA candidates with 12 columns containing the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source. The web server provides a complete preview of the results ([Output in miRNATranslate](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt)).
-
+Then the miRNA candidates will be returned as a TAB seperated matrix (see following figure)
 ![output](img/1.4.2.png)
 
-<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+Note: the complete preview of this results are available at  [Output in miRNATranslate](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt).
 
-## Module II
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+## miRNA selection
+This module selects a subset of miRNA candidates that are regarded as promising miRNAs, according to the high-throughput criteria and/or using an ML-based approach. For the latter miRNA selection approach, iwa-miRNA builds a one-class SVM classifier to predict if tested miRNA candidates are potentially real miRNAs or not. iwa-miRNA is user friendly, in that users can tune corresponding parameters according to the sRNA-Seq data at hand. A set of default parameters, derived from our own analysis experience, are also provided to assist non-expert users within their analyses.
 
 ### miRNASelection
-
-In this function, we aim at select promising miRNA candidates using high-throughput criteria and/or machine learning-based approaches. 
-
-**Input:** 
-
-A comprehensive collection of miRNA candidates from **miRNATranslate**.
-
-Read sequences and expression levels from **miRNAPredict**.
-
+To run this function, two inputs are required:
+- A comprehensive collection of miRNA candidates from **miRNATranslate**
+- Read sequences and expression levels from **miRNAPredict**
+For other selections, see the following figure:
 ![input](img/2.1.1.png)
 
-**Output:**
-
-The annotation file containing the information of miRNA precursors and mature miRNAs and the classification results of high-throughput criteria and/or machine learning-based approach. In addition, we have renamed the newly predicted miRNA with a uniform naming scheme and the already annotated miRNA from databases still use the previous names. The final name was included in the **ID** column. The web server provides a complete preview of the results ([Output in miRNASelection](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/II_miRNASelection_output.txt)).
-
+Then the annotation file containing the information of miRNA precursors , mature miRNAs and the classification results will be returned. For complete preview of this output, please refer to [Output in miRNASelection](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/II_miRNASelection_output.txt), the following figure shows a screenshot for the output.
 ![output](img/2.1.2.png)
 
-<p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
-## Module III
+- **Note**: we have renamed the newly predicted miRNA with a uniform naming scheme and the already annotated miRNA from databases still use the previous names. The final name was included in the **ID** column.
+
+
+<p align="right"><a href="#top">&#x25B2; back to top</a></p>
+## Manual curation
+This module provides the information for all miRNA candidates generated during the compilation and selection processes, and creates a summary page for rapid curation of the quality of selected miRNAs.
 
 ### manualCuration
-
-In this function, we aim at generate a detailed feature report for the convenience of miRNA refinement during manual inspection.
-
-**Input:**
-
-Users can download data (Test data in GitHub: `iwa-miRNA/Test_data/III_sample_information.txt` and `III_gene_description.txt`  or web server: [data1-sample_information](https://deepngs.nwafu.edu.cn/static/welcome/testData/III_sample_information.txt) and [data2-gene_description](https://deepngs.nwafu.edu.cn/static/welcome/testData/III_gene_description.txt)) as a part of input of this function.
-
-![download](img/3.1.1.png)
-
-Besides, selected miRNA candidates from **miRNATranslate** as an essential input.
-
+This function requires three inputs:
+- Sample information: upload the data in directory `iwamiRNA/Test_data/III_sample_information.txt` to your local server
+- Gene description: upload the data in directory `iwamiRNA/Test_data/III_gene_description.txt` to your local server
+- miRNA candidates output by **miRNATranslate** 
+For other options, please see the following figure:
 ![input](img/3.1.2.png)
 
-**Output:**
-
-The summary and report pages containing the information of miRNA precursors and mature miRNAs will be returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The web server provides a complete preview of the results ([Output in manualCuration](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/III_manualCuration_output.html)).
+Then, the summary and report pages containing the information of miRNA precursors and mature miRNAs will be returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The complete preview of the results are available at [Output in manualCuration](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/III_manualCuration_output.html).
 
 ![output](img/3.1.3.png)
 
@@ -187,4 +151,3 @@ Each miRNA has a report page that contains detailed information customized by fe
 ![output](img/3.1.4.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
