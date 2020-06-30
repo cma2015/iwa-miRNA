@@ -1,5 +1,7 @@
 <div id="top"></div>
 <h1>Tutorial</h1>
+
+
 - [Brief introduction](#brief-introduction)
 - [iwa-miRNA installation](#iwa-mirna-installation)
 - [MiRNA Compilation](#mirna-compilation)
@@ -14,11 +16,56 @@
 
 ## Brief introduction
 
-- MicroRNAs (miRNAs), a class of short noncoding RNA, play fundamental roles in most biological processes at posttranscriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. We present iwa-miRNA which establishes linkages between already annotations in public miRNA databases (including four existing plant databases) and new predictions from rapid accumulated sRNA-Seq data. iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills. In addition, iwa-miRNA performs a series of accessible, reproducible, easily sharable analyses based on powerful Galaxy platform and implements interactive HTML reports for supporting decision making in manual inspection. 
+- MicroRNAs (miRNAs), a class of short noncoding RNA, play fundamental roles in most biological processes at posttranscriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. 
+- We present a web-based platform, iwa-miRNA, to allow generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills. In addition, iwa-miRNA performs a series of accessible, reproducible, easily sharable analyses based on powerful Galaxy platform and implements interactive HTML reports for supporting decision making in manual inspection.
 - iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
 
 ## iwa-miRNA installation
-- **Step 1**: [Docker installation](./Docker_installation.md)
+- **Step 1**: Docker installation
+
+  **i) Docker installation and start ([Official installation tutorial](https://docs.docker.com/install))**
+
+  For **Windows (Test on Windows 10 Enterprise version):**
+
+  * Download [Docker](<https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe>) for windows
+  * Double click the EXE file to open it;
+  * Follow the wizard instruction and complete installation;
+  * Search docker, select ___Docker for Windows___ in the search results and click it.
+
+  For **Mac OS X (Test on macOS Sierra version 10.12.6 and macOS High Sierra version 10.13.3):**
+
+  * Download [Docker](<https://download.docker.com/mac/stable/Docker.dmg>) for Mac os <br>
+  * Double click the DMG file to open it;
+  * Drag the docker into Applications and complete installation;
+  * Start docker from Launchpad by click it.
+
+  For **Ubuntu (Test on Ubuntu 14.04 LTS and Ubuntu 16.04 LTS):**
+
+  * Go to [Docker](<https://download.docker.com/linux/ubuntu/dists/>), choose your Ubuntu version, browse to ___pool/stable___ and choose ___amd64, armhf, ppc64el or s390x.____ Download the ___DEB___ file for the Docker version you want to install;
+  * Install Docker, supposing that the DEB file is download into following path:___"/home/docker-ce<version-XXX>~ubuntu_amd64.deb"___ </br>
+
+  ```bash
+  $ sudo dpkg -i /home/docker-ce<version-XXX>~ubuntu_amd64.deb      
+  $ sudo apt-get install -f
+  ```
+
+  **ii) Verify if Docker is installed correctly**
+
+  ----------------------------------------
+
+     Once Docker installation is completed, we can run `hello-world` image to verify if Docker is installed correctly. Open terminal in Mac OS X and Linux operating system and open CMD for Windows operating system, then type the following command:
+
+  ```bash
+  $ docker run hello-world
+  ```
+
+     **<font color =red>Note</font>:** root permission is required for Linux operating system.
+
+  - Once Docker is installed successfully, you will see the following message:
+    ![Verify-docker](E:/1_projects/iwa-miRNA/iwa-miRNA_github/Tutorials/img/docker-run.jpg)
+
+  
+
 - **Step 2**: iwa-miRNA installation from Docker Hub
 ```bash
 # pull latest iwa-miRNA Docker image from docker hub
