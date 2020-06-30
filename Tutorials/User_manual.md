@@ -2,13 +2,15 @@
 <h1>Tutorial</h1>
 - [Brief introduction](#brief-introduction)
 - [iwa-miRNA installation](#iwa-mirna-installation)
-- [microRNA compilation](#microRNA-compilation)
-  - [genomeRetrival](#genomeretrival)
-  - [miRNARetrival](#mirnaretrival)
-  - [miRNAPredict](#mirnapredict)
-  - [miRNATranslate](#mirnatranslate)
-- [miRNA selection](#mirna-selectioni)
-- [Manual curation](#manual-curation)
+- [MiRNA Compilation](#mirna-compilation)
+  * [genomeRetrival](#genomeretrival)
+  * [miRNARetrival](#mirnaretrival)
+  * [miRNAPredict](#mirnapredict)
+  * [miRNATranslate](#mirnatranslate)
+- [MiRNA Selection](#mirna-selection)
+- [Manual Curation](#manual-curation)
+
+
 
 ## Brief introduction
 
@@ -51,7 +53,7 @@ Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma201
 User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/0.1.4.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-## miRNA compilation
+## MiRNA Compilation
 This module generates a comprehensive collection of miRNA candidates by aggregating already annotated miRNAs from four plant miRNA databases (i.e., [miRBase](http://www.mirbase.org), [PmiREN](http://www.pmiren.com), [sRNAanno](http://plantsrnas.org), and [PsRNA](http://plantsmallrnagenes.science.psu.edu)) and predicted miRNAs from user-submitted sRNA-Seq data. In the following, we will use screenshots to show how to use this module correctly.
 
 ### genomeRetrival
@@ -113,7 +115,7 @@ Then the miRNA candidates will be returned as a TAB seperated matrix (see follow
 Note: the complete preview of this results are available at  [Output in miRNATranslate](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt).
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-## miRNA selection
+## MiRNA Selection
 This module selects a subset of miRNA candidates that are regarded as promising miRNAs, according to the high-throughput criteria and/or using an ML-based approach. For the latter miRNA selection approach, iwa-miRNA builds a one-class SVM classifier to predict if tested miRNA candidates are potentially real miRNAs or not. iwa-miRNA is user friendly, in that users can tune corresponding parameters according to the sRNA-Seq data at hand. A set of default parameters, derived from our own analysis experience, are also provided to assist non-expert users within their analyses.
 
 ### miRNASelection
@@ -131,7 +133,7 @@ Then the annotation file containing the information of miRNA precursors , mature
 
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-## Manual curation
+## Manual Curation
 This module provides the information for all miRNA candidates generated during the compilation and selection processes, and creates a summary page for rapid curation of the quality of selected miRNAs.
 
 ### manualCuration
