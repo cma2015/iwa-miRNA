@@ -1,6 +1,5 @@
 <div id="top"></div>
 <h1>Tutorial</h1>
-
 - [Brief introduction](#brief-introduction)
 - [iwa-miRNA installation](#iwa-mirna-installation)
 - [MiRNA Compilation](#mirna-compilation)
@@ -14,7 +13,7 @@
 ## Brief introduction
 
 - MicroRNAs (miRNAs), a class of short noncoding RNA, play fundamental roles in most biological processes at posttranscriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. 
-- We present a web-based platform, iwa-miRNA, to allow generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
+- We present a web-based platform, iwa-miRNA, to allow generate a comprehensive collection of miRNA candidates, and interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 - iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
 
 ## iwa-miRNA installation
@@ -90,7 +89,7 @@ Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma201
 
 	![server](img/0.1.2.png)
 	
-	A detailed list of sample data is shown below.
+	A detailed list of test data is shown below.
 
 ![files](img/0.1.3.png)
 
@@ -99,7 +98,6 @@ Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma201
 User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/0.1.4.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ## MiRNA Compilation
 
 This module generates a comprehensive collection of miRNA candidates by aggregating already annotated miRNAs from four plant miRNA databases (i.e., [miRBase](http://www.mirbase.org), [PmiREN](http://www.pmiren.com), [sRNAanno](http://plantsrnas.org), and [PsRNA](http://plantsmallrnagenes.science.psu.edu)) and predicted miRNAs from user-submitted sRNA-Seq data. In the following, we will use screenshots to show how to use this module correctly.
@@ -116,7 +114,6 @@ If users choose **Built-in species**, genome sequences and corresponding annotat
 ![built-in](img/1.1.2.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNARetrival
 
 This function aims to retrive miRNA annotations (e.g., name, sequence, genomic coordinates, and so on) automatically from four miRNA databases  ([miRBase](http://www.mirbase.org/), [PmiREN](http://www.pmiren.com/), [sRNAanno](http://plantsrnas.org/), and [Plant small RNA genes](http://plantsmallrnagenes.science.psu.edu/)). Users can choose **Overview of four representative miRNA databases** or **Aggregating already annotated miRNAs**
@@ -133,7 +130,6 @@ Then an interactive HTML document will be returned to users, the example output 
 ![output](img/1.2.5.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNAPredict
 
 This function provided two sub-functions (**Raw sequencing data preprocessing** and **miRNA identification and quantification**) to predict miRNAs from raw small RNA sequencing data.
@@ -155,7 +151,6 @@ This function provided two sub-functions (**Raw sequencing data preprocessing** 
    ![output](img/1.3.5.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ### miRNATranslate
 
 **miRNATranslate** can be used to translate annotated miRNAs into the genomic coordinate system of the target genome by performing miRNA precursor-to-genomic alignment using GMAP. This function takes miRNA candidates from **miRNARetrival** and **miRNAPredict** as inputs (see following figure) and outputs a TAB seperated matrix with 12 columns: the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source.
@@ -166,7 +161,6 @@ Then the miRNA candidates will be returned as a TAB seperated matrix (see follow
 Note: the complete preview of this results are available at  [Output in miRNATranslate](https://deepngs.nwafu.edu.cn/static/welcome/testData/Test_results/I_miRNATranslate_output.txt).
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ## MiRNA Selection
 
 This module selects a subset of miRNA candidates that are regarded as promising miRNAs, according to the high-throughput criteria and/or using an ML-based approach. For the latter miRNA selection approach, iwa-miRNA builds a one-class SVM classifier to predict if tested miRNA candidates are potentially real miRNAs or not. iwa-miRNA is user friendly, in that users can tune corresponding parameters according to the sRNA-Seq data at hand. A set of default parameters, derived from our own analysis experience, are also provided to assist non-expert users within their analyses.
@@ -187,7 +181,6 @@ Then the annotation file containing the information of miRNA precursors , mature
 
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
-
 ## Manual Curation
 
 This module provides the information for all miRNA candidates generated during the compilation and selection processes, and creates a summary page for rapid curation of the quality of selected miRNAs.
