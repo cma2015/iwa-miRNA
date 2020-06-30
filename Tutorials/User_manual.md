@@ -62,7 +62,7 @@
      **<font color =red>Note</font>:** root permission is required for Linux operating system.
 
   - Once Docker is installed successfully, you will see the following message:
-    ![Verify-docker](E:/1_projects/iwa-miRNA/iwa-miRNA_github/Tutorials/img/docker-run.jpg)
+    ![Verify-docker](E:img/docker-run.jpg)
 
   
 
