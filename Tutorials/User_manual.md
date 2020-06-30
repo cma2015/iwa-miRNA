@@ -203,7 +203,7 @@ This module provides the information for all miRNA candidates generated during t
 This function requires three inputs:
 - Sample information: upload the data in directory `Test_data/III_sample_information.txt` to your local server
 - Gene description: upload the data in directory `Test_data/III_gene_description.txt` to your local server
-- miRNA candidates output by **miRNATranslate** 
+- miRNA candidates output by **miRNASelection** 
 For other options, please see the following figure:
 ![input](img/3.1.2.png)
 
