@@ -108,7 +108,7 @@ This module generates a comprehensive collection of miRNA candidates by aggregat
 
 This function was designed to fetch genome sequences in FASTA format and corresponding annotations in GFF3/GTF format automatically, and then building index for the genome sequences. To run this function, users can choose **Upload your own genome** or **Built-in species**:
 
-- For **Upload your own genome:** users are required to input the Latin species name and choose uploading data from FTP link (see following figure), the required input for t/r/sn/snoRNA sequences are available at `iwa-miRNA/Test_data/I_Arabidopsis_trsnsnoRNAs.fa.gz`
+- For **Upload your own genome:** users are required to input the Latin species name and choose uploading data from FTP link (see following figure), the required input for t/r/sn/snoRNA sequences are available at `Test_data/I_Arabidopsis_trsnsnoRNAs.fa.gz`
 ![genomeRetrival](img/1.1.1.png)
 
 - For **Built-in species:** 
@@ -138,7 +138,7 @@ Then an interactive HTML document will be returned to users, the example output 
 
 This function provided two sub-functions (**Raw sequencing data preprocessing** and **miRNA identification and quantification**) to predict miRNAs from raw small RNA sequencing data.
 
-- For **Raw sequencing data preprocessing:** this sub-function will download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database and/or private datasets. Users are required to input the SRA accession number or upload raw sequencing data in FASTQ format  (see following figure), the SRA accessions used in this tutorial are listed in `iwa-miRNA/Test_data/I_miRNAPredict_input.txt`
+- For **Raw sequencing data preprocessing:** this sub-function will download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database and/or private datasets. Users are required to input the SRA accession number or upload raw sequencing data in FASTQ format  (see following figure), the SRA accessions used in this tutorial are listed in `Test_data/I_miRNAPredict_input.txt`
   ![input](img/1.3.1.png)
   **Note**: iwa-miRNA can automatically search for adapter sequences, but for large-scale data processing, **we recommend that users provide adapter sequences to prevent erroneous results**.
 
@@ -195,8 +195,8 @@ This module provides the information for all miRNA candidates generated during t
 ### manualCuration
 
 This function requires three inputs:
-- Sample information: upload the data in directory `iwamiRNA/Test_data/III_sample_information.txt` to your local server
-- Gene description: upload the data in directory `iwamiRNA/Test_data/III_gene_description.txt` to your local server
+- Sample information: upload the data in directory `Test_data/III_sample_information.txt` to your local server
+- Gene description: upload the data in directory `Test_data/III_gene_description.txt` to your local server
 - miRNA candidates output by **miRNATranslate** 
 For other options, please see the following figure:
 ![input](img/3.1.2.png)
