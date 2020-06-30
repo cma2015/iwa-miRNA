@@ -99,7 +99,9 @@ Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma201
 User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload](img/0.1.4.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
+
 ## MiRNA Compilation
+
 This module generates a comprehensive collection of miRNA candidates by aggregating already annotated miRNAs from four plant miRNA databases (i.e., [miRBase](http://www.mirbase.org), [PmiREN](http://www.pmiren.com), [sRNAanno](http://plantsrnas.org), and [PsRNA](http://plantsmallrnagenes.science.psu.edu)) and predicted miRNAs from user-submitted sRNA-Seq data. In the following, we will use screenshots to show how to use this module correctly.
 
 ### genomeRetrival
