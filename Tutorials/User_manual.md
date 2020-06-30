@@ -1,6 +1,5 @@
 <div id="top"></div>
 <h1>Tutorial</h1>
-
 - [Brief introduction](#brief-introduction)
 - [iwa-miRNA installation](#iwa-mirna-installation)
 - [MiRNA Compilation](#mirna-compilation)
@@ -60,7 +59,8 @@
      **<font color =red>Note</font>:** root permission is required for Linux operating system.
 
   - Once Docker is installed successfully, you will see the following message:
-    ![Verify-docker](E:img/docker-run.jpg)
+    
+    ![docker](E:img/docker-run.jpg)
 
   
 
