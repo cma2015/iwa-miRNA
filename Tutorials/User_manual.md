@@ -60,7 +60,7 @@
 
   - Once Docker is installed successfully, you will see the following message:
     
-    ![docker](E:img/docker-run.jpg)
+    ![docker](img/docker-run.jpg)
 
   
 
