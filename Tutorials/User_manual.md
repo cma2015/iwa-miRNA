@@ -16,7 +16,7 @@
   - [miRNASelection](#mirnaselection)
 - [Manual Curation](#manual-curation)
   - [manualCuration](#manualcuration)
-- [Run time for test data](#run-time-for-test-data)
+- [Costing time for test data](#costing-time-for-test-data)
 
 ## Brief introduction
 
@@ -203,9 +203,9 @@ Each miRNA has a report page that contains detailed information customized by fe
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
-## Run time for test data
+## Costing time for test data
 
-|                    | running time                             |
+|                    | Costing time                             |
 | ------------------ | ---------------------------------------- |
 | **miRNARetrival**  | 48 seconds                               |
 | **genomePrepare**  | 17 seconds                               |
