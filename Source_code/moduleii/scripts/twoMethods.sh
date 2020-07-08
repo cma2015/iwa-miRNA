@@ -10,7 +10,7 @@ usage() {
   echo "--curpath   --file path"
   echo "--fasta     --fasta file"
   echo "--txtfile   --alignment file"
-  echo "--mergefile --result from miRNATranslate"
+  echo "--mirmerge --result from miRNATranslate"
   echo "--outcorr   --miRNA precursor"
   echo "--outfile   --results from two methods"
   echo "--version   --Version of script"
@@ -24,7 +24,7 @@ version(){
 }
 main(){
     # Parsing options
-    ARGS=`getopt -o vh --long version,help,curpath:,fasta:,txtfile:,mergefile:,expfile:,outcorr:,outfile:,outtardata:,outexp: -n "$0" -- "$@"`
+    ARGS=`getopt -o vh --long version,help,curpath:,mirmerge:,expfile:,stemloop:,structure:,abias:,sbias:,minlen:,maxlen:,positive:,nuval:,outfile: -n "$0" -- "$@"`
     if [ $? != 0 ]; then
         echo "Terminating..."
         exit 1
@@ -35,14 +35,17 @@ main(){
     do
         case "$1" in
             --curpath) curdir=$2; shift 2;;
-            --fasta) fasta=$2; shift 2;;
-            --txtfile) txtfile=$2; shift 2;;            
-            --mergefile) mergefile=$2; shift 2;;
+            --mirmerge) mirmerge=$2; shift 2;;
             --expfile) expfile=$2; shift 2;;
-            --outcorr) outcorr=$2; shift 2;;
+            --stemloop) stemloop=$2; shift 2;;
+            --structure) structure=$2; shift 2;;
+            --abias) abias=$2; shift 2;;
+            --sbias) sbias=$2; shift 2;;
+            --minlen) minlen=$2; shift 2;;
+            --maxlen) maxlen=$2; shift 2;;
+            --positive) positive=$2; shift 2;;
+            --nuval) nuval=$2; shift 2;;
             --outfile) outfile=$2; shift 2;;
-            --outtardata) outtardata=$2; shift 2;;
-            --outexp) outexp=$2; shift 2;;
             -v|--version) version;;
             -h|--help) usage;;
             --) shift; break;;
@@ -51,36 +54,50 @@ main(){
     done
 
     # Add environment path
-    SCRIPTPATH=${curdir}/scripts
-    PATH="$PATH:${SCRIPTPATH}"
+    script_path=${curdir}/scripts
 
     # Define the output directory
-    OUTDIR=${curdir}/tmp/222222 #`date +%s%N | cut -c6-13`
-    if [ ! -d $OUTDIR ]; then
-        mkdir -p ${curdir}/tmp $OUTDIR
+    out_dir=${outfile%.*}
+
+    mkdir -p ${out_dir} ${out_dir}/miRNASelection
+
+    cp -r ${mirmerge%.*}/* ${out_dir}/
+
+    cd ${out_dir}/miRNASelection
+
+    python ${script_path}/HTcriteria.py -c ${out_dir}/miRNASelection -f ../miRNAPredict/reads_18_26.fa -t ../miRNAPredict/reads_18_26.txt -m ${mirmerge}
+    Rscript ${script_path}/HTcriteria.R ${out_dir}/miRNASelection/out_pool_merge.txt ${out_dir}/miRNASelection/pc_criteria.txt ${stemloop} ${structure} ${abias} ${sbias} ${minlen} ${maxlen}
+
+    cp -r ${script_path}/featureScripts ${out_dir}/miRNASelection/featureScripts
+    cd ${out_dir}/miRNASelection/featureScripts
+    python 0extract_features.py
+
+    cd ${out_dir}/miRNASelection
+    if [ ! -z ${positive} ];then
+        cp ${positive} positive_name.txt
+        Rscript ${script_path}/one-class-svm.R  00feature_out.txt out_pool_merge.txt ${nuval} ML_result.txt positive_name.txt
+    else
+        Rscript ${script_path}/one-class-svm.R  00feature_out.txt out_pool_merge.txt ${nuval} ML_result.txt
     fi
-
-    # python ${SCRIPTPATH}/HTcriteria.py -c ${OUTDIR} -f ${fasta} -t ${txtfile} -m ${mergefile}
-
-    # Rscript ${SCRIPTPATH}/HTcriteria.R ${OUTDIR}/out_pool_merge.txt ${OUTDIR}/pc_criteria.txt
-
-    # cp -r ${SCRIPTPATH}/featureScripts ${OUTDIR}/featureScripts
-    cd ${OUTDIR}/featureScripts 
-    # python 0extract_features.py
-    #Rscript ${SCRIPTPATH}/one-class-svm.R  ${OUTDIR}/00feature_out.txt ${OUTDIR}/out_pool_merge.txt 0.3 ${OUTDIR}/ML_result.txt
-    cd ${OUTDIR}
-    cp ${SCRIPTPATH}/igraph_rename.sh igraph_rename.sh
-    cp ${SCRIPTPATH}/igraph_rename.R igraph_rename.R
+    cp ${script_path}/igraph_rename.sh igraph_rename.sh
+    cp ${script_path}/igraph_rename.R igraph_rename.R
     sh igraph_rename.sh
-    mkdir rpmData
-    tar -zxvf $expfile -C rpmData
-    python ${SCRIPTPATH}/expCount.py
-    Rscript ${SCRIPTPATH}/expMat.R
-    Rscript ${SCRIPTPATH}/mergeOutput.R pc_criteria.txt ML_result.txt out_pool_merge.txt NameChange_out.txt expressionMat.txt final_table.txt
-    
+
+    python ${script_path}/expCount.py ${out_dir}/miRNAPredict
+    Rscript ${script_path}/expMat.R
+    Rscript ${script_path}/mergeOutput.R pc_criteria.txt ML_result.txt out_pool_merge.txt NameChange_out.txt expressionMat.txt final_table.txt
+
+    awk -F"\t" 'NR>1{print $11"\n"$14}' final_table.txt | sort -u >mature_miRNAs.fa
+    python ${script_path}/matureMat.py ${out_dir}/miRNAPredict
+    Rscript ${script_path}/matureMat.R
+
+    ## Output
+    cd ${out_dir}/miRNASelection
     cp final_table.txt ${outfile}
-    cp corr_pre-mirna_seq.txt ${outcorr}
-    cp expressionMat.txt ${outexp}
-    tar -zcvf ${outtardata} -C ${OUTDIR}/data . 
+
+    # cp corr_pre-mirna_seq.txt ${outcorr}
+    # cp expressionMat.txt ${outexp}
+    # tar -zcvf ${outtardata} -C ./data/ .
+    # cp miRNA_in_sample.txt ${matexp}
 }
 main "$@"

@@ -1,0 +1,15 @@
+<!-- Use the file tool_data_table_conf.xml.oldlocstyle if you don't want to update your loc files as changed in revision 4550:535d276c92bc-->
+<tables>
+    <table name="ensembl_plant" comment_char="#" allow_duplicate_entries="False">
+        <columns>value, name</columns>
+        <file path="tools/modulei/table_data/species_EnsemblPlants.txt" />
+    </table>
+    <table name="ensembl_plant_version" comment_char="#" allow_duplicate_entries="False">
+        <columns>value, name</columns>
+        <file path="tools/modulei/table_data/species_version.txt" />
+    </table>
+    <table name="miRNA_species" comment_char="#" allow_duplicate_entries="False">
+        <columns>value, name</columns>
+        <file path="tools/modulei/table_data/miRNA_species.txt" />
+    </table>
+</tables>

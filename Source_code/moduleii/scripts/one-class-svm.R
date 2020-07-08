@@ -6,16 +6,22 @@ args <- commandArgs(T)
 
 feature.dir <- args[1] # directory of feature matrix, the first columns are sample names
 pos.dir <- args[2] # directory of positive samples
-nu <- args[3] # parameter nu, default is 0.3
+nu <- 1-as.numeric(args[3]) # parameter nu, default is 0.3
 out_res <- args[4]
 
 featureMat <- as.matrix(read.table(file = feature.dir, sep = "\t", row.names = 1, header = T))
-featureMat[1:5,1:5]
 colnames(featureMat) <- paste0("feature-", 1:ncol(featureMat))
 class(featureMat) <- "numeric"
 
 positivesDf <- read.table(file = pos.dir,  sep = "\t", header = T)
-positives <- positivesDf[positivesDf$Source!="+",]$Extended_stem_loop_loc
+if(length(args)==5){
+  positives <- read.table(args[5], sep = "\t", stringsAsFactors = F)[,1]
+  if(any(positives%in%positivesDf$Precursors)){
+    positives <- positivesDf[positivesDf[,1]%in%positives, 2]
+  }
+}else{
+  positives <- positivesDf[positivesDf$Source!="+",]$Extended_stem_loop_loc
+}
 # unlabels <- setdiff(rownames(featureMat), positives)
 # scale 
 # featureMatScale <- apply(featureMat, 2, scaleFeature)

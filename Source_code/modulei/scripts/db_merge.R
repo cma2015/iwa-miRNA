@@ -1,28 +1,26 @@
 library(seqinr)
 library(tibble)
-# args <- c("../tmp/00000",
-#           "miRBase,sRNAanno,PlantsmallRNAgenes,PmiREN",
-#           "../Index/oryza_sativa_47")
 
 args <- commandArgs(trailingOnly = T)
 cur_path <- args[1]
-database_name <- unlist(strsplit(args[2], ","))
-species_path <- args[3]
+database_name <- list.files(path = args[1])
+species_path <- args[2]
 
 raw_data <- matrix(ncol = 12)
 colnames(raw_data) <- 1:12
-da_vec <- c("miRBase", "PmiREN", "sRNAanno", "Psgenes")
+da_vec <- c("miRBase", "PmiREN", "sRNAanno", "Psgenes", "Novel")
+da_abr <- c("1","2","3","4", "+")
 
 database_list = vector()
-if ("miRBase" %in% database_name){
+if ("miRBase.txt" %in% database_name){
   tmp_data <- read.table(paste0(cur_path, "/miRBase.txt"), header = T)[,c(1:4,6:11,5)]
   tmp_data <- cbind(tmp_data, "miRBase")
   cat(ncol(tmp_data), "miRBase\n")
-  colnames(tmp_data) <- colnames(raw_data)
+    colnames(tmp_data) <- colnames(raw_data)
   raw_data <- rbind(raw_data, tmp_data)
   database_list <- c(database_list, "miRBase")
 }
-if  ("PmiREN" %in% database_name) {
+if  ("PmiREN.txt" %in% database_name) {
   tmp_data <- read.table(paste0(cur_path, "/PmiREN.txt"), header = T)[,c(1:4,6:11,5)]
   tmp_data <- cbind(tmp_data, "PmiREN")
   cat(ncol(tmp_data), "PmiREN\n")
@@ -30,7 +28,7 @@ if  ("PmiREN" %in% database_name) {
   raw_data <- rbind(raw_data, tmp_data) 
   database_list <- c(database_list, "PmiREN")
 }
-if  ("sRNAanno" %in% database_name) {
+if  ("sRNAanno.txt" %in% database_name) {
   tmp_data <- read.table(paste0(cur_path, "/sRNAanno.txt"), header = T)[,c(1:4,6:11,5)]
   tmp_data <- cbind(tmp_data, "sRNAanno")
   cat(ncol(tmp_data), "sRNAanno\n")
@@ -38,13 +36,22 @@ if  ("sRNAanno" %in% database_name) {
   raw_data <- rbind(raw_data, tmp_data)
   database_list <- c(database_list, "sRNAanno")
 }
-if  ("PlantsmallRNAgenes" %in% database_name) {
-  tmp_data <- read.table(paste0(cur_path, "/PlantsmallRNAgenes.txt"), header = T)[,c(1:4,7:12,5)]
+if  ("PlantsmallRNAgenes.txt" %in% database_name) {
+  tmp_data <- read.table(paste0(cur_path, "/PlantsmallRNAgenes.txt"), header = T)[,c(1:4,6:11,5)]
   tmp_data <- cbind(tmp_data, "Psgenes")
   cat(ncol(tmp_data), "Psgenes\n")
   colnames(tmp_data) <- colnames(raw_data)
   raw_data <- rbind(raw_data, tmp_data)
   database_list <- c(database_list, "Psgenes")
+}
+
+if  ("prediction.txt" %in% database_name) {
+  tmp_data <- read.table(paste0(cur_path, "/prediction.txt"), header = T)[,c(1:7,9:11,13)]
+  tmp_data <- cbind(tmp_data, "Novel")
+  cat(ncol(tmp_data), "Novel\n")
+  colnames(tmp_data) <- colnames(raw_data)
+  raw_data <- rbind(raw_data, tmp_data)
+  database_list <- c(database_list, "Novel")
 }
 
 rm_dup <- function(loctest, loclist){
@@ -92,7 +99,7 @@ for( i in uniq_mature){
 
 loc_number <- uniq_mature[mature_index]
 final_mat <- matrix(ncol = 12 + length(database_list), nrow = length(loc_number))
-colnames(final_mat) <- c("Pre-miRNAs", "pLoc", "pSeq", "pLen", 
+colnames(final_mat) <- c("Precursors", "pLoc", "pSeq", "pLen", 
                          "Loc5p", "Seq5p", "Len5p", "Loc3p", 
                          "Seq3p", "Len3p", 'Mature_arm',database_list, "db_num")
 rownames(final_mat) <- loc_number
@@ -111,7 +118,7 @@ for(i in loc_number){
   final_mat[i, 11] <- names(sort(tmp_arm)[length(tmp_arm)])
   final_mat[i, colnames(final_mat)%in%raw_data[mat_loc,12]] <- "<i class='correct'></i>"
   # final_mat[i, ncol(final_mat)-1] <- sum(colnames(final_mat)%in%raw_data[mat_loc,11])
-  final_mat[i, ncol(final_mat)] <- paste0(which(da_vec%in%raw_data[mat_loc,12]), collapse = "")
+  final_mat[i, ncol(final_mat)] <- paste0(da_abr[which(da_vec%in%raw_data[mat_loc,12])], collapse = "")
 }
 
 final_mat[,3] <- gsub("U", "T", final_mat[,3])
@@ -145,5 +152,5 @@ final_mat[,3] <- seq_input
 final_mat[,4] <- nchar(seq_input)
 
 final_mat <- final_mat[final_mat[,11]%in%c("5p","3p","-"), ]
-write.table(final_mat, paste0(cur_path, "/00merge.txt"), quote = F, sep = "\t", row.names = F)
+write.table(final_mat, paste0(cur_path, "/Translate_result.txt"), quote = F, sep = "\t", row.names = F)
   

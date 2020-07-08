@@ -1,4 +1,5 @@
 import os
+import sys
 
 seq_list = {}
 limit_seq_list = {}
@@ -20,7 +21,7 @@ with open('corr_pre-mirna_seq.txt') as input_flat:
             else:
                 limit_seq_list[eli[1]].append(eli[0])
 
-path = "rpmData/"
+path = "{}/4rpmData/".format(sys.argv[1])
 files= os.listdir(path)
 for file in files:
     with open( path + file) as file_input:

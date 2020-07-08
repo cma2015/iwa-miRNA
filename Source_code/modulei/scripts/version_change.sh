@@ -13,7 +13,7 @@ usage() {
   echo "--version  --Version of script"
   echo "Example: bash ~/sRNAbox/tools/srnaDatabase/scripts/verchange.sh \
 --path ~/sRNAbox/tools/srnaDatabase/tmp/20200112 \
---genome ~/sRNAbox/tools/srnaVis/Index/release-43/Zea_mays.B73_RefGen_v4.43/Genome/Genome.fa \
+--genome ~/sRNAbox/tools/srnaVis/Index/release-43/Zea_mays.B73_RefGen_v4.43/ \
 --flatrna ~/sRNAbox/tools/srnaDatabase/tmp/20200112/PmiREN.txt"
   exit 1
 }
@@ -49,14 +49,14 @@ main(){
     mkdir -p ${curdir}/GMAP
     mv ${flatrna} ${curdir}/GMAP/tmp.txt
     awk 'NR>1{print ">"$1"\n"$3}' ${curdir}/GMAP/tmp.txt >${curdir}/GMAP/tmp.fa
-    if [ -f ${genome} ]; then
-        gmap_build -D ${curdir}/GMAP -d Index -k 15 ${genome}
-    else
-        gmap_build -D ${curdir}/GMAP -d Index -k 15 ${genome}/Genome/Genome.fa
+
+    if [ ! -d ${genome}/gmap_index ];then
+        gmap_build -D ${genome} -d gmap_index -k 15 ${genome}/Genome/Genome.fa
     fi
-    gmap -D ${curdir}/GMAP -d Index --nosplicing --no-chimeras \
+
+    gmap -D ${genome} -d gmap_index --nosplicing --no-chimeras \
     --allow-close-indels=0 -n 10 -f psl -t 20 ${curdir}/GMAP/tmp.fa | awk '$2==0&&$18==1' > ${curdir}/GMAP/tmp.psl
-    python ${curdir}/gmap_change.py --inpath ${curdir} --outfile ${flatrna}
+    python ${curdir}/gmap_change.py --inputfile ${curdir}/GMAP/tmp.txt --psl ${curdir}/GMAP/tmp.psl --outfile ${flatrna}
 }
 
 main "$@"

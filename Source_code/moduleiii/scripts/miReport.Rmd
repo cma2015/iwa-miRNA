@@ -1,5 +1,5 @@
 ---
-title: "Detailed representations of ath-MIR156b"
+title: "Report page"
 output:
     flexdashboard::flex_dashboard:
         orientation: rows
@@ -27,72 +27,67 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r import, include=FALSE}
 info_table_raw <- read.table("final_table.txt", sep = "\t", header = T)
-info_table <- info_table_raw[,c(2,5:37)]
+info_table <- info_table_raw[,c(2,5:ncol(info_table_raw))]
 info_table <- info_table[info_table$ID!="", ]
 
-tissue_info <- read.table("sample_info.txt", sep = "\t", stringsAsFactors = F, row.names = 1)
 mature_exp <- read.table("miRNA_in_sample.txt", sep = "\t", stringsAsFactors = F, row.names = 1)
 rownames(mature_exp) <- gsub("T", "U", rownames(mature_exp))
 
-tmp_fullname <- info_table$Stem_loop_loc
+tmp_fullname <- info_table$Extended_stem_loop_loc
 tmp_fullname <- gsub(":", "-", tmp_fullname)
-tmp_index_value <- which(tmp_fullname%in%"xxxxxx")
+tmp_index <- which(tmp_fullname%in%"xxxxxx")
 
-for(tmp_index in tmp_index_value){
-  tmp_name <- info_table[tmp_index, 2]
-  info_vec <- info_table[tmp_index, c(1:13,20:21)]
-  
-  tmp_df <- data.frame("Location"=as.character(info_vec[c(2,5,7,10)]), 
-                       "Sequence"=as.character(info_vec[c(3,6,8,11)]), 
-                       "Length"=as.character(c(info_vec[4],  nchar(info_vec[6]), 
-                                               info_vec[c(9,12)])))
-  rownames(tmp_df) <- c("miRNA precursors", "Stem loop", "5p", "3p")
-  mature_df <- t(mature_exp[c(info_vec$Seq5p, info_vec$Seq3p), ])
-  mature_df[is.na(mature_df)] <- 0
-  arm_ratio <- apply(mature_df, 1, function(x){
-    if(max(x[1:2])<3){
-      return(0)
+tmp_name <- info_table[tmp_index, 2]
+info_vec <- info_table[tmp_index, c(1:13,20:21)]
+
+tmp_df <- data.frame("Location"=as.character(info_vec[c(2,5,7,10)]), 
+                     "Sequence"=as.character(info_vec[c(3,6,8,11)]), 
+                     "Length"=as.character(c(info_vec[4],  nchar(info_vec[6]), 
+                                             info_vec[c(9,12)])))
+rownames(tmp_df) <- c("miRNA precursors", "Stem loop", "5p", "3p")
+mature_df <- t(mature_exp[c(info_vec$Seq5p, info_vec$Seq3p), ])
+mature_df[is.na(mature_df)] <- 0
+arm_ratio <- apply(mature_df, 1, function(x){
+  if(max(x[1:2])<3){
+    return(0)
+  } else{
+    if(info_vec$Mature_arm == '5p'){
+      return(round(log2((x[1]+1)/(x[2]+1)), 2))
     } else{
-      if(info_vec$Mature_arm == '5p'){
-        return(round(log2((x[1]+1)/(x[2]+1)), 2))
-      } else{
-        return(round(log2((x[2]+1)/(x[1]+1)), 2))
-      }
+      return(round(log2((x[2]+1)/(x[1]+1)), 2))
     }
-  })
-}
+  }
+})
+
 ```
 
 ```{css}
 p.seq {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 800px;
-    min-width: 0;
-    margin: 0;
-    font-size: 15px;
-}
-
-p.seq:hover {
-    overflow: none;
-    width: auto;
+  word-wrap:break-word;word-break:break-all;
+  font-size: 15px;
 }
 
 p.one{
   margin-top:0.2em;
+}
+
+table{
+  table-layout:fixed;
+}
+
+table td {
+  word-wrap:break-word;
+  
 }
 ```
 
 Browse {data-icon=fa-area-chart}
 =====================================
 
-  &emsp;**In order to better elucidate each miRNA, this page contains the following parts: 1. miRNA sequences; 2. prediction structure; 3. read mapping in miRNA precursor; 4. miRNA expression and arm selection in different samples; 5. miRNA-target interactions; 6. miRNA isoforms**
-
 Row 
 -------------------------------------
 
-### Location and sequence {data-width=250}
+### Location and sequences {data-width=250}
 
 ```{r table1, results='asis'}
 eseq <- tmp_df[1,2]
@@ -107,7 +102,7 @@ tmp_df[2,2] <- paste0('<p class="seq"><span style="background-color: #F88017">',
        tmp_df[3,2], "</span>", substr(eseq, eseqms+nchar(tmp_df[3,2]), eseqss-1),
        '<span style="background-color: #168EF7">', tmp_df[4,2], "</span></p>")
 
-knitr::kable(tmp_df, escape = FALSE) %>%kable_styling("striped", full_width = TRUE)
+knitr::kable(tmp_df, escape = FALSE) %>%kable_styling("striped", full_width = FALSE)
 ```
 
 ## {data-height=10}
@@ -120,28 +115,26 @@ Row
 ### RNAfold structure {data-height=100, data-width=350}
 
 ```{r pressure1, echo=FALSE, fig.cap="RNAfold", out.width = '33%'}
-svgPanZoom::svgPanZoom( read_file(paste0("data/",  gsub(":", "_", tmp_name), '_r.svg')))
-```
-
-### Centroidfold structure {data-width=350}
-
-```{r pressure2, echo=FALSE, fig.cap="Centroidfold", out.width = '33%'}
-svgPanZoom::svgPanZoom( read_file(paste0("data/",  gsub(":", "_", tmp_name), '_c.svg')))
+svgPanZoom::svgPanZoom( read_file(paste0("../miRNASelection/data/",  gsub(":", "_", tmp_name), '_r.svg')))
 ```
 
 ### Information {data-width=250}
 
 ```{r}
-fold_info <- t(read.table(paste0("data/", tmp_name, '_fold.txt')))
+fold_info <- t(read.table(paste0("../miRNASelection/data/", tmp_name, '_fold.txt')))
 colnames(fold_info) <- c("RNAfold", "Centriodfold")
 rownames(fold_info) <- c("miRNAs", "meet criterion", "mismatch+bugleOne", "bugleOne", "bugleTwo")
 knitr::kable(fold_info, escape = FALSE, align = "c") %>% 
   kable_styling("striped", full_width = TRUE)
 ```
 
-## {data-height=10}
+### Centroidfold structure {data-width=350}
 
-<p class="one"></p>
+```{r pressure2, echo=FALSE, fig.cap="Centroidfold", out.width = '33%'}
+svgPanZoom::svgPanZoom( read_file(paste0("../miRNASelection/data/",  gsub(":", "_", tmp_name), '_c.svg')))
+```
+
+## {data-height=10}
 
 Row
 -----------------------------------
@@ -150,7 +143,7 @@ Row
 
 <div style="height:100%;width:100%;overflow:auto">
 ```{r readstacks, class="scroll-100", results='asis'}
-htmltools::includeHTML(paste0("./data/", tmp_name, '_map.html'))
+htmltools::includeHTML(paste0("../miRNASelection/data/", tmp_name, '_map.html'))
 ```
 </div>
 
@@ -164,16 +157,16 @@ Row
 ### mature miRNA expression
 
 ```{r}
+tissue_info <- read.table("sample_info.txt", sep = "\t", stringsAsFactors = F, row.names = 1)
 tissue_name <- tissue_info[rownames(mature_df),]
 exp_df <- data.frame("miRNAs"=rep(c(paste0(info_vec[1], "-5p"), paste0(info_vec[1], "-3p")), each=nrow(mature_df)), "TPM" = c(mature_df[,1], mature_df[,2]), "Tissues"= rep(tissue_name, 2), stringsAsFactors = F)
 exp_df <- exp_df[exp_df[,3]!="-", ]
 exp_df[,1] <- factor(exp_df[,1], levels = unique(exp_df[,1]))
 
-hcboxplot(x = exp_df$TPM, var = exp_df$Tissues, var2 = exp_df$miRNAs, outliers = FALSE, 
-          color = c("#DE3025", "#257ADE")) %>%
-  hc_chart(type = "column") %>% 
-  hc_xAxis(title = list(text = "")) %>% 
-  hc_yAxis(title  = list(text = "TPM")) %>% 
+hcboxplot(x = exp_df$TPM, var = exp_df$Tissues, var2 = exp_df$miRNAs, outliers = FALSE) %>%
+  hc_chart(type = "column") %>%
+  hc_xAxis(title = list(text = "")) %>%
+  hc_yAxis(title  = list(text = "TPM")) %>%
   hc_exporting(enabled = TRUE, filename = "mature_miRNA_expression")
 ```
 
@@ -214,21 +207,21 @@ Row {.tabset}
 ### Network of miRNAs-target interactions {data-width=400}
 
 ```{r}
-tmp_path <- paste0(info_table[tmp_index_value, 5], ".mti")
-if(file.exists(tmp_path)){
+tmp_path <- paste0("../miRNASelection/data/", tmp_name, '.mti')
+if(file.exists(tmp_path)&file.info(tmp_path)[1,1]>0){
     inputRaw <- read.table(tmp_path, sep = "\t", header = F, stringsAsFactors = F)
-    cat(paste0(info_table[tmp_index_value, 5], ".mti"), "\n")
     if(nrow(inputRaw)>0){
-      gene_description <- read.table("gene_description.txt", row.names = 1, stringsAsFactors = F, sep = "\t")
-      
       inputRaw[,2] <- gsub("\\.\\d", "", inputRaw[,2])
-      inputRaw[,4] <- gene_description[inputRaw[,2], 1]
-      inputRaw <- unique(inputRaw[grepl(info_vec$ID, inputRaw[,1]), c(1:4,11)])
-      
+      if(file.exists("gene_description.txt")){
+        gene_description <- read.table("gene_description.txt", row.names = 1, stringsAsFactors = F, sep = "\t")
+        inputRaw[,4] <- gene_description[inputRaw[,2], 1]
+      }else{
+        inputRaw[,4] <- "-"
+      }
+      inputRaw[,1] <- gsub(tmp_name, info_vec$ID, inputRaw[,1])
+      inputRaw[,1] <- gsub("\\+", "", inputRaw[,1])
       colnames(inputRaw)[1:5] <- c("miRNA Acc.", "Target Acc.", "Expect", "Target description", "Inhibition")
       inputRe <- unique(inputRaw[,1:2])
-      
-      
       nodes <- data.frame(id = unique(c(inputRe[,1],inputRe[,2])))%>%
             mutate(node_color = ifelse(id %in% inputRe[,1],
                                    "#DE3025",
@@ -271,7 +264,7 @@ if(file.exists(tmp_path)){
 ### Information of Network {data-width=600}
 
 ```{r}
-if(file.exists(tmp_path)){
+if(file.exists(tmp_path)&file.info(tmp_path)[1,1]>0){
   table_options <- function() {
     list(dom = 'Bfrtip',
       pageLength = 8,
@@ -310,8 +303,8 @@ Row
 ### The expression level of different types of isomiR {data-width=500}
 
 ```{r}
-tmp_out <- paste0("data/", tmp_name, '.out')
-if(file.exists(tmp_out)){
+tmp_out <- paste0("../miRNASelection/data/", tmp_name, '.out')
+if(file.exists(tmp_out)&file.info(tmp_out)[1,1]>0){
   iso_list <- read.table(tmp_out, sep = "\t", stringsAsFactors = F)
   iso_list <- iso_list[iso_list[,10]!="-", ]
   iso_list[,2] <- factor(iso_list[,2], levels = c("5p", "3p"))
@@ -336,4 +329,3 @@ if(file.exists(tmp_out)){
     hc_exporting(enabled = TRUE, filename = "different_types_of_isomiR")
 }
 ```
-

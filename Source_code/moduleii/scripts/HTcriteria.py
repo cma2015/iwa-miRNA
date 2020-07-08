@@ -6,7 +6,7 @@ import time
 import random
 import subprocess
 import pandas as pd
-from tqdm import tqdm
+import multiprocessing
 
 def tag_id_abu(fa_file):
     '''Extract sequence and abundance from fasta file'''
@@ -40,7 +40,7 @@ def extract_map_read(read_map_file ,input_dict):
         sub_frame = sub_frame[['ID','start','end','strand','RPM','SNP']]
         sub_frame = sub_frame.sort_values(by=['start','end'],axis=0, ascending=True)
         separate_key_df[ikey] = sub_frame
-    return separate_key_df     
+    return separate_key_df
 
 def centroid_fold(input_dict):
     get_centroid_dict = {}
@@ -69,8 +69,6 @@ def rnafold_fold(input_dict):
         amfe = float(mfe)/len(input_dict[rna_site][2])*100
         rnafold_str[rna_site] = [rnafold_res[1], mfe, amfe]
     return(rnafold_str)
-
-
 
 def iso_type(ref_location,query_location):
     type_out = '-'
@@ -120,7 +118,7 @@ def sub_in_pre(pre_start, pre_end, mature_start, mature_end, pre_strand):
         return [mature_start-pre_start+1, mature_end-pre_start+1]
     else:
         return [pre_end-mature_end+1, pre_end-mature_start+1]
-    
+
 def bias_get(input_dict, iso_df):
     with open( '{}/{}'.format(out_path, "corr_pre-mirna_seq.txt"), 'w') as out_tmp:
         bias_str = {}
@@ -152,7 +150,7 @@ def bias_get(input_dict, iso_df):
                     mature_sub_df = sub_frame[mature_iso_index]
                     mature_iso_seq = [tagId_seq[i] for i in mature_sub_df['ID']]
                     mature_iso_rpm = sum([tagId_count[i] for i in mature_iso_seq])
-                    ## 
+                    ##
                     if len(mature_sub_df) > 0:
                         for index in mature_sub_df.index:
                             isomiR_site = [int(mature_sub_df.loc[index, 'start']), int(mature_sub_df.loc[index, 'end'])]
@@ -164,7 +162,7 @@ def bias_get(input_dict, iso_df):
                                 snp_info = mature_sub_df.loc[index, 'SNP'].split(':')
                                 tmp_type = iso_snp_type(mir_site, isomiR_site, snp_info[0])
                             df_index_list = [str(x) for x in list(mature_sub_df.loc[index, ])]
-                            out_iso.write('{}\t5p\t{}\t{}\t{}\n'.format(rna_site,tagId_seq[df_index_list[0]], '\t'.join(df_index_list), tmp_type))                    
+                            out_iso.write('{}\t5p\t{}\t{}\t{}\n'.format(rna_site,tagId_seq[df_index_list[0]], '\t'.join(df_index_list), tmp_type))
                     # star
                     star_iso_index = (abs(sub_frame['start'] - star_start) <=3) & \
                     (abs(sub_frame['end'] - star_end) <=3) & \
@@ -172,7 +170,7 @@ def bias_get(input_dict, iso_df):
                     star_sub_df = sub_frame[star_iso_index]
                     star_iso_seq = [tagId_seq[i] for i in sub_frame[star_iso_index]['ID']]
                     star_iso_rpm = sum([tagId_count[i] for i in star_iso_seq])
-                    ## 
+                    ##
                     if len(star_sub_df) > 0:
                         for index in star_sub_df.index:
                             isomiR_site = [int(star_sub_df.loc[index, 'start']), int(star_sub_df.loc[index, 'end'])]
@@ -184,8 +182,9 @@ def bias_get(input_dict, iso_df):
                                 snp_info = star_sub_df.loc[index, 'SNP'].split(':')
                                 tmp_type = iso_snp_type(mir_site, isomiR_site, snp_info[0])
                             df_index_list = [str(x) for x in list(star_sub_df.loc[index, ])]
-                            out_iso.write('{}\t3p\t{}\t{}\t{}\n'.format(rna_site,tagId_seq[df_index_list[0]], '\t'.join(df_index_list), tmp_type))                 
-                    for ii in all_sequence: 
+                            out_iso.write('{}\t3p\t{}\t{}\t{}\n'.format(rna_site,tagId_seq[df_index_list[0]],
+                            '\t'.join(df_index_list), tmp_type))
+                    for ii in all_sequence:
                         if ii in mature_iso_seq or ii in star_iso_seq:
                             out_tmp.write('{}\t{}\t{}\t{}\n'.format(rna_site, ii, 'complex', tagId_count[ii]))
                         else:
@@ -195,13 +194,13 @@ def bias_get(input_dict, iso_df):
                     (abs(sub_frame['end'] - mature_end) <=3) & \
                     (sub_frame['strand'] != pre_strand)
                     reverse_sequence = [tagId_seq[i] for i in sub_frame[mature_reverse]['ID']]
-                    reverse_mature = sum([tagId_count[i] for i in reverse_sequence]) 
+                    reverse_mature = sum([tagId_count[i] for i in reverse_sequence])
                     ## star reverse
                     mature_reverse = (abs(sub_frame['start'] - star_start) <=3) & \
                     (abs(sub_frame['end'] - star_end) <=3) & \
                     (sub_frame['strand'] != pre_strand)
                     reverse_sequence = [tagId_seq[i] for i in sub_frame[mature_reverse]['ID']]
-                    reverse_star = sum([tagId_count[i] for i in reverse_sequence]) 
+                    reverse_star = sum([tagId_count[i] for i in reverse_sequence])
                     ## calculate bias
                     arround_rpm = mature_iso_rpm + star_iso_rpm
                     strand_rpm = arround_rpm + reverse_mature + reverse_star
@@ -215,14 +214,14 @@ def bias_get(input_dict, iso_df):
                         strand_bias = round(arround_rpm/strand_rpm, 4)
                     map_read_count = len(mature_iso_seq) + len(star_iso_seq)
                     if abundance_bias == 0 and strand_bias == 0:
-                        bias_str[rna_site] = [round(arround_rpm,2), map_read_count, len(all_sequence),'-','-']
+                        bias_str[rna_site] = [round(arround_rpm,2), map_read_count, len(all_sequence),0,0]
                     else:
-                        bias_str[rna_site] = [round(arround_rpm,2), map_read_count, len(all_sequence), 
+                        bias_str[rna_site] = [round(arround_rpm,2), map_read_count, len(all_sequence),
                                               abundance_bias, strand_bias]
             else:
-                bias_str[rna_site] = ['-']*5
+                bias_str[rna_site] = [0]*5
         return(bias_str)
-    
+
 
 def isParenthese(ch):
     if ch=='(' or ch==')':
@@ -482,11 +481,11 @@ def structure_plot(info_list):
     rnafoldstr = '{}/{}_r'.format(out_data, pre_file)
     centroidstr = '{}/{}_c'.format(out_data, pre_file)
     with open(rnafoldstr+'.str', 'w') as str_f:
-        str_f.write('>{}_r\n{}\n{}'.format(pre_file, 
-                                           info_list[2], 
+        str_f.write('>{}_r\n{}\n{}'.format(pre_file,
+                                           info_list[2],
                                            rnafold_dict[info_list[1]][0]))
     with open(centroidstr+'.str', 'w') as str_f:
-        str_f.write('>{}_c\n{}\n{}'.format(pre_file, 
+        str_f.write('>{}_c\n{}\n{}'.format(pre_file,
                                            info_list[2],
                                            centroid_dict[info_list[1]][0]))
     mature_se = getMiRNAPosition(mat_star(info_list)[0],info_list[2])
@@ -505,7 +504,7 @@ def structure_plot(info_list):
         sign2_col = ['0.8', '0', '0']
     else:
         sign1_col = ['0', '0.8', '0']
-        sign2_col = ['0', '0.8', '0']       
+        sign2_col = ['0', '0.8', '0']
     color_list = [['0.8', '0.8', '0.8'], sign1_col, ['1', '0.6', '0'], sign2_col, ['0.8', '0.8', '0.8']]
     color_tab = []
     for i in range(len(site_loc)-1):
@@ -536,7 +535,7 @@ def seq_table(seq_info, mature_se, star_se):
     else:
         seq_td = '<td>{}<span style="background-color: #257ADE">{}</span>{}<span style="background-color: #DE3025">{}</span>{}</td>'.format(
         tmp_seq[0:star_se[0]], tmp_seq[star_se[0]:star_se[1]],tmp_seq[star_se[1]:mature_se[0]],
-        tmp_seq[mature_se[0]:mature_se[1]],tmp_seq[mature_se[1]:])        
+        tmp_seq[mature_se[0]:mature_se[1]],tmp_seq[mature_se[1]:])
     out_raw += seq_td
     for kk in seq_info[1:]:
         out_raw += '<td >{}</td>'.format(kk)
@@ -558,7 +557,7 @@ def miR_iso_add(info_list):
         iso_index = (iso_df['strand'] == pre_strand)
         iso_df = iso_df[iso_index]
         pre_loc = info_list[1].split(':')
-        ## 
+        ##
         mature_se = getMiRNAPosition(mat_star(info_list)[0],info_list[2])
         star_se = getMiRNAPosition(mat_star(info_list)[1],info_list[2])
         ##
@@ -594,13 +593,9 @@ def miR_iso_add(info_list):
                 text_left = int(pre_loc[2])-iso_df.iloc[ii, 2]
                 text_right = iso_df.iloc[ii, 1]-int(pre_loc[1])
             only_seq = "."*text_left + text_seq + "."*text_right
-            seq_map.write(seq_table([only_seq, info_type, 
+            seq_map.write(seq_table([only_seq, info_type,
                                      info_tpm], mature_se, star_se)  + '\n')
         seq_map.write('</table>')
-
-def create_ps_map(pre_info):
-    structure_plot(pre_info)
-    miR_iso_add(pre_info)
 
 
 def randomString(length):
@@ -634,9 +629,12 @@ os.makedirs(out_path, exist_ok=True)
 out_data = out_path + '/data'
 os.makedirs(out_data, exist_ok=True)
 
+print(out_path)
+
 global MIN_SPACE
 MIN_SPACE = 5
 tag_id_abu( options.fasta )
+
 parse_dict = {}
 
 with open( options.mergefile ) as file_input:
@@ -646,17 +644,40 @@ with open( options.mergefile ) as file_input:
 
 rnafold_dict = rnafold_fold(parse_dict)
 centroid_dict = centroid_fold(parse_dict)
+print(options.txtfile)
 iso_dict = extract_map_read( options.txtfile, parse_dict)
+
+print(len(parse_dict))
 bias_dict = bias_get(parse_dict, iso_dict)
+
+print(len(parse_dict), "======\n")
+
+def create_ps_map(tmp_info):
+    structure_plot(tmp_info)
+    miR_iso_add(tmp_info)
+
+print('Parent process {0} is Running'.format(os.getpid()))
+
+p = multiprocessing.Pool(processes=2)
+for poolsite in parse_dict:
+    p.apply_async(create_ps_map, args=(parse_dict[poolsite],))
+print('process start')
+p.close()
+p.join()
+
+print('All processes done!')
+
+# pool = multiprocessing.Pool(processes=2)
+# pool.map(create_ps_map, list(parse_dict.keys()))
 
 with open( '{}/{}'.format(out_path, "out_pool_merge.txt"), 'w') as out_file:
     inline_len = len(parse_dict[list(parse_dict.keys())[1]])
     if inline_len >12:
-        tmp_name = ['Pre-miRNAs', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq', 'Extended_stem_loop_len', 
-                    'Stem_loop_loc', 'Stem_loop_seq', 'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm', 
-                    ['-']*(inline_len-12), 'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE', 
-                    'Stem_loop_AMFE', 'The_total_abundance', 'The number of sequences in miRNA/miRNA* and 3nt variant region',
-                    'The number of sequences in pre-miRNAs', 'Abundance_bias', 'Strand_bias',
+        tmp_name = ['Precursors', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq', 'Extended_stem_loop_len',
+                    'Stem_loop_loc', 'Stem_loop_seq', 'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm',
+                    ['-']*(inline_len-12), 'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
+                    'Stem_loop_AMFE', 'The_total_abundance', 'The_number_of_sequences_in_miRNA/miRNA*_and_3nt_variant_region',
+                    'The_number_of_sequences_in_pre-miRNAs', 'Abundance_bias', 'Strand_bias',
                     'RNAfold', 'Centroidfold']
         tmp_tname = []
         for i in tmp_name:
@@ -667,74 +688,76 @@ with open( '{}/{}'.format(out_path, "out_pool_merge.txt"), 'w') as out_file:
                 tmp_tname.append(i)
         out_file.write('\t'.join(tmp_tname) + '\n')
     else:
-        out_file.write('\t'.join(['Pre-miRNAs', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq', 
-                                  'Extended_stem_loop_len', 'Stem_loop_loc', 'Stem_loop_seq', 
-                                  'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm', 
-                                  'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE', 
-                                  'Stem_loop_AMFE', 'The_total_abundance', 'The number of sequences in miRNA/miRNA* and 3nt variant region',
-                                  'The number of sequences in pre-miRNAs', 'Abundance_bias', 'Strand_bias',
+        out_file.write('\t'.join(['Pre-miRNAs', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq',
+                                  'Extended_stem_loop_len', 'Stem_loop_loc', 'Stem_loop_seq',
+                                  'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm',
+                                  'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
+                                  'Stem_loop_AMFE', 'The_total_abundance', 'The_number_of_sequences_in_miRNA/miRNA*_and_3nt_variant_region',
+                                  'The_number_of_sequences_in_pre-miRNAs', 'Abundance_bias', 'Strand_bias',
                                   'RNAfold', 'Centroidfold']) + '\n')
     ## write to text
     for pre_site in parse_dict:
         basic_info = parse_dict[pre_site]
-        create_ps_map(basic_info)
         with open('{0}/{1}_fold.txt'.format(out_data, basic_info[1]), 'w') as fold_summary:
             ## expression value
             if basic_info[5] in tagId_count:
                 rmpl = tagId_count[basic_info[5]]
             else:
-                rmpl = '-'
+                rmpl = 0
             if basic_info[8] in tagId_count:
                 rmpf = tagId_count[basic_info[8]]
             else:
-                rmpf = '-'
+                rmpf = 0
             ## stem_loop
             loc_f = basic_info[4].split(':')
             loc_t = basic_info[7].split(':')
-            pos_f = getMiRNAPosition(basic_info[5], basic_info[2])
-            pos_t = getMiRNAPosition(basic_info[8], basic_info[2])
-            loc_list = [loc_f[1], loc_f[2], loc_t[1], loc_t[2]]
-            loc_list = [int(i) for i in loc_list]
-            stem_loop_loc = ':'.join([loc_f[0],str(min(loc_list)),str(max(loc_list)),loc_f[3]])
-            if pos_f[0] > pos_t[1]:
-                print(basic_info[1])
-            else:
-                stem_loop_seq = basic_info[2][pos_f[0]:pos_t[1]]
-                stem_loop_seq = stem_loop_seq.replace('T', 'U')
-                ## MFE and AMFE
-                other, stem_loop_structure = subprocess.getstatusoutput("echo " + stem_loop_seq + "| RNAfold --noPS")
-                rnafold_tmp = re.split("\n|\s\(", stem_loop_structure)
-                rmfe = re.sub(r'\)|\s', '', rnafold_tmp[2]) 
-                ramfe = float(rmfe)/len(stem_loop_seq)*100
-                ramfe = round(ramfe, 2)
-                ## structure
-                rnafold_res_o = struct_filter([basic_info[1], basic_info[2], rnafold_dict[pre_site][0]], basic_info[5])
-                rnafold_res_t = struct_filter([basic_info[1], basic_info[2], rnafold_dict[pre_site][0]], basic_info[8])
-                if rnafold_res_o[0] == 'False' and rnafold_res_t[0] == 'False':
-                    rnafold_out = 'False'
+            if basic_info[5] in basic_info[2] and basic_info[8] in basic_info[2]:
+                pos_f = getMiRNAPosition(basic_info[5], basic_info[2])
+                pos_t = getMiRNAPosition(basic_info[8], basic_info[2])
+                loc_list = [loc_f[1], loc_f[2], loc_t[1], loc_t[2]]
+                loc_list = [int(i) for i in loc_list]
+                stem_loop_loc = ':'.join([loc_f[0],str(min(loc_list)),str(max(loc_list)),loc_f[3]])
+                if pos_f[0] > pos_t[1]:
+                    pass
+                    # print(basic_info[1])
                 else:
-                    rnafold_out = 'True'
-                fold_summary.write('{}\t{}\n'.format(basic_info[5], '\t'.join(rnafold_res_o)))
-                centroid_res_o = struct_filter([basic_info[1], basic_info[2], centroid_dict[pre_site][0]], basic_info[5])
-                centroid_res_t = struct_filter([basic_info[1], basic_info[2], centroid_dict[pre_site][0]], basic_info[8])
-                if centroid_res_o[0] == 'False' and centroid_res_t[0] == 'False':
-                    centroid_out = 'False'
-                else:
-                    centroid_out = 'True'
-                fold_summary.write('{}\t{}\n'.format(basic_info[5], '\t'.join(centroid_res_o)))
-                ## output list
-                basic_info[2] = basic_info[2].replace('T', 'U')
-                basic_info[5] = basic_info[5].replace('T', 'U')
-                basic_info[8] = basic_info[8].replace('T', 'U')
-                basic_info[3] = len(basic_info[2])
-                infor_list = [basic_info[0:4], stem_loop_loc, stem_loop_seq, basic_info[4:], rmpl, rmpf,
-                                 len(stem_loop_seq), rmfe, ramfe, bias_dict[pre_site], rnafold_out, centroid_out]
-                infor_out = []
-                for i in infor_list:
-                    if type(i) == list:
-                        for j in i:
-                            infor_out.append(str(j))
+                    stem_loop_seq = basic_info[2][pos_f[0]:pos_t[1]]
+                    stem_loop_seq = stem_loop_seq.replace('T', 'U')
+                    ## MFE and AMFE
+                    # print(basic_info, stem_loop_seq, "\n")
+                    other, stem_loop_structure = subprocess.getstatusoutput("echo " + stem_loop_seq + "| RNAfold --noPS")
+                    rnafold_tmp = re.split("\n|\s\(", stem_loop_structure)
+                    rmfe = re.sub(r'\)|\s', '', rnafold_tmp[2])
+                    ramfe = float(rmfe)/len(stem_loop_seq)*100
+                    ramfe = round(ramfe, 2)
+                    ## structure
+                    rnafold_res_o = struct_filter([basic_info[1], basic_info[2], rnafold_dict[pre_site][0]], basic_info[5])
+                    rnafold_res_t = struct_filter([basic_info[1], basic_info[2], rnafold_dict[pre_site][0]], basic_info[8])
+                    if rnafold_res_o[0] == 'False' and rnafold_res_t[0] == 'False':
+                        rnafold_out = 'False'
                     else:
-                        infor_out.append(str(i))
-                ## write to table
-                out_file.write('\t'.join(infor_out) +'\n')
+                        rnafold_out = 'True'
+                    fold_summary.write('{}\t{}\n'.format(basic_info[5], '\t'.join(rnafold_res_o)))
+                    centroid_res_o = struct_filter([basic_info[1], basic_info[2], centroid_dict[pre_site][0]], basic_info[5])
+                    centroid_res_t = struct_filter([basic_info[1], basic_info[2], centroid_dict[pre_site][0]], basic_info[8])
+                    if centroid_res_o[0] == 'False' and centroid_res_t[0] == 'False':
+                        centroid_out = 'False'
+                    else:
+                        centroid_out = 'True'
+                    fold_summary.write('{}\t{}\n'.format(basic_info[5], '\t'.join(centroid_res_o)))
+                    ## output list
+                    basic_info[2] = basic_info[2].replace('T', 'U')
+                    basic_info[5] = basic_info[5].replace('T', 'U')
+                    basic_info[8] = basic_info[8].replace('T', 'U')
+                    basic_info[3] = len(basic_info[2])
+                    infor_list = [basic_info[0:4], stem_loop_loc, stem_loop_seq, basic_info[4:], rmpl, rmpf,
+                                    len(stem_loop_seq), rmfe, ramfe, bias_dict[pre_site], rnafold_out, centroid_out]
+                    infor_out = []
+                    for i in infor_list:
+                        if type(i) == list:
+                            for j in i:
+                                infor_out.append(str(j))
+                        else:
+                            infor_out.append(str(i))
+                    ## write to table
+                    out_file.write('\t'.join(infor_out) +'\n')

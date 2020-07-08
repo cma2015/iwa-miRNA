@@ -4,16 +4,21 @@
 
 rule sRNA_result:
     input:
-        expand("{fileout}/2rpmData/{sample}.txt", fileout=config["outpath"], sample=config["samples"]),
-        expand("{fileout}/2countData/{sample}.txt", fileout=config["outpath"], sample=config["samples"])
-        
-        
+        expand("{fileout}/3readlength/{sample}_all.txt", fileout=config["outpath"], sample=config["samples"]),
+        expand("{fileout}/4rpmData/{sample}.txt", fileout=config["outpath"], sample=config["samples"]),
+        expand("{fileout}/4countData/{sample}.txt", fileout=config["outpath"], sample=config["samples"])
 
 rule read_map:
-    input: "{fileout}/0collapseData/{sample}.fasta"
+    input:
+        fq =  "{fileout}/00rawdata/{sample}.fastq",
+        cfq = "{fileout}/1cleandata/{sample}_clean.fastq",
+        clfa = "{fileout}/1cleandata/{sample}_clean.fasta",
+        cufa = "{fileout}/2collapsedata/{sample}.fasta"
     output:
-        gm = "{fileout}/1mapData/{sample}_genome.fasta",
-        clm = "{fileout}/1mapData/{sample}_rmtrsno.fasta"
+        gm = "{fileout}/3mapData/{sample}_genome.fasta",
+        clm = "{fileout}/3mapData/{sample}_rmtrsno.fasta",
+        alltxt = "{fileout}/3readlength/{sample}_all.txt",
+        unique = "{fileout}/3readlength/{sample}_unique.txt"
     params:
         multimap=expand(config["multimap"]),
         speciespath=expand(config["speciespath"]),
@@ -22,20 +27,28 @@ rule read_map:
     shell:
         """
         set -x
-        bowtie -p 5 -v 1 -f -t -m {params.multimap} -S --al {output.gm} {params.speciespath}/Genome/Genome {input} 1>/dev/null 2>&1
+        bowtie -p 5 -v 1 -f -t -m {params.multimap} -S --al {output.gm} {params.speciespath}/Genome/Genome {input.cufa} 1>/dev/null 2>&1
         bowtie -p 5 -v 0 -f -t -S --norc --un {output.clm} {params.speciespath}/trsnsnoRNAs/trsnsnoRNAs {output.gm} 1>/dev/null 2>&1
-        clean=`awk '$1~/>/{{split($1,a,"-");b+=a[2]}}END{{print b}}' {input}`
+        readnum=$((`cat {input.fq} | wc -l`/4))
+        clean=$((`cat {input.cfq} | wc -l`/4))
+        ratioval=`awk 'BEGIN{{printf ('$clean'/'$readnum')*100}}'`
+        cleanlen=`grep ">" {input.clfa} | wc -l`
         gg=`awk '$1~/>/{{split($1,a,"-");b+=a[2]}}END{{print b}}' {output.gm}`
         rmtr=`awk '$1~/>/{{split($1,a,"-");b+=a[2]}}END{{print b}}' {output.clm}`
-        if [ $gg lt {params.readnum} ];then
-            rm {wildcards.fileout}/1mapData/{wildcards.sample}_rmtrsno.fasta
+        rmtrunique=`grep ">" {output.clm} | wc -l`
+        abundseq=`sed -n '2p' {output.clm}`
+        abundnum=`sed -n '1p' {output.clm} | cut -d"-" -f 2`
+        if [ $gg -lt {params.readnum} ];then
+            rm {wildcards.fileout}/3mapData/{wildcards.sample}_rmtrsno.fasta
         fi
-        echo -e "{wildcards.sample}\t${{clean}}\t${{gg}}\t${{rmtr}}" >>{wildcards.fileout}/00Table_Summary_of_sRNA-seq.txt
+        echo -e "{wildcards.sample}\t${{readnum}}\t${{clean}}\t${{ratioval}}\t${{cleanlen}}\t${{gg}}\t${{rmtr}}\t${{rmtrunique}}\t${{abundseq}}\t${{abundnum}}" >>{wildcards.fileout}/00Table_Summary_of_sRNA-seq_data.txt
+        awk -v sample={wildcards.sample} '$1!~/>/{{a[length($1)]++}}END{{OFS="\t";for(i in a)print "All",sample,i,a[i]}}' {input.clfa} >{output.alltxt}
+        awk -v sample={wildcards.sample} '$1!~/>/{{a[length($1)]++}}END{{OFS="\t";for(i in a)print "Unique",sample,i,a[i]}}' {input.cufa} >{output.unique}
         """
 
 rule read_count:
-    input: "{fileout}/1mapData/{sample}_rmtrsno.fasta"
-    output: "{fileout}/2countData/{sample}.txt"
+    input: "{fileout}/3mapData/{sample}_rmtrsno.fasta"
+    output: "{fileout}/4countData/{sample}.txt"
     threads: 1
     shell:
         """
@@ -44,8 +57,8 @@ rule read_count:
         """
 
 rule read_rpm:
-    input: "{fileout}/1mapData/{sample}_rmtrsno.fasta"
-    output: "{fileout}/2rpmData/{sample}.txt"
+    input: "{fileout}/3mapData/{sample}_rmtrsno.fasta"
+    output: "{fileout}/4rpmData/{sample}.txt"
     threads: 1
     shell:
         """

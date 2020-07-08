@@ -1,14 +1,13 @@
 ---
-title: "NCBI SRA data"
+title: "Raw sequencing data preprocessing"
 date: '(`r format(Sys.time(), format = "%Y-%m-%d")`)'
 output:
   flexdashboard::flex_dashboard:
-    navbar:
-      - { title: "About", href: "http://bioinfo.nwafu.edu.cn:4005/" }
     vertical_layout: scroll
     social: menu
     source_code: embed
     theme: cosmo
+    self_contained: no
 ---
 
 ```{r setup, include = FALSE}
@@ -36,6 +35,15 @@ $(function() {
 ```
 
 ```{css, echo=FALSE}
+.limitrow {
+  width: 99.4% !important;
+  flex: none !important;
+}
+
+.limitrow .chart-stage {
+  overflow-x:scroll;
+}
+
 #row-4 .chart-stage,
 #row-5 .chart-stage {
 width:1475px !important;
@@ -43,22 +51,22 @@ overflow-x:scroll !important;
 }
 ```
 
-Length-limited read  {data-orientation=rows data-icon="fa-table"}
+Summary  {data-orientation=rows data-icon="fa-table"}
 =====================================
 
 ### Fetch large-scale small RNA-seq data from NCBI and filter the raw data.
-Besides analyzing individual data, users can collect public data from NCBI (https://www.ncbi.nlm.nih.gov/). Samples with low data quality will be excluded. The remaining samples were analyzed and indicated in the following tables and figures. For more detailed processing procedure, please visit *Tutorial* section.
+Users can collect public data from NCBI (https://www.ncbi.nlm.nih.gov/). Samples with low data quality will be excluded. The remaining samples were analyzed and indicated in the following tables and figures.
 
-### Results
 Row {data-width=850}
 --------------------------------------
 
-### Table1 Summary table contains sample information
+### Table1 Summary table contains sample information {.limitrow}
 ```{r}
 inputMat <- read.table("00Table_Summary_of_sRNA-seq_data.txt", stringsAsFactors = F, sep = "\t", row.names = 1)
+inputMat <- inputMat[order(rownames(inputMat)), ]
 adapter <- read.table("Adapter.txt", row.names = 1)
 inputMat <- cbind(adapter[rownames(inputMat),], inputMat)
-colnames(inputMat) <- c("Adapter", 'Phred','Barcode',  "Raw reads", "Clean reads", "Ratio(%)", "Length limited","Unique reads","Most abundance read", "Most abundance read count")
+colnames(inputMat) <- c("Adapter", 'Phred','Barcode',  "Raw reads", "Clean reads", "Ratio(%)", "Aligned", "Remove t/r/sn/snoRNA", "Length limited","Unique reads","Most abundance read", "Most abundance read count")
 
 datatable(data = inputMat, extensions = 'Buttons', class="compact cell-border", options = list( dom = "Blfrtip", buttons = list("copy",list(extend = "collection", buttons = c("csv", "excel", "pdf"), text = "Download") ),lengthMenu = list( c(10, 20, -1), c(10, 20, "All") ), pageLength = 10, autoWidth = TRUE), rownames = TRUE)%>%
 formatStyle(TRUE, `text-align` = 'right')

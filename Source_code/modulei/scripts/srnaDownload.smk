@@ -22,18 +22,17 @@ rule download_sra:
             srreach=${{srrnam//+/ }}
             for eachsam in $srreach
             do
-                downurl=`curl https://www.ebi.ac.uk/ena/data/warehouse/filereport\?accession\=${{eachsam}}\&result\=read_run\&fields\=run_accession,fastq_ftp,fastq_md5,fastq_bytes | grep -oP "ftp.+?gz"`
-                axel -n 10 $downurl
-                gunzip $eachsam.fastq.gz
-                cat *.fastq >>{output}
-                rm *.fastq
+                {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch ${{eachsam}} -O ./
+                {params.ipath}/scripts/sratoolkit.2.9.1/bin/fastq-dump --split-3 ./${{eachsam}}.sra
+                cat ${{eachsam}}.fastq >>{wildcards.fileout}/{wildcards.sample}_merge.fastq
+                rm ./${{eachsam}}.sra ./${{eachsam}}.fastq
             done
-            gzip -k {output}
+            mv {wildcards.fileout}/{wildcards.sample}_merge.fastq {output}
         else
-            downurl=`curl https://www.ebi.ac.uk/ena/data/warehouse/filereport\?accession\=${{srrnam}}\&result\=read_run\&fields\=run_accession,fastq_ftp,fastq_md5,fastq_bytes | grep -oP "ftp.+?gz"`
-            axel -n 10 $downurl
-            gunzip $srrnam.fastq.gz
-            mv $srrnam.fastq {output}
+            {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch ${{srrnam}} -O ./
+            {params.ipath}/scripts/sratoolkit.2.9.1/bin/fastq-dump --split-3 ./${{srrnam}}.sra
+            rm ./${{srrnam}}.sra
+            mv $srrnam.fastq {output} 
         fi
         gzip -k {output}
         """
@@ -47,3 +46,5 @@ rule download_sra:
 #     fastq-dump --split-3 -O {params.ipath} {params.ipath}/$srrnam.sra
 #     cat {params.ipath}/$srrnam.fastq >>{output}
 # fi
+
+# downurl=`curl https://www.ebi.ac.uk/ena/data/warehouse/filereport\?accession\=${{eachsam}}\&result\=read_run\&fields\=run_accession,fastq_ftp,fastq_md5,fastq_bytes | grep -oP "ftp.+?gz"`

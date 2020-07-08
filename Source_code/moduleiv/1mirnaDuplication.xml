@@ -2,7 +2,7 @@
     <!-- <description> extracts the homologous miRNAs genes</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        bash ${__tool_directory__}/scripts/mirnaDuplication.sh 
+        bash ${__tool_directory__}/scripts/mirnaDuplication.sh
             --curpath ${__tool_directory__}
             --pcgfasta $pcgfasta
             --pcggff $pcggff
@@ -14,17 +14,17 @@
     ]]></command>
 
     <inputs>
-        <param name="pcgfasta" type="data" format="fasta" label="Inpput the protein sequences of protein-coding genes"/>
-        <param name="pcggff" type="data" format="gff3" label="Inpput the GFF3 annotation of protein-coding genes"/>
-        <param name="mirAnno" format="tsv" type="data" label="Input miRNA annotation"
-            help="Note: The annotation file can be obtained from miRNACuration, miRNASelection, or miRNARetrieval tool."/>
+        <param name="pcgfasta" type="data" format="fasta" label="Protein sequences of protein-coding genes"/>
+        <param name="pcggff" type="data" format="gff3" label="The GFF3 annotation of protein-coding genes"/>
+        <param name="mirAnno" format="tabular" type="data" label="miRNA annotation"
+            help="Note: The annotation file can be obtained from miRNASelection or miRNATranslate tool."/>
     </inputs>
 
-    <outputs>  
-        <data name="output1" format="tsv" label="Output | miRNA duplication events"/>
-        <data name="output2" format="pdf" label="Output | The plot of miRNA duplication events"/>
-        <data name="output3" format="tsv" label="Output | miRNA duplication in syntenic blocks"/>
-    </outputs>    
+    <outputs>
+        <data name="output1" format="tabular" label="${tool.name} | Duplication events of miRNAs"/>
+        <data name="output2" format="pdf" label="${tool.name} | Plot of miRNA duplication events"/>
+        <data name="output3" format="tabular" label="${tool.name} | miRNAs in syntenic blocks"/>
+    </outputs>
 
     <help><![CDATA[
 
@@ -32,22 +32,25 @@
 
 **What it does**
 
-miRNA duplication for expansions of miRNA family is one of the modes of their evolution. 
-This function can be used to identify miRNA duplication events by means of Whole Genome Duplication 
-and others types of duplication.
+MiRNA duplication for expansions of miRNA family is one of the modes of their evolution.
+This function aims at identify miRNA duplication events by means of whole genome duplication (WGD)
+and others types of duplications.
 
 .. class:: infomark
 
 **Inputs**
 
-- **The sequences and coordinates of protein-coding genes**
-- **miRNA annotation file from miRNAnnotation or miRNACuration**
+- The sequences and coordinates of protein-coding genes
+- miRNA annotation file from miRNASelection or miRNATranslate
 
 .. class:: infomark
 
 **Output**
 
 The duplication events of miRNAs and miRNA pairs in syntenic blocks.
+
+Note: The different types of gene duplications contain whole genome /segmental (i.e. collinear genes in collinear blocks), tandem (consecutive repeat),
+proximal (in nearby chromosomal region but not adjacent), and dispersed (other modes than segmental, tandem and proximal) duplications.
 
 ]]></help>
 

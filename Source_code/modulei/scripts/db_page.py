@@ -1,6 +1,7 @@
 import re
 import os
 import subprocess
+import multiprocessing
 
 from optparse import OptionParser
 parser = OptionParser()
@@ -10,13 +11,13 @@ parser.add_option('-v','--version', action="store_false", dest="verbose", defaul
 
 outpath = options.outputpath
 
-def centroid_fold(input_dict):
+def centroid_fold(tmp_dict):
     ## Centroidfold structure
     global centroid_str
     centroid_str = {}
     with open("{}/tmp.fasta".format(outpath), "w") as fas_file:
-        for rna_site in input_dict:
-            fas_file.write('>%s\n%s\n' % (rna_site, input_dict[rna_site][2]))
+        for rna_site in tmp_dict:
+            fas_file.write('>%s\n%s\n' % (rna_site, tmp_dict[rna_site][2]))
     fas_str = 'centroid_fold -e CONTRAfold -g 4 {}/tmp.fasta > {}/tmp.structure'.format(outpath, outpath)
     other, res = subprocess.getstatusoutput(fas_str)
     with open("{}/tmp.structure".format(outpath), "r") as str_file:
@@ -308,69 +309,70 @@ def mat_star(pre_info):
     return([mat_seq, star_seq])
 
 
-def create_report(input_dict):
-    for dict_key in input_dict:
-        info_list = input_dict[dict_key]
-        pre_name = re.sub(':','_',info_list[1])
-        rnafoldstr = '{}/png/{}_r'.format(outpath, pre_name)
-        centroidstr = '{}/png/{}_c'.format(outpath, pre_name)
-        a,process_res = subprocess.getstatusoutput('echo {}| RNAfold --noPS '.format(info_list[2]))
-        rnafold_res = re.split("\n|\s\(", process_res)   
-        # print(rnafold_res[1]) 
-        with open(rnafoldstr+'.str', 'w') as str_f:
-            str_f.write('>{}_r\n{}\n{}'.format(pre_name, 
-                                            info_list[2], 
-                                            rnafold_res[1]))
-        with open(centroidstr+'.str', 'w') as str_f:
-            str_f.write('>{}_c\n{}\n{}'.format(pre_name, 
-                                            info_list[2],
-                                            centroid_str[dict_key]))
-        mature_se = getMiRNAPosition(mat_star(info_list)[0],info_list[2])
-        star_se = getMiRNAPosition(mat_star(info_list)[1],info_list[2])
-        site_loc = sorted([0, mature_se[0], mature_se[1], star_se[0],
-                    star_se[1], len(info_list[2])])
-        if info_list[10] == "5p":
-            sign1_name = "Mature"
-            sign2_name = "Star"
-            sign1_col = ['0.8', '0', '0']
-            sign2_col = ['0', '0.8', '0']
-        elif info_list[10] == "3p":
-            sign1_name = "Star"
-            sign2_name = "Mature"
-            sign1_col = ['0', '0.8', '0']
-            sign2_col = ['0.8', '0', '0']
-        else:
-            sign1_col = ['0', '0.8', '0']
-            sign2_col = ['0', '0.8', '0']       
-        color_list = [['0.8', '0.8', '0.8'], sign1_col, ['1', '0.6', '0'], sign2_col, ['0.8', '0.8', '0.8']]
-        color_tab = []
-        for i in range(len(site_loc)-1):
-            for j in range(len(info_list[2])):
-                if site_loc[i] <= j < site_loc[i+1]:
-                    color_tab.append(str(j+1))
-                    color_tab.extend(color_list[i])
-                    color_tab.append('cfmark')
-        extraMacro = "/cfmark {setrgbcolor newpath 1 sub coor exch get aload pop fsize 2 div 0 360 arc fill} bind def"
-        os.system("RNAplot --pre \" {} {}\" < {}.str".format(extraMacro, " ".join(color_tab), rnafoldstr))
-        os.system("RNAplot --pre \" {} {}\" < {}.str".format(extraMacro, " ".join(color_tab), centroidstr))
-        os.system("rm {}.str {}.str".format(rnafoldstr, centroidstr))
-        os.system("mv {0}_r_ss.ps {1}.ps &&mv {0}_c_ss.ps {2}.ps".format(
-            pre_name, rnafoldstr, centroidstr))
-        os.system('convert -trim -quality 300  -density 300 ' + rnafoldstr + '.ps ' + rnafoldstr + '.png')
-        os.system('convert -trim -quality 300  -density 300 ' + centroidstr + '.ps ' + centroidstr + '.png')
-        os.system("rm {0}.ps".format(rnafoldstr))
-        os.system("rm {0}.ps".format(centroidstr))
+def create_report(dict_key):
+    info_list = input_dict[dict_key]
+    pre_name = re.sub(':','_',info_list[1])
+    rnafoldstr = '{}/png/{}_r'.format(outpath, pre_name)
+    centroidstr = '{}/png/{}_c'.format(outpath, pre_name)
+    a,process_res = subprocess.getstatusoutput('echo {}| RNAfold --noPS '.format(info_list[2]))
+    rnafold_res = re.split("\n|\s\(", process_res)
+    # print(rnafold_res[1])
+    with open(rnafoldstr+'.str', 'w') as str_f:
+        str_f.write('>{}_r\n{}\n{}'.format(pre_name,
+                                        info_list[2],
+                                        rnafold_res[1]))
+    with open(centroidstr+'.str', 'w') as str_f:
+        str_f.write('>{}_c\n{}\n{}'.format(pre_name,
+                                        info_list[2],
+                                        centroid_str[dict_key]))
+    mature_se = getMiRNAPosition(mat_star(info_list)[0],info_list[2])
+    star_se = getMiRNAPosition(mat_star(info_list)[1],info_list[2])
+    site_loc = sorted([0, mature_se[0], mature_se[1], star_se[0],
+                star_se[1], len(info_list[2])])
+    if info_list[10] == "5p":
+        sign1_name = "Mature"
+        sign2_name = "Star"
+        sign1_col = ['0.8', '0', '0']
+        sign2_col = ['0', '0.8', '0']
+    elif info_list[10] == "3p":
+        sign1_name = "Star"
+        sign2_name = "Mature"
+        sign1_col = ['0', '0.8', '0']
+        sign2_col = ['0.8', '0', '0']
+    else:
+        sign1_col = ['0', '0.8', '0']
+        sign2_col = ['0', '0.8', '0']
+    color_list = [['0.8', '0.8', '0.8'], sign1_col, ['1', '0.6', '0'], sign2_col, ['0.8', '0.8', '0.8']]
+    color_tab = []
+    for i in range(len(site_loc)-1):
+        for j in range(len(info_list[2])):
+            if site_loc[i] <= j < site_loc[i+1]:
+                color_tab.append(str(j+1))
+                color_tab.extend(color_list[i])
+                color_tab.append('cfmark')
+    extraMacro = "/cfmark {setrgbcolor newpath 1 sub coor exch get aload pop fsize 2 div 0 360 arc fill} bind def"
+    os.system("RNAplot --pre \" {} {}\" < {}.str".format(extraMacro, " ".join(color_tab), rnafoldstr))
+    os.system("RNAplot --pre \" {} {}\" < {}.str".format(extraMacro, " ".join(color_tab), centroidstr))
+    os.system("rm {}.str {}.str".format(rnafoldstr, centroidstr))
+    os.system("mv {0}_r_ss.ps {1}.ps &&mv {0}_c_ss.ps {2}.ps".format(
+        pre_name, rnafoldstr, centroidstr))
+    os.system('convert -trim -quality 300  -density 300 ' + rnafoldstr + '.ps ' + rnafoldstr + '.png')
+    os.system('convert -trim -quality 300  -density 300 ' + centroidstr + '.ps ' + centroidstr + '.png')
+    os.system("rm {0}.ps".format(rnafoldstr))
+    os.system("rm {0}.ps".format(centroidstr))
 
-        # os.system("{1}gmt psconvert -Tf {0}.ps && {1}pdf2svg {0}.pdf {0}.svg".format(rnafoldstr, '~/sRNAbox/miniconda3/bin/'))
-        # os.system("{1}gmt psconvert -Tf {0}.ps && {1}pdf2svg {0}.pdf {0}.svg".format(centroidstr, '~/sRNAbox/miniconda3/bin/'))
-        # os.system("rm {0}.ps {0}.pdf ".format(rnafoldstr))
-        # os.system("rm {0}.ps {0}.pdf ".format(centroidstr))
+# os.system("{1}gmt psconvert -Tf {0}.ps && {1}pdf2svg {0}.pdf {0}.svg".format(rnafoldstr, '~/sRNAbox/miniconda3/bin/'))
+# os.system("{1}gmt psconvert -Tf {0}.ps && {1}pdf2svg {0}.pdf {0}.svg".format(centroidstr, '~/sRNAbox/miniconda3/bin/'))
+# os.system("rm {0}.ps {0}.pdf ".format(rnafoldstr))
+# os.system("rm {0}.ps {0}.pdf ".format(centroidstr))
 
 if __name__ == '__main__':
+    global input_dict
     input_dict = {}
-    with open('{}/00merge.txt'.format(outpath), 'r') as mergefile:
+    with open('{}/Translate_result.txt'.format(outpath), 'r') as mergefile:
         for eli in mergefile.readlines()[1:]:
             eli = eli.strip().split('\t')
             input_dict[eli[1]] = eli
     centroid_fold(input_dict)
-    create_report(input_dict)
+    pool = multiprocessing.Pool(processes=2)
+    pool.map(create_report, list(input_dict.keys()))

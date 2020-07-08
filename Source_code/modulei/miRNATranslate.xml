@@ -1,22 +1,26 @@
-<tool id="merging" name="miRNATranslate" version="17.09">
+<tool id="merging" name="miRNATranslate" version="20.05">
     <!-- <description>translates annotated and predicted miRNAs into the genomic coordinate system</description> -->
     <command><![CDATA[
         bash ${__tool_directory__}/scripts/mirTranslate.sh
             --curpath ${__tool_directory__}
             --dbfile $dbfile
             --pdfile $pdfile
+            --species $refpath
             --outxt $outxt
+            --outhtml $outhtml
     ]]></command>
 
     <inputs>
-        <param name="dbfile" type="data" format="tsv" label="miRNA candidates from miRNARetrieval" />
-        <param name="pdfile" type="data" format="tsv" label="miRNA candidates from miRNAPridect" />
+        <param name="dbfile" type="data" format="zip" optional="true" label="miRNA candidates from miRNARetrieval" />
+        <param name="pdfile" type="data" format="tabular" optional="true" label="miRNA candidates from miRNAPredict" />
+        <param name="refpath" type="data" format="simple" label="References of species" />
     </inputs>
 
-    <stdio><exit_code range="1:" level="fatal" description="Error Running miRNATranslate"/></stdio>
+    <stdio><exit_code range="1:" level="fatal" description="Error Running ${tool.name}"/></stdio>
 
     <outputs>
-        <data name="outxt" format="tsv" label="Merged candidates (txt format)" />
+        <data name="outxt" format="tabular" label="${refpath.name} | ${tool.name} | Merged miRNA candidates form annotated and predicted miRNAs" />
+        <data name="outhtml" format="html" label="${refpath.name} | ${tool.name} | Reports of merged miRNA candidates" />
     </outputs>
 
 <help>
@@ -27,22 +31,26 @@
 
 **What it does**
 
-This function is designed to merge annotated and predicted miRNAs.
+This function is designed to translate annotated and predicted miRNAs into the genomic coordinate system.
 
 .. class:: infomark
 
 **Inputs**
 
-miRNA candidates from **miRNARetrieval** and **miRNAPredict**
+Output from **miRNARetrival** and **miRNAPredict**.
 
 .. class:: infomark
 
 **Output**
 
-A list of miRNA candidates with 12 columns containing the location, sequence, length of miRNA precursor, 5' arm, 3'arm, the arm of mature miRNA, and miRNA source.
+A list of miRNA and miRNA precursors with a uniform format, which have 12 columns containing the location, sequence, length of miRNA precursors, 5' arm, 3'arm, the arm of mature miRNAs, and miRNA source.
 
 |
 
 </help>
+
+<citations>
+    <citation type="doi">10.1093/bioinformatics/bti310</citation>
+</citations>
 
 </tool>

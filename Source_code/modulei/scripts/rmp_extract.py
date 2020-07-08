@@ -44,6 +44,6 @@ with open( options.log,'w') as logfile:
             round(seqindex[ii][1],2), seqindex[ii][2]]
             logfile.write('{}\t{}\t{}\n'.format(seqindex[ii][0], seqindex[ii][1], seqindex[ii][2]))
             if seqindex[ii][2] >= int(samval):
-                if  seqindex[ii][1] >= float(leastval) and seqindex[ii][0] >= int(options.total):
+                if  seqindex[ii][1] >= float(leastval) or seqindex[ii][0] >= int(options.total):
                     outfile.write('>Seq{} {}\n{}\n'.format(tmp,seqindex[ii][0],ii))
                     tmp += 1

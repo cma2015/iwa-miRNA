@@ -1,6 +1,6 @@
 <tool id="MIRNAplot" name="associationAnalysis" version="20.05">
     <!-- <description>performs interactive analysis and visualization of miRNAs.</description> -->
-    
+
     <command><![CDATA[
 		bash ${__tool_directory__}/scripts/mirnaAssociation.sh
             --curpath ${__tool_directory__}
@@ -10,17 +10,19 @@
     ]]></command>
 
     <inputs>
-        <param name="mirAnno" format="tsv" type="data" label="Input miRNA annotation"
-            help="Note: The annotation file can be obtained from miRNACuration, miRNASelection, or miRNARetrieval tool."/>
+        <param type="data" name="mirAnno" format="tabular" optional="true"
+            label="miRNA annotation file"
+            help="Note: This annotation file can be obtained from miRNASelection or miRNATranslate tool."/>
 
-        <param name="genomeAnno" format="txt" type="data" label="Input genome annotation file in FLAT format"
-            help="Note: users can use the tool GFF-to-FLAT to convert GFF to FLAT format" />
+        <param type="data" name="genomeAnno" format="txt" optional="true"
+            label="Genome annotation file"
+            help="As you can see in following description, this file contains seven columns." />
     </inputs>
 
     <stdio><exit_code range="1:" level="fatal" description="Error Running associationAnalysis"/></stdio>
 
     <outputs>
-        <data name="resultHTML" format="html" label="miRNA_pre-miRNA.html" /> 
+        <data name="resultHTML" format="html" label="${tool.name} | Distribution of miRNAs in different genomic features.html" />
     </outputs>
 
 <help>
@@ -29,24 +31,47 @@
 
 **What it does**
 
-This function is designed to perform interactive analysis and visualization of the characteristics of manually annotated miRNAs,  
-including the feature distribution of miRNAs with different length, 
-the overall statistics on the number and abundance of different miRNA lengths, 
-the overall statistics on the length of different genomic features, such as gene, TE, and lncRNA,
-the distribution of miRNA length and abundance among the different genomic features.
+This function is designed to interactively analyze and visualize the characteristics of annotated miRNA,
+including the feature distribution of miRNAs with different lengths; the number and abundance of different miRNA lengths;
+the length of different genomic features, such as genes, TEs, and lncRNAs;
+distribution of miRNA length and abundances among different genomic features.
 
 .. class:: infomark
 
 **Input**
 
-1. Annotation file of miRNAs derived from databases or *de novo* identification.
+1. Annotation file of miRNAs derived from miRNASelection or miRNATranslate tool.
 
-2. Genome annotation were used to label the source of miRNA.
+2. Genome annotations will be used to label the source of miRNAs.
 
 .. class:: infomark
 
 **Output**
-  *associationAnalysis* provides visualization and summarization of miRNAs in interactive and animated charts. 
+  *associationAnalysis* provides visualization and summarization of miRNAs in interactive and animated charts.
+
+.. class:: infomark
+
+**About**
+
+Genome annotation file with following information in tab delimited format.
+
+ | Chr   Start   End ID  Strand  Type    Subtype
+ | 1	3630	5899	AT1G01010    +	PCG	PCG
+ | 1	6787	9130	AT1G01020	-	PCG	PCG
+ | 1	11100	11372	AT1G03987	+	ncRNA_gene	lncRNA
+ | 1	11648	13714	AT1G01030	-	PCG	PCG
+ | 1	11897	11976	ATCOPIA24	.	TE	LTR/Copia
+ | 1	16883	17009	ATREP4	.	TE	RC/Helitron
+ | 1	17024	18924	ATREP3	.	TE	RC/Helitron
+ | 1	23120	31227	AT1G01040	+	PCG	PCG
+ | ......
+
+PCG: protein coding gene;
+ncRNA_gene: non-protein coding RNA gene;
+lncRNA: long non-coding RNA;
+TE: Transposable element.
+
+|
 
 </help>
 

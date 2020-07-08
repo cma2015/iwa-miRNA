@@ -22,7 +22,7 @@ version(){
 }
 main(){
     # Parsing options
-    ARGS=`getopt -o vh --long version,help,curpath:,annoinput:,related:,speciesInfo:,speciesPath:,htmlout: -n "$0" -- "$@"`
+    ARGS=`getopt -o vh --long version,help,curpath:,annoinput:,related:,sampleInfo:,description:,matexp:,htmlout: -n "$0" -- "$@"`
     if [ $? != 0 ]; then
         echo "Terminating..."
         exit 1
@@ -35,9 +35,10 @@ main(){
             --curpath) curdir=$2; shift 2;;
             --annoinput) annoinput=$2; shift 2;;
             --related) related=$2; shift 2;;
-            --speciesInfo) speciesInfo=$2; shift 2;; 
-            --speciesPath) speciesPath=$2; shift 2;; 
+            --sampleInfo) sampleInfo=$2; shift 2;;
+            --description) description=$2; shift 2;;
             --htmlout) htmlout=$2; shift 2;;
+            --matexp) matexp=$2; shift 2;;
             -v|--version) version;;
             -h|--help) usage;;
             --) shift; break;;
@@ -46,49 +47,72 @@ main(){
     done
 
     # Add environment path
-    SCRIPTPATH=${curdir}/scripts
-    PATH="$PATH:${SCRIPTPATH}"
+    script_path=${curdir}/scripts
+    PATH="$PATH:${script_path}"
 
     # Define the output directory
-    OUTDIR=${curdir}/tmp/000000 #`date +%s%N | cut -c6-13`
-    if [ ! -d $OUTDIR ]; then
-        mkdir -p ${curdir}/tmp $OUTDIR
+    out_dir=${annoinput%.*}
+    if [ ! -d $out_dir/manualCuration ]; then
+        mkdir -p $out_dir/manualCuration
     fi
 
-    cd ${OUTDIR} 
-    # cp $annoinput final_table.txt
-    # cp ${SCRIPTPATH}/miRPage.Rmd miRPage.Rmd
-    # cp ${SCRIPTPATH}/miReport.Rmd miReport.Rmd
-    # Rscript -e "rmarkdown::render('miRPage.Rmd')"
+    cd ${out_dir}/manualCuration
+    mkdir miRNA_out
 
-    # mkdir -p data miRNA_out figure-html
-    # tar -zcvf $related -C ${OUTDIR}/data .
+    cp ${annoinput} final_table.txt
+    awk '{OFS="\t";print $1,$2}' ${sampleInfo} > sample_info.txt
+    cp ${out_dir}/miRNASelection/miRNA_in_sample.txt miRNA_in_sample.txt
+    if [ -f $description ];then
+        cp ${description} gene_description.txt
+    fi
+    cp ${script_path}/miRPage.Rmd miRPage.Rmd
+    cp ${script_path}/miReport.Rmd miReport.Rmd
+    Rscript -e "rmarkdown::render('miRPage.Rmd')"
 
-    # cut -f 8 final_table.txt | awk 'NR>1' | sed "s/:/-/g" | while read line
-    # do
-    # echo ${line}
+    awk -F"\t" 'NR>1{print $5}' final_table.txt | sed "s/:/-/g" >tmp_name.txt
 
-    # sed "s/xxxxxx/${line}/" miReport.Rmd > ${line}.Rmd
+    awk -F"\t" 'NR>1{print ">"$5"_5p\n"$11"\n>"$5"_3p\n"$14}' final_table.txt >mature_miRNAs.fa
 
-    # Rscript -e "rmarkdown::render('${line}.Rmd')"
+    speciespath=`cat ${out_dir}/miRNATranslate/speciespath.txt`
 
-    # sed -i "s/${line}_files/js_css/" ${line}.html
-    # sed -i "s/js_css\/figure-html/figure-html\/${line}/" ${line}.html
+    if [ -s psRNAtarget_MIT.out ];then
+        if [ `grep -c "miRNA_Acc." psRNAtarget_MIT.out` -ne '0' ];then
+            echo "pass!"
+        else
+            python ${script_path}/PsRNAtarget.py ${speciespath} ps_path.sh
+            bash ps_path.sh
+        fi
+    else
+        python ${script_path}/PsRNAtarget.py ${speciespath} ps_path.sh
+        bash ps_path.sh
+    fi
 
-    # mkdir figure-html/${line}
-    # mv ${line}.html miRNA_out/${line}.html
+    awk -F"\t" 'NR>1{print $5}' final_table.txt | while read line
+    do
+        grep "${line}" psRNAtarget_MIT.out >${out_dir}/miRNASelection/data/${line}.mti
+    done
 
-    # if [ ! -d miRNA_out/js_css ];then
-    #     mkdir miRNA_out/js_css
-    #     mv -r ${line}_files/* miRNA_out/js_css
-    # fi
-    # rm ${line}.Rmd
-    # rm -r ${line}_files/
-    # done
+    cat tmp_name.txt | while read line
+    do
+        echo ${line}
+        sed "s/xxxxxx/${line}/" miReport.Rmd > ${line}.Rmd
+        Rscript -e "rmarkdown::render('${line}.Rmd')"
+        sed -i "s/${line}_files/js_css/" ${line}.html
 
-    cp miRPage.html $htmlout
+        mv ${line}.html miRNA_out/${line}.html
+        if [ ! -d miRNA_out/js_css ];then
+            mkdir miRNA_out/js_css
+            cp -r ${line}_files/* miRNA_out/js_css
+        else
+            rm -r ${line}_files
+        fi
+        rm ${line}.Rmd
+    done
+
+    mv miRPage.html $htmlout
     mkdir -p ${htmlout%.*}_files
-    cp -r miRNA_out/ ${htmlout%.*}_files/
-
+    mv miRPage_files ${htmlout%.*}_files
+    mv miRNA_out ${htmlout%.*}_files
 }
+
 main "$@"

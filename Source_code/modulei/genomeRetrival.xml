@@ -1,0 +1,148 @@
+<tool id="genomeindex" name="genomePrepare" workflow_compatible="false" version="20.05">
+    <!-- <description>get genome sequences, annotation and file path (built-in or uploaded)</description> -->
+
+    <command><![CDATA[
+        bash ${__tool_directory__}/scripts/obtainSpecies.sh
+            --curpath ${__tool_directory__}
+            #if $genometype.datainput == "UploadData":
+                --name "$genometype.speciename"
+                --genome $genometype.genomeData
+                --gff $genometype.annotationData
+                --otherrna $genometype.otherrna
+                --transcript $genometype.transcriptsData
+                --protein $genometype.proteinsData
+                --speciesout $filePath
+                --infout $infout1
+            #else
+                --ensembl "$genometype.buildplant"
+                --verorder "$genometype.version"
+
+                --outgenome $outgenome
+                --outgff3 $outgff3
+                --outtranscript $outtranscript
+                --outtrsnsnoRNA $outtrsnsnoRNA
+                --outprotein $outprotein
+
+                --speciesout $builtinPath
+                --infout $infout2
+            #end if
+
+    ]]></command>
+
+    <inputs>
+        <conditional name="genometype">
+            <!-- <param name="datainput" type="boolean"  truevalue="yes" falsevalue="no" checked="true"
+                label="Upload your own genome data?" help ="User can also select built-in species by clicking the button-No " /> -->
+            <param type="select" name="datainput" display="radio" multiple="false" help="Note: for 'upload from local disk', please upload files by uploadFile function first."
+                label="Two ways for preparing genome data:" >
+                <option value="BuiltinSpecies" selected="true" > Download from EnsemblPlants database</option>
+		             <option value="UploadData"> Upload from local disk</option>
+            </param>
+
+            <when value="BuiltinSpecies">
+                <param name="buildplant" type="select"
+                    label="Species (support for 61 species)"
+                    help="">
+                    <options from_data_table="ensembl_plant" >
+                        <!-- <filter type="sort_by" column="1"/>
+                        <validator type="no_options" message="No indexes are available for the selected input dataset"/> -->
+                    </options>
+                </param>
+
+                <param name="version" type="select"
+                    label="Database version"
+                    help="">
+                    <options from_data_table="ensembl_plant_version">
+                        <validator type="no_options" message="No indexes are available for the selected input dataset"/>
+                    </options>
+                </param>
+
+            </when>
+
+            <when value="UploadData">
+                <param type="text" name="speciename" value=""
+                    label="Species"
+                    help="e.g. Arabidopsis thaliana" />
+
+                <param name="genomeData" type="data" format="fasta" optional="true" label="Genome sequences (.fasta)" />
+                <param name="annotationData" type="data" format="gff3" optional="true" label="Annotation file (.gff3)" />
+                <param name="otherrna" type="data" format="fasta" optional="true" label="t/r/sn/snoRNA sequences (.fasta)" />
+                <param name="transcriptsData" type="data" format="fasta" optional="true" label="cDNA sequences (.fasta)" />
+                <param name="proteinsData" type="data" format="fasta" optional="true" label="Optional: Protein sequences (.fasta)" />
+            </when>
+        </conditional>
+    </inputs>
+
+    <stdio><exit_code range="1:" level="fatal" description="Error when running ${tool.name}"/></stdio>
+
+    <outputs>
+        <data format="simple" name="filePath" label="${genometype.speciename.value}">
+            <filter> genometype['datainput'] == "UploadData" </filter>
+        </data>
+        <data format="pdf" name="infout1" label="${genometype.speciename.value} | ${tool.name} | Summary of genomic features">
+            <filter> genometype['datainput'] == "UploadData" </filter>
+        </data>
+        <data format="simple" name="builtinPath" label="${genometype.buildplant.value}_${genometype.version.value}">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="pdf" name="infout2" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | Summary of genomic features">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="gz" name="outgenome" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | Genome sequences ">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="fasta" name="outtrsnsnoRNA" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | t/r/sn/snoRNA sequences">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="gff3" name="outgff3" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | GFF3 annotations">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="fasta" name="outtranscript" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | cDNA sequences">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+        <data format="fasta" name="outprotein" label="${genometype.buildplant.value}_${genometype.version.value} | ${tool.name} | Protein sequences">
+            <filter> genometype['datainput'] == "BuiltinSpecies" </filter>
+        </data>
+
+    </outputs>
+
+    <tests>
+        <test>
+            <param name="genomeData" value="Arabidopsis_genome.fa" ftype="fasta" />
+            <param name="annotationData" value="Arabidopsis_annotation.gff3" ftype="fasta" />
+            <output name="filePath" file="genomePrepare: References_of_Arabidopsis_thaliana.simple" ftype="simple" />
+        </test>
+
+    </tests>
+
+
+<help><![CDATA[
+
+.. class:: donemark
+
+**What it does**
+
+This tool provides two ways for preparing genome data:
+
+    1. Automatically download genomes, annotations, t/r/sn/snoRNAs (i.e. tRNAs, rRNAs, snRNAs, and snoRNAs), cDNAs, and proteins from `EnsemblPlants database`_.
+    2. Upload genomic data for species not included in EnsemblPlants.
+
+.. class:: infomark
+
+**Output**
+
+    - A file containing the path of formatted genome sequences and annotations. Index files of the reference genome and t/r/sn/snoRNA sequences in this path are used for 'miRNAPredict' analysis.
+    - Summary of the number and length of genomic features.
+    - Genome sequences, annotation file in GFF3 format, t/r/sn/snoRNA sequences, cDNAs, and protein sequences.
+
+.. _`EnsemblPlants database`: ftp://ftp.ensemblgenomes.org/pub/plants
+
+|
+
+    ]]></help>
+
+    <citations>
+        <citation type="doi">10.1007/978-1-4939-6658-5_1</citation>
+    </citations>
+
+</tool>

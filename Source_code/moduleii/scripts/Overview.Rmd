@@ -1,0 +1,596 @@
+---
+title: "The available miRNAs in several public databases"
+output:
+    flexdashboard::flex_dashboard:
+        orientation: rows
+        vertical_layout: scroll
+        social: menu
+        source_code: embed
+        theme: cosmo
+---
+
+```{r setup, include=FALSE}
+library(DT)
+library(purrr)
+library(ggplot2)
+library(dplyr)
+library(highcharter)
+options(stringsAsFactors = F)
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{css, echo=FALSE}
+.limitrow {
+  width: 99.4% !important;
+  flex: none !important;
+}
+
+.limitrow .chart-stage {
+  overflow-x:scroll;
+}
+
+p.seq {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
+    min-width: 0;
+    margin: 0;
+    font-size: 15px;
+}
+
+p.seq:hover {
+    overflow: none;
+    width: auto;
+}
+```
+
+miRBase {data-icon=fa-bar-chart}
+=====================================
+
+Row
+-------------------------------------
+
+### Table: Detailed information of miRNAs {.limitrow}
+
+```{r }
+sRNA_data <- read.table("miRBase.txt", sep = "	", header = T)
+sRNA_data <- sRNA_data[sRNA_data[,8]<30&sRNA_data[,11]<30, ]
+sRNA_data[,3] <- paste0("<p class=\"seq\">", sRNA_data[,3],"</p>")
+datatable(data = sRNA_data,
+          extensions = 'Buttons',
+          options = list(dom = "Blfrtip",
+                         buttons = list("copy",list(extend = "collection",
+                                                     buttons = c("csv", "excel"),
+                                                     text = "Download")),
+                         lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+                         pageLength = 10, autoWidth = TRUE),
+          rownames = FALSE, escape = FALSE, class = 'compact nowrap stripe hover')%>%
+formatStyle(TRUE, `text-align` = 'center')
+```
+
+Row
+-------------------------------------
+
+### miRNA categories
+
+```{r}
+name_col_two <- as.data.frame(table(sRNA_data[,12]))
+name_col_two[,1] <- paste0(name_col_two[,1], " (", name_col_two[,2], ")")
+highchart() %>%
+    hc_title(text = "miRNAs" ,align = "center",verticalAlign = "middle") %>%
+    hc_tooltip(headerFormat ="", pointFormat = "{series.y} <b>{point.percentage:.1f}%</b>")%>%
+    hc_plotOptions(pie = list(dataLabels = list(enabled = TRUE,distance = -50
+                                                ,style = list(fontWeight = "bold",color = "white",
+                                                              fontSize=16, textOutline = "")),
+                              center = c('50%','50%'))) %>%
+    hc_add_series(name_col_two, type = "pie", hcaes(name = Var1, y = Freq),
+            innerSize = "50%") %>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Pie_miRNA_identification")
+
+```
+
+### miRNA family sizes and total number of family
+
+```{r}
+name_family <- gsub("\\D$", "", sRNA_data[,1])
+family_table <- table(name_family)
+name_col_pre <- table(family_table)
+name_col_num <- as.numeric(names(name_col_pre))
+tmp_name <- as.character(min(name_col_num):max(name_col_num))
+name_col_pre <- name_col_pre[tmp_name]
+names(name_col_pre) <- tmp_name
+name_col_pre[is.na(name_col_pre)] <- 0
+name_col_one <- as.data.frame(name_col_pre)
+name_col_one[,1] <- as.numeric(name_col_one[,1])
+highchart() %>%
+    hc_title(text = "miRNA family") %>%
+    hc_add_series(name="miRNA family", name_col_one, type = "column",hcaes(name = Var1, y = Freq))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 12)))%>%
+    hc_exporting(enabled = TRUE, filename = "total number of miRNA family")
+```
+
+### miRNA family sizes
+
+```{r}
+family_index <- name_family%in%names(family_table[family_table>1])
+family_show <- data.frame('mirna' = name_family[family_index])
+family_show %>%
+    count(mirna) %>%
+    hchart('treemap', hcaes(x = 'mirna', value = 'n', color = 'n'))%>%
+    hc_exporting(enabled = TRUE, filename = "miRNA family sizes")
+```
+
+Row
+-------------------------------------
+
+### Length distribution
+
+```{r}
+ds <- map(unique(sRNA_data[,12]), function(x){
+    dt <- density(sRNA_data[,4][sRNA_data[,12] == x])[1:2]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>%
+    hc_add_series_list(ds)%>%
+    hc_add_theme(hc_theme_google())
+```
+
+### Length and distribution of all miRNAs
+
+```{r}
+ter_len <- data.frame('Ter'=rep(c("5p","3p"), each = nrow(sRNA_data)),
+                      "Len" = c(sRNA_data[,8], sRNA_data[,11]))
+ter_len <- ter_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(ter_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution")
+```
+
+### Composition of the first base
+
+```{r}
+mat_char <- data.frame('Type'=rep(c("5p","3p"), each = nrow(sRNA_data)),
+                      "Letter" = c(substr(sRNA_data[,7], 1, 1), substr(sRNA_data[,10], 1, 1)))
+mat_char <- mat_char %>% group_by(Letter, Type) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal", borderColor = "",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(mat_char, type = "column", hcaes(x = Type, y = n , group = Letter))%>%
+    hc_add_theme(hc_theme_google()) %>%
+    hc_tooltip(headerFormat ="", pointFormat = "<b>{point.percentage:.1f}%</b>")%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 16)))%>%
+    hc_exporting(enabled = TRUE, filename = "Composition of the first base")
+```
+
+PmiREN {data-icon=fa-bar-chart}
+=====================================
+
+Row
+-------------------------------------
+
+### Table: Detailed information of miRNAs {.limitrow}
+
+```{r }
+sRNA_data2 <- read.table("PmiREN.txt", sep = "	", header = T)
+sRNA_data2[,3] <- paste0("<p class=\"seq\">", sRNA_data2[,3],"</p>")
+datatable(data = sRNA_data2,
+          extensions = 'Buttons',
+          options = list(dom = "Blfrtip",
+                         buttons = list("copy",list(extend = "collection",
+                                                     buttons = c("csv", "excel"),
+                                                     text = "Download")),
+                         lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+                         pageLength = 10, autoWidth = TRUE),
+          rownames = FALSE, escape = FALSE, class = 'compact nowrap stripe hover')%>%
+formatStyle(TRUE, `text-align` = 'center')
+```
+
+Row
+-------------------------------------
+
+### miRNA family sizes and total number of family
+
+```{r}
+name_family <- gsub("\\D$", "", sRNA_data2[,1])
+family_table <- table(name_family)
+name_col_pre <- table(family_table)
+name_col_num <- as.numeric(names(name_col_pre))
+tmp_name <- as.character(min(name_col_num):max(name_col_num))
+name_col_pre <- name_col_pre[tmp_name]
+names(name_col_pre) <- tmp_name
+name_col_pre[is.na(name_col_pre)] <- 0
+name_col_one <- as.data.frame(name_col_pre)
+name_col_one[,1] <- as.numeric(name_col_one[,1])
+highchart() %>%
+    hc_title(text = "miRNA family") %>%
+    hc_add_series(name="miRNA family", name_col_one, type = "column",hcaes(name = Var1, y = Freq))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 12)))%>%
+    hc_exporting(enabled = TRUE, filename = "total number of miRNA family")
+```
+
+### miRNA family sizes
+
+```{r}
+family_index <- name_family%in%names(family_table[family_table>1])
+family_show <- data.frame('mirna' = name_family[family_index])
+family_show %>%
+    count(mirna) %>%
+    hchart('treemap', hcaes(x = 'mirna', value = 'n', color = 'n'))%>%
+    hc_exporting(enabled = TRUE, filename = "miRNA family sizes")
+```
+
+### miRNA categories
+
+```{r}
+def_col_two <- rep("Known", nrow(sRNA_data2))
+def_col_two[grepl("MIRN", sRNA_data2[,1])] <- "Novel"
+name_col_two <- as.data.frame(table(def_col_two))
+name_col_two[,1] <- paste0(name_col_two[,1], " (", name_col_two[,2], ")")
+highchart() %>%
+    hc_title(text = "miRNAs" ,align = "center",verticalAlign = "middle") %>%
+    hc_tooltip(headerFormat ="", pointFormat = "{series.y} <b>{point.percentage:.1f}%</b>")%>%
+    hc_plotOptions(pie = list(dataLabels = list(enabled = TRUE,distance = -50
+                                                ,style = list(fontWeight = "bold",color = "white",
+                                                              fontSize=16, textOutline = "")),
+                              center = c('50%','50%'))) %>%
+    hc_add_series(name_col_two, type = "pie", hcaes(name = def_col_two, y = Freq),
+            innerSize = "50%") %>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Pie_miRNA_identification")
+```
+
+Row
+-------------------------------------
+
+### Length distribution
+
+```{r}
+ds <- map(unique(def_col_two), function(x){
+    dt <- density(sRNA_data2[,4][def_col_two == x])[1:2]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>%
+    hc_add_series_list(ds)%>%
+    hc_add_theme(hc_theme_google())
+```
+
+### Length and distribution of all miRNAs
+
+```{r}
+ter_len <- data.frame('Ter'=rep(c("5p","3p"), each = nrow(sRNA_data2)),
+                      "Len" = c(sRNA_data2[,8], sRNA_data2[,11]))
+ter_len <- ter_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(ter_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution")
+```
+
+### Length and distribution of mature miRNAs
+
+```{r}
+mat_len <- data.frame('Ter'=sRNA_data2[,5],
+                      "Len" = sRNA_data2[,8])
+mat_len <- mat_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(mat_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Length and distribution of mature miRNA")
+```
+
+sRNAanno {data-icon=fa-bar-chart}
+=====================================
+
+Row
+-------------------------------------
+
+### Table: Detailed information of miRNAs {.limitrow}
+
+```{r }
+sRNA_data3 <- read.table("sRNAanno.txt", sep = "	", header = T)
+sRNA_data3[,3] <- paste0("<p class=\"seq\">", sRNA_data3[,3],"</p>")
+datatable(data = sRNA_data3,
+          extensions = 'Buttons',
+          options = list(dom = "Blfrtip",
+                         buttons = list("copy",list(extend = "collection",
+                                                     buttons = c("csv", "excel"),
+                                                     text = "Download")),
+                         lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+                         pageLength = 10, autoWidth = TRUE),
+          rownames = FALSE, escape = FALSE, class = 'compact nowrap stripe hover')%>%
+formatStyle(TRUE, `text-align` = 'center')
+```
+
+Row
+-------------------------------------
+
+### miRNA family sizes and total number of family
+
+```{r}
+name_col <- t(do.call("cbind", strsplit(sRNA_data3[,1], "-")))
+name_col[,1] <- gsub("\\D$", "", name_col[,1] )
+colnames(name_col) <- c("mirna", 'Type')
+
+name_col_pre <- table(table(name_col[,1]))
+name_col_num <- as.numeric(names(name_col_pre))
+tmp_name <- as.character(min(name_col_num):max(name_col_num))
+name_col_pre <- name_col_pre[tmp_name]
+names(name_col_pre) <- tmp_name
+name_col_pre[is.na(name_col_pre)] <- 0
+name_col_one <- as.data.frame(name_col_pre)
+name_col_one[,1] <- as.numeric(name_col_one[,1])
+
+highchart() %>%
+    hc_title(text = "miRNA family") %>%
+    hc_add_series(name="miRNA family", name_col_one, type = "column",hcaes(name = Var1, y = Freq))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 12)))%>%
+    hc_exporting(enabled = TRUE, filename = "total number of miRNA family")
+```
+
+### miRNA family sizes
+
+```{r}
+family_index <- name_col[,1]%in%names(table(name_col[,1])[table(name_col[,1])>1])
+family_show <- as.data.frame(name_col[family_index, ])
+family_show %>%
+    count(mirna) %>%
+    hchart('treemap', hcaes(x = 'mirna', value = 'n', color = 'n'))%>%
+    hc_exporting(enabled = TRUE, filename = "miRNA family sizes")
+```
+
+### miRNA categories
+
+```{r}
+name_col_two <- as.data.frame(table(name_col[,2]))
+name_col_two[,1] <- paste0(name_col_two[,1], " (", name_col_two[,2], ")")
+highchart() %>%
+    hc_title(text = "miRNAs" ,align = "center",verticalAlign = "middle") %>%
+    hc_tooltip(headerFormat ="", pointFormat = "{series.y} <b>{point.percentage:.1f}%</b>")%>%
+    hc_plotOptions(pie = list(dataLabels = list(enabled = TRUE,distance = -50
+                                                ,style = list(fontWeight = "bold",color = "white",
+                                                              fontSize=16, textOutline = "")),
+                              center = c('50%','50%'))) %>%
+    hc_add_series(name_col_two, type = "pie", hcaes(name = Var1, y = Freq),
+            innerSize = "50%") %>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Pie_miRNA_identification")
+```
+
+Row
+-------------------------------------
+
+### Length distribution
+
+```{r}
+ds <- map(unique(name_col[,2]), function(x){
+    dt <- density(sRNA_data3[,4][name_col[,2] == x])[1:2]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>%
+    hc_add_series_list(ds)%>%
+    hc_add_theme(hc_theme_google())
+
+ter_len <- data.frame('Ter'=rep(c("5p","3p"), each = nrow(sRNA_data3)),
+                      "Len" = c(sRNA_data3[,8], sRNA_data3[,11]))
+ter_len <- ter_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(ter_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution")
+```
+
+### Length and distribution of mature miRNA
+
+```{r}
+mat_len <- data.frame('Ter'=sRNA_data3[,5],
+                      "Len" = sRNA_data3[,8])
+mat_len <- mat_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(mat_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Length and distribution of mature miRNA")
+```
+
+### Composition of the first base
+
+```{r}
+mat_char <- data.frame('Type'=name_col[,2],
+                      "Letter" = substr(sRNA_data3[,7], 1, 1))
+mat_char <- mat_char %>% group_by(Letter, Type) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal", borderColor = "",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(mat_char, type = "column", hcaes(x = Type, y = n , group = Letter))%>%
+    hc_add_theme(hc_theme_google()) %>%
+    hc_tooltip(headerFormat ="", pointFormat = "<b>{point.percentage:.1f}%</b>")%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 16)))%>%
+    hc_exporting(enabled = TRUE, filename = "Composition of the first base")
+```
+
+Plant small RNA genes {data-icon=fa-bar-chart}
+=====================================
+
+Row
+-------------------------------------
+
+### Table: Detailed information of miRNAs {.limitrow}
+
+```{r }
+sRNA_data4 <- read.table("PlantsmallRNAgenes.txt", sep = "	", header = T)
+data_index <- sRNA_data4$Mature_arm!='unmatchedRegion'&sRNA_data4$Length5p<30&sRNA_data4$Length3p<30
+sRNA_data4 <- sRNA_data4[data_index, ]
+sRNA_data4[,3] <- paste0("<p class=\"seq\">", sRNA_data4[,3],"</p>")
+datatable(data = sRNA_data4,
+          extensions = 'Buttons',
+          options = list(dom = "Blfrtip",
+                         buttons = list("copy",list(extend = "collection",
+                                                     buttons = c("csv", "excel"),
+                                                     text = "Download")),
+                         lengthMenu = list( c(10, 20, -1), c(10, 20, "All")),
+                         pageLength = 10, autoWidth = TRUE),
+          rownames = FALSE, escape = FALSE, class = 'compact nowrap stripe hover')%>%
+formatStyle(TRUE, `text-align` = 'center')
+```
+
+Row
+-------------------------------------
+
+### miRNA categories
+
+```{r}
+name_col_two <- as.data.frame(table(sRNA_data4$Source))
+name_col_two[,1] <- paste0(name_col_two[,1], " (", name_col_two[,2], ")")
+highchart() %>%
+    hc_title(text = "miRNAs" ,align = "center",verticalAlign = "middle") %>%
+    hc_tooltip(headerFormat ="", pointFormat = "{series.y} <b>{point.percentage:.1f}%</b>")%>%
+    hc_plotOptions(pie = list(dataLabels = list(enabled = TRUE,distance = -50
+                                                ,style = list(fontWeight = "bold",color = "white",
+                                                              fontSize=16, textOutline = "")),
+                              center = c('50%','50%'))) %>%
+    hc_add_series(name_col_two, type = "pie", hcaes(name = Var1, y = Freq),
+            innerSize = "50%") %>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_exporting(enabled = TRUE, filename = "Pie_miRNA_identification")
+```
+
+### miRNA family sizes and total number of family
+
+```{r}
+name_family <- gsub("\\D$", "", sRNA_data4$Precursors)
+family_table <- table(name_family)
+name_col_pre <- table(family_table)
+name_col_num <- as.numeric(names(name_col_pre))
+tmp_name <- as.character(min(name_col_num):max(name_col_num))
+name_col_pre <- name_col_pre[tmp_name]
+names(name_col_pre) <- tmp_name
+name_col_pre[is.na(name_col_pre)] <- 0
+name_col_one <- as.data.frame(name_col_pre)
+name_col_one[,1] <- as.numeric(name_col_one[,1])
+if( "Freq"%in%colnames(name_col_one) ){
+  highchart() %>%
+    hc_title(text = "miRNA family") %>%
+    hc_add_series(name="miRNA family", name_col_one, type = "column",hcaes(name = Var1, y = Freq))%>%
+    hc_add_theme(hc_theme_google())%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 12)))%>%
+    hc_exporting(enabled = TRUE, filename = "total number of miRNA family")
+}
+```
+
+### miRNA family sizes
+
+```{r}
+family_index <- name_family%in%names(family_table[family_table>1])
+family_show <- data.frame('mirna' = name_family[family_index])
+family_show %>%
+    count(mirna) %>%
+    hchart('treemap', hcaes(x = 'mirna', value = 'n', color = 'n'))%>%
+    hc_exporting(enabled = TRUE, filename = "miRNA family sizes")
+```
+
+Row
+-------------------------------------
+
+### Length distribution
+
+```{r}
+ds <- map(unique(sRNA_data4$Source), function(x){
+    dt <- density(sRNA_data4$pLength[sRNA_data4$Source == x])[1:2]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+db <- map(unique(sRNA_data4$Type), function(x){
+    dt <- density(sRNA_data4$pLength[sRNA_data4$Type == x])[1:2]
+    dt <- list_parse2(as.data.frame(dt))
+    list(data = dt, name = x)
+})
+
+highchart() %>%
+    hc_add_series_list(ds)%>%
+    hc_add_series_list(db)%>%
+    hc_add_theme(hc_theme_google())
+```
+
+### Length and distribution of all miRNAs
+
+```{r}
+ter_len <- data.frame('Ter'=rep(c("5p","3p"), each = nrow(sRNA_data4)),
+                      "Len" = c(sRNA_data4$Length5p, sRNA_data4$Length3p))
+ter_len <- ter_len %>% group_by(Len, Ter) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(ter_len, type = "column", hcaes(x = Len, y = n , group = Ter))%>%
+    hc_exporting(enabled = TRUE, filename = "Length distribution")
+```
+
+### Composition of the first base
+
+```{r}
+firstbase <- apply(sRNA_data4, 1, function(x){
+  if(x[5] == "5p"){
+  return(substr(x[8], 1, 1))
+  }else{
+  return(substr(x[11], 1, 1))
+  }
+})
+mat_char <- data.frame('Type'=rep(c(sRNA_data4$Source, sRNA_data4$Type)),
+                      "Letter" = c(firstbase, firstbase))
+mat_char <- mat_char %>% group_by(Letter, Type) %>%  summarise(n = n())
+highchart() %>%
+    hc_plotOptions(column = list(
+        dataLabels = list(enabled = FALSE),
+        stacking = "normal", borderColor = "",
+        enableMouseTracking = TRUE)
+    ) %>%
+    hc_add_series(mat_char, type = "column", hcaes(x = Type, y = n , group = Letter))%>%
+    hc_add_theme(hc_theme_google()) %>%
+    hc_tooltip(headerFormat ="", pointFormat = "<b>{point.percentage:.1f}%</b>")%>%
+    hc_xAxis(type = "category", labels = list(style = list(fontSize = 16)))%>%
+    hc_exporting(enabled = TRUE, filename = "Composition of the first base")
+```

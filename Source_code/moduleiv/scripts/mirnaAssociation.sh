@@ -53,15 +53,16 @@ main(){
     PATH="$PATH:${SCRIPTPATH}"
 
     # Define the output directory
-    OUTDIR=${curdir}/tmp/20200110 #2019_`date +%s%N | cut -c6-13`
+    OUTDIR=${curdir}/../tmp/associationAnalysis_`date +%s%N | cut -c6-13`
     if [ ! -d $OUTDIR ]; then
         mkdir -p ${curdir}/tmp $OUTDIR
     fi
-
+    cd ${OUTDIR}
     Rscript ${SCRIPTPATH}/mirExtract.R ${mirtxt} ${OUTDIR}/mir.txt
-    bedtools intersect -wo -a ${OUTDIR}/mir.txt -b ${genomeanno} >${OUTDIR}/miRNA_intersect_out.txt
+    awk '{OFS="\t";print $1,$2,$3,$4,".",$5,$6,$7}' ${genomeanno} >genome_anno.txt
+    bedtools intersect -wo -a ${OUTDIR}/mir.txt -b genome_anno.txt >${OUTDIR}/miRNA_intersect_out.txt
     cp ${SCRIPTPATH}/mirAssociation.Rmd ${OUTDIR}/mirAssociation.Rmd
-    Rscript -e "rmarkdown::render('"${OUTDIR}"/mirAssociation.Rmd',output_dir='"${OUTDIR}"')"
+    Rscript -e "rmarkdown::render('mirAssociation.Rmd')"
     cp ${OUTDIR}/mirAssociation.html ${rmd}
 }
 

@@ -1,18 +1,18 @@
 ---
-title: "Analysis"
+title: "Summary page"
 date: '(`r format(Sys.time(), format = "%Y-%m-%d")`)'
 output:
   flexdashboard::flex_dashboard:
     vertical_layout: scroll
     source_code: embed
-    theme: cerulean
-    self_contained: yes
+    theme: cosmo
+    self_contained: no
 ---
 
 Quality control  {data-orientation=rows data-icon="fa-area-chart"}
 ================================
   
-  Row
+Row
 -------------------------------------
 
 ### Overview and Summary Information
@@ -33,10 +33,12 @@ options(stringsAsFactors = F)
 info_table <- read.table("final_table.txt", sep = "\t", header = T)
 info_table[info_table[, "RPM5p"]=="-", "RPM5p"] <- "0"
 info_table[info_table[, "RPM3p"]=="-", "RPM3p"] <- "0"
+info_table$Mean <- round(info_table$Mean, 2)
+info_table$Max <- round(info_table$Max, 2)
 
 colname_list <- c("ID", "HTcriteria", "One_class_SVM", "Source","Stem_loop_loc", "Stem_loop_len", "Stem_loop_MFE", "Stem_loop_AMFE",
                      "Mature_arm", "Seq5p", "Len5p", "RPM5p", "The_number_of_sequences_in_pre.miRNAs", "Abundance_bias", "Strand_bias",
-                     "RNAfold", "Centroidfold")
+                     "RNAfold", "Centroidfold", "Mean", "Max", "Samples")
 df <- info_table[, colname_list]
 
 replaceCol <- c("Mature_arm", "Seq5p", "Len5p", "RPM5p")
@@ -57,27 +59,27 @@ for(i in 1:nrow(df)){
 
 # df <- read.table("summary_information.txt", sep = "\t", header = T)
 #tissue_name <- colnames(info_table)[33:ncol(info_table)]
-linkname <- gsub(":", "-", df[,5])
+linkname <- gsub(":", "-", info_table$Extended_stem_loop_loc)
 # for(i in 1:nrow(df)){
 #  df_out <- data.frame("name" = colnames(df),  "value" = as.character(df[i,]))
 #   writeLines(jsonlite::toJSON(df_out), paste0("data/", linkname[i], ".json"))
 # }
 df[,1] <- paste0("<a href=\"javascript:void(0)\" onclick=\"mirnaplot('",linkname,"')\">", df[,1],"</a>")
 
-set_list <- lapply(1:3,function(cc){
-  formatter("span", style = x ~ style(color = ifelse(x, "green", "red")),
-            x ~ icontext(ifelse(x, "ok", "remove"), ifelse(x, "Yes", "No")))
-})
-names(set_list) <- colnames(df)[c(2,16,17)]
+# set_list <- lapply(1:3,function(cc){
+#   formatter("span", style = x ~ style(color = ifelse(x, "green", "red")),
+#             x ~ icontext(ifelse(x, "ok", "remove"), ifelse(x, "Yes", "No")))
+# })
+# names(set_list) <- colnames(df)[c(2,16,17)]
 
 df <- cbind(df, "remove" = '<input type="button" value="Delete" class="btnDelete">')
 df <- df %>% rowid_to_column("Row") %>% mutate(Row = "")
-df <- formattable(df, set_list)
+# df <- formattable(df, set_list)
 
 th_style = "padding: 5px;
-color: #000;
+color: #fff;
+background-color:#517FB9;
 text-align: center;
-background-color: #ccc;
 border-right-width: 1px; 
 border-right-style: solid; 
 border-right-color: white; 
@@ -99,12 +101,13 @@ table_frame <-
               th(rowspan = 2, style = th_style, 'One class SVM'),
               th(rowspan = 2, style = th_style, 'Source'),
               th(class = 'dt-center', style = th_style, colspan = 4, 'Stem loop'),
-              th(class = 'dt-center', style = th_style, colspan = 4, 'mature miRNA'),
+              th(class = 'dt-center', style = th_style, colspan = 4, 'Mature miRNA'),
               th(class = 'dt-center', style = th_style, colspan = 5, 'miRNA precursor'),
+              th(class = 'dt-center', style = th_style, colspan = 3, 'Expressed samples'),
               th(rowspan = 2, style = th_style, 'Remove'),
               tr(lapply(c('Loc', 'Len', 'MFE', 'AMFE', 'Arm', 'Seq', 'Len', 'TPM',
                   'Seq count', 'Abundance bias', 'Strand bias',
-                  'RNAfold', 'Centroidfold'), th, style = th_style)) #'Mean', 'Max','Sample (TPM>1)', tissue_name
+                  'RNAfold', 'Centroidfold','Mean','Max','Sample(TPM>1)'), th, style = th_style)) #'Mean', 'Max','Sample (TPM>1)', tissue_name
             )
           )))
   }
@@ -119,7 +122,6 @@ table_options <- function() {
     columnDefs = list(list(className = "select-checkbox", targets = 0, orderable = FALSE)),
     select = list(style = "multi", selector = "td:first-child"),
     searchHighlight = TRUE,
-    colReorder = TRUE,
     scrollX = TRUE,
     fixedColumns = TRUE,
     extensions = 'Responsive',
@@ -138,12 +140,16 @@ table_options <- function() {
 #clrs <- round(seq(255, 40, length.out = length(brks) + 1), 0) %>%
 #{paste0("rgb(255,", ., ",", ., ")")}
 
-as.datatable(
+df$One_class_SVM <- factor(df$One_class_SVM, levels = unique(df$One_class_SVM))
+df$Source <- factor(df$Source, levels = unique(df$Source))
+
+datatable(
   df,
   rownames = FALSE,
-  editable = TRUE,
+  editable = FALSE,
   elementId = "linktable",
   class="compact cell-border",
+  filter = 'top',
   # class = 'cell-border',
   escape = FALSE,
   container = table_frame(),

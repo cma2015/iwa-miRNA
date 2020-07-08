@@ -6,7 +6,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 # parser.add_option('-t','--type',action = 'store',type = "string" ,dest = 'type')
-parser.add_option('-i','--input',action = 'store',type = "string" ,dest = 'input')
+parser.add_option('-i','--inputfile',action = 'store',type = "string" ,dest = 'inputfile')
 parser.add_option('-p','--psl',action = 'store',type = "string" ,dest = 'psl')
 parser.add_option('-o','--outfile',action = 'store',type = "string" ,dest = 'outfile')
 parser.add_option('-v','--version', action="store_false", dest="verbose", default='',help="version [default]")
@@ -63,7 +63,7 @@ def loc_change(pre_loc, mat_loc, new_pre):
 
 ## location file
 tmp_dict = {}
-with open( options.input ) as input_txt:
+with open( options.inputfile ) as input_txt:
     for eli in input_txt.readlines()[1:]:
         eli = eli.strip().split('\t')
         tmp_dict[eli[0]] = eli

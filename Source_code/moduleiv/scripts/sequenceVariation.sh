@@ -1,30 +1,41 @@
 #!bin/sh
 
-codePath=$1 premirnaBed=$2; premirnaSeq=$3; matureLoc=$4; SNPs=$5 premirnaSNP=$6
+curdir=$1 premirna=$2; SNPs=$3; premirnaSNP=$4
 
-## Create folder
-parentPath=`dirname ${codePath}`
-fullname=${2##*/}
-fileName=${fullname%.*}
-mkdir -p ${parentPath}/tmp/${fileName}/SNPs
+## Add environment path
+script_path=${curdir}/scripts
 
-## copy file to file folder
-cd ${parentPath}/tmp/${fileName}/SNPs
-cp ${codePath}/sequenceComplement.py ./
-cp ${codePath}/Hairpin_plots.py ./
-cp ${matureLoc} mature_location.txt
-cp ${premirnaBed} premirLoc.bed
+# Define the output directory
+out_dir=${curdir}/../tmp/sequenceVariation_`date +%s%N | cut -c6-13`
 
-zcat ${SNPs} | grep -P "##|TSA=SNV" | bedtools intersect -wao  -a ${premirnaBed} -b - | \
-awk 'BEGIN{OFS="\t";print "##fileformat=VCFv4.2""\n""#CHROM","POS","ID","REF","ALT"}{gsub(/T/,"U",$10);gsub(/T/,"U",$11);if($6=="+"){print $4,$8-$2,$9,$10,
-$11}else{print $4,$3-$8+1,$9,$10,$11}}' - > SNP.vcf
+if [ ! -d ${out_dir} ]; then
+    mkdir ${out_dir}
+fi
+
+cd ${out_dir}
+
+cp ${script_path}/sequenceComplement.py sequenceComplement.py
+cp ${script_path}/Hairpin_plots.py Hairpin_plots.py
+cp ${premirna} final_table.txt
+awk '{OFS="\t";print $1,$2,$3,$4,$5}' ${SNPs} > SNPs.txt
+
+Rscript ${script_path}/extract_miRNA.R
+
+bedtools intersect -wo -a pre_miRNA.bed -b SNP.bed | awk 'BEGIN{OFS="\t";print "##fileformat=VCFv4.2""\n""#CHROM","POS","ID","REF","ALT"}{gsub(/T/,"U",$13);gsub(/T/,"U",$14);if($6=="+"){print $4,$8-$2,$10,$13,
+$14}else{print $4,$3-$8+1,$10,$13,$14}}' - >SNP.vcf
+
 (head -n 2 SNP.vcf && tail -n +3 SNP.vcf | sort -k 1,1 -k 2,2n ) >SNP_sort.vcf
 bcftools view SNP_sort.vcf -Oz -o SNP.vcf.gz
 bcftools index -f SNP.vcf.gz
-#bcftools consensus SNP.vcf.gz --fasta-ref finalPremiRNAs.fasta -o finalPremiRNAs_SNPs.fasta
 
-python sequenceComplement.py ${premirnaBed} ${premirnaSeq}
+if [ `grep -c "Extended_stem_loop_loc" final_table.txt` -ne '0' ];then
+    awk -F"\t" 'NR>1{print ">"$2"\n"$6}' final_table.txt >pre_miRNA.fa
+else
+    awk -F"\t" 'NR>1{print ">"$1"\n"$3}' final_table.txt >pre_miRNA.fa
+fi
+
+python sequenceComplement.py pre_miRNA.bed pre_miRNA.fa
 bcftools consensus SNP.vcf.gz --fasta-ref finalPremiRNAsMod.fasta -o finalPremiRNAsMod_SNPs.fasta
-python Hairpin_plots.py 
+python Hairpin_plots.py
 
 pdfunite $(ls -v *.pdf) ${premirnaSNP}

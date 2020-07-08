@@ -6,7 +6,7 @@ import os
 import re
 import sys
 import copy
-import commands
+import subprocess
 from PIL import Image
 from Bio import SeqIO
 
@@ -31,13 +31,13 @@ beforeSeq={}
 afterSeq={}
 seqStrand={}
 
-bed_file = open('premirLoc.bed', "r")
+bed_file = open('pre_miRNA.bed', "r")
 for i in bed_file.readlines():
     i = i.strip()
     lineStrand = i.split("\t")
     if lineStrand[5]=="-":
         seqStrand[lineStrand[3]]="-"
-    
+
 bed_file.close()
 
 for name_infor in SeqIO.parse('finalPremiRNAsMod.fasta', 'fasta'):
@@ -74,7 +74,7 @@ for i in location_file.readlines():
 location_file.close()
 
 ## each per-miRNAs
-for extract_name in afterSeq.keys():
+for extract_name in vcfFile:
     for seqType in ['before', 'after']:
         file_name = extract_name
         if seqType == 'before':
@@ -82,7 +82,7 @@ for extract_name in afterSeq.keys():
         else:
             sequence = afterSeq[extract_name]
         # RNAfold struture
-        other, structure = commands.getstatusoutput("echo " + sequence + "| RNAfold")
+        other, structure = subprocess.getstatusoutput("echo " + sequence + "| RNAfold")
         structure = re.split("\s", structure)
         ## Write the structure
         inputFile = file_name+'.str'
@@ -93,14 +93,15 @@ for extract_name in afterSeq.keys():
         fas_file.close()
         ## Calculate the color
         mature_location = sorted(location[extract_name])
-        values = range(mature_location[0]+1, mature_location[1]+1)
-        values.extend(range(mature_location[2]+1, mature_location[3]+1))
+        values = list(range(mature_location[0]+1, mature_location[1]+1))
+        print(values)
+        values.extend(list(range(mature_location[2]+1, mature_location[3]+1)))
         color_tab = []
         sign1_rgd = ['0.8', '0', '0']
         sign2_rgd = ['0', '0.8', '0']
         pre_location = copy.deepcopy(location[extract_name])
         pre_location = sorted(pre_location)
-        print vcfLoc[extract_name]
+        print(vcfLoc[extract_name])
         for i in [i+1 for i in range(len(sequence))]:
             if i not in vcfLoc[extract_name]:
                 if pre_location[0] < i < (pre_location[1]+1):
@@ -124,12 +125,12 @@ for extract_name in afterSeq.keys():
             os.system('convert -trim -quality 500  -density 500 ' + extract_name + '_ss.ps ' + file_name + '_before.png')
             img = Image.open( file_name + '_before.png')
             (x, y) = img.size
-            scaleBefore = float(max(x, y))/min(x, y)        
+            scaleBefore = float(max(x, y))/min(x, y)
         else:
             os.system('convert -trim -quality 500  -density 500 ' + extract_name + '_ss.ps ' + file_name + '_after.png')
             img = Image.open( file_name + '_after.png')
             (x, y) = img.size
-            scaleAfter = float(max(x, y))/min(x, y)  
+            scaleAfter = float(max(x, y))/min(x, y)
     """The page
     """
     c = canvas.Canvas(extract_name + ".pdf", pagesize=(page_wid, page_hei))

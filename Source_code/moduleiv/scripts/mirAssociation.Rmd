@@ -6,7 +6,7 @@ output:
     vertical_layout: scroll
     social: menu
     source_code: embed
-    theme: journal
+    theme: cosmo
 ---
 
 ```{r setup, include=FALSE}
@@ -129,41 +129,37 @@ p1 %>%
 ### Total CPM of different length
 
 ```{r}
-p2 <- data %>%
-         group_by(Len) %>%
-         summarise(count = sum(CPM)) %>%
-         plot_ly(labels = ~Len,
-                 values = ~count,
-                 marker = list(colors = mycolors)) %>%
-         add_pie(hole = 0.5) %>%
-         layout(xaxis = list(zeroline = F,
-                             showline = F,
-                             showticklabels = F,
-                             showgrid = F),
-                yaxis = list(zeroline = F,
-                             showline = F,
-                             showticklabels=F,
-                             showgrid=F))
-
-p2 %>%
-  config(
-    toImageButtonOptions = list(
-      filename = "Total CPM of different length",
-      format = "svg",
-      width = 200,
-      height = 100
+if(!any(data[,7]=="-")){
+  p2 <- data %>%
+           group_by(Len) %>%
+           summarise(count = sum(CPM)) %>%
+           plot_ly(labels = ~Len,
+                   values = ~count,
+                   marker = list(colors = mycolors)) %>%
+           add_pie(hole = 0.5) %>%
+           layout(xaxis = list(zeroline = F,
+                               showline = F,
+                               showticklabels = F,
+                               showgrid = F),
+                  yaxis = list(zeroline = F,
+                               showline = F,
+                               showticklabels=F,
+                               showgrid=F))
+  
+  p2 %>%
+    config(
+      toImageButtonOptions = list(
+        filename = "Total CPM of different length",
+        format = "svg",
+        width = 200,
+        height = 100
+      )
     )
-  )
-
+}
 # subplot(plot_spacer(), p1, p2, p3,
 #         nrows = 2, margin = 0.04, heights = c(0.7, 0.3))
 
 ```
-
-Row {data-height=100px}
--------------------------------------
-
-To reduce false positives, the potential 'noise' reads can be filtered according to the R package *Threshold-seq*. The remaining contigs were normalized to reads per million (RPM). Sum of RPM and maximum RPM of each sample were used to assess overall abundance and further filter low abundance. For more detailed processing procedure, please visit *Tutorial* section.
 
 Row
 -------------------------------------
@@ -214,7 +210,8 @@ wrap_plots(A = p3, B = p4, C = p5,
 ### TE
 
 ```{r}
-TE_data <- data[data$Type=="TE", ]
+if("TE" %in% data$Type){
+  TE_data <- data[data$Type=="TE", ]
 if(nrow(TE_data)>0){
   TE_data_mat <- table(TE_data[,c(5,15)])
   TE_data_mat <- reshape2::melt(TE_data_mat)
@@ -258,12 +255,14 @@ if(nrow(TE_data)>0){
              design = design, heights = c(1.5,1), guides = "collect")
 
 }
+}
 ```
 
 ### RPM frequency
 
 ```{r}
-raw_df <- matrix(ncol = 3)
+if(!any(data[,7]=="-")){
+  raw_df <- matrix(ncol = 3)
 breaks = c(0,100,1000,10000,floor(max(data[,7])))
 for(i in 1:length(breaks)-1){
   index_tmp <- data[,7]>=breaks[i]&data[,7]<breaks[i+1]
@@ -273,16 +272,17 @@ for(i in 1:length(breaks)-1){
                              j, as.numeric(index_tmp[j])))
   }}
 
-raw_df <- as.data.frame(raw_df[-1,])
-raw_df[,3] <- as.numeric(raw_df[,3])
-raw_df[,1] <- factor(raw_df[,1],levels=unique(raw_df[,1]))
-colnames(raw_df) <- c("region", "length", "percentage")
-#dlast <- as.data.frame(table(cut(data[,7], breaks = c(0,100,1000,10000,max(data[,7])))))
-
-ggplot(raw_df,aes(region,percentage,fill=length))+
-  geom_bar(stat="identity",position="fill")+
-  theme_Publication()+
-  theme(axis.line = element_line(colour = "black", size = 0.5))+
-  guides(fill=guide_legend(title=NULL))+coord_flip()+
-  scale_fill_uchicago()
+  raw_df <- as.data.frame(raw_df[-1,])
+  raw_df[,3] <- as.numeric(raw_df[,3])
+  raw_df[,1] <- factor(raw_df[,1],levels=unique(raw_df[,1]))
+  colnames(raw_df) <- c("region", "length", "percentage")
+  #dlast <- as.data.frame(table(cut(data[,7], breaks = c(0,100,1000,10000,max(data[,7])))))
+  
+  ggplot(raw_df,aes(region,percentage,fill=length))+
+    geom_bar(stat="identity",position="fill")+
+    theme_Publication()+
+    theme(axis.line = element_line(colour = "black", size = 0.5))+
+    guides(fill=guide_legend(title=NULL))+coord_flip()+
+    scale_fill_uchicago()
+}
 ```

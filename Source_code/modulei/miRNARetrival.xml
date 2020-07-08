@@ -1,0 +1,104 @@
+<tool id="databases" name="miRNARetrival " version="20.05">
+    <!-- <description>aggregates annotated miRNAs provided by different miRNA databases</description> -->
+
+    <command><![CDATA[
+
+        bash ${__tool_directory__}/scripts/databases_mining.sh ${__tool_directory__} "$plant" $database $htmlreport1 $filelist
+
+    ]]></command>
+
+    <inputs>
+        <param name="plant" type="select" value="Choose" label="Species (support for 192 species)"
+            help="">
+            <options from_data_table="miRNA_species" >
+                <!-- <filter type="sort_by" column="1"/> -->
+                <validator type="no_options" message="No indexes are available for the selected input dataset"/>
+            </options>
+        </param>
+
+        <param type="select" name="database" display="checkboxes" multiple="true"
+            label="miRNA databases"
+            help ="">
+            <option value="miRBase" selected="true">miRBase</option>
+            <option value="PmiREN" selected="true">PmiREN</option>
+            <option value="sRNAanno" selected="true">sRNAanno</option>
+            <option value="PlantsmallRNAgenes" selected="true">Plant small RNA genes</option>
+        </param>
+    </inputs>
+
+    <stdio><exit_code range="1:" level="fatal" description="Error Running miRNARetrival"/></stdio>
+
+    <outputs>
+        <data format="html" name="htmlreport1" label="${plant.value} | ${tool.name} | Overview of already annotated miRNAs in public databases" />
+        <data format="zip" name="filelist" label="${plant.value} | ${tool.name} | Collection of ${plant.value} miRNAs from public databases" />
+    </outputs>
+
+<help>
+
+|
+
+.. class:: donemark
+
+**What it does**
+
+This tool is designed to integrate four representative miRNA databases (`miRBase`_, `PmiREN`_, `sRNAanno`_, and `Plant small RNA genes`_) into
+a unified HTML document, which contains the size, length distribution, and composition of the first base of miRNA families, enabling users to easily perform comparative analysis.
+
+.. class:: infomark
+
+**Inputs**
+
+- **miRNA databases**: Choose miRNA databases (at least one).
+
+.. class:: infomark
+
+**Outputs**
+
+- An HTML document recording the comprehensive information of already annotated miRNAs reported in selected databases.
+- A packaged file containing miRNAs in each database.
+
+.. _`miRBase`: http://www.mirbase.org/
+.. _`PmiREN`: http://www.pmiren.com/
+.. _`sRNAanno`: http://plantsrnas.org/
+.. _`Plant small RNA genes`: http://plantsmallrnagenes.science.psu.edu/
+.. _`GMAP`: https://academic.oup.com/bioinformatics/article/21/9/1859/409207
+
+.. class:: infomark
+
+**About**
+
+- **miRBase:** The miRBase database is the central online repository of published miRNA sequences and annotations.
+
+- **PmiREN (Plant miRNA ENcyclopedia):** The PmiREN is a comprehensive functional plant miRNA database. In current version, PmiREN contains 20,388 miRNA loci (MIRs) belonging to 5,757 families, 1,365 clusters, 1,668 syntenic blocks and 141,327 predicted miRNA-target pairs in 88 species phylogenetically ranging from chlorophytes to angiosperms. In addition, 1,537 deeply sequenced small RNA libraries were used in quantification of miRNA expression pattern.
+
+- **sRNAanno:** The sRNAanno hosts a large collection of miRNA, phasiRNA- and hc-siRNA-generating loci annotated from ~140 plants using consistent and high-confidence criteria.
+
+- **Plant small RNA genes:** The 'Plant small RNA genes' database analyzed a large data set of published and newly generated sRNA sequencing data (1,333 sRNA-seq libraries containing more than 20 billion reads) and used a uniform bioinformatic pipeline to produce comprehensive sRNA loci annotations of 47 diverse plants, yielding more than 2.7 million sRNA loci.
+
+For details, please see the following table：
+
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+|  **Database**         | **Date** | **Version** |  **Species**                                                                                                                                | **Small RNA type**                         |
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| miRBase               | 2019     |  v22.1      | 86 plants (1 chlorophytes, 3 mosses, 4 gymnosperms, 1 basal angiosperm, 14 monocotyledons, and 63 eudicotyledons)                           | miRNA                                      |
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| PmiREN                | 2019     |  v1.0       | 88 plants (2 chlorophytes, 1 moss, 1 lycophyte, 2 gymnosperms, 1 basal angiosperm, 1 magnoliidae, 18 monocotyledons, and 62 eudicotyledons) | miRNA                                      |
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| sRNAanno              | 2020     |  v1.0       | 143 plants (2 chlorophytes, 3 mosses, 2 fernes, 2 gymnosperms, 1 basal angiosperm, 2 Magnoliids,  28 monocotyledons, and 103 eudicotyledons)| miRNA, phasiRNA, hc-siRNA                  |
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+| Plant small RNA genes | 2019     |  v1.0       | 47 plants (2 mosses, 1 gymnosperm, 1 basal angiosperm, 9 monocotyledons, and 34 eudicotyledons)                                             | miRNA, nearMIRNA, 20-24nt siRNA,  otherRNA |
++-----------------------+----------+-------------+---------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------+
+
+|
+
+    </help>
+
+    <citations>
+        <citation type="doi">10.1093/nar/gky1141</citation>
+        <citation type="doi">10.1093/nar/gkz894</citation>
+        <citation type="doi">10.1101/gr.256750.119</citation>
+        <citation type="doi">10.1101/771121</citation>
+        <!-- <citation type="doi">10.1093/bioinformatics/bti310</citation> -->
+    </citations>
+
+</tool>

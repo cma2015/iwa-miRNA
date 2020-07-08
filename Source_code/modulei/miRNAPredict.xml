@@ -1,213 +1,188 @@
-<tool id="dataProcessing" name="miRNAPredict" version="17.09">
+<tool id="dataProcessing" name="miRNAPredict" version="20.05">
     <!-- <description>predicts miRNAs from sRNA-Seq data</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        #if $atype.grouptype == "preprocess":
-            bash ${__tool_directory__}/scripts/srnaProcess.sh
-                -f ${__tool_directory__}
-                #if $atype.sradata.datainput == "yes":
-                    -s $atype.sradata.srainput
-                #end if
-                #if $atype.userdata.datainput == "yes":
-                    -u $atype.userdata.userinput
-                #end if
-                #if $atype.adapterdata.adapterinput == "yes":
-                    -a $atype.adapterdata.adapter
-                #end if
-                -q $atype.qulity
-                -m $atype.min
-                -n $atype.max
-                -c $atype.cleanRead
-                -p $atype.athreads
-                -g $outputFasta
-                -i $QCres
-                -l $rmdout
-        #end if
 
-        #if $atype.grouptype == "identify":
-            bash ${__tool_directory__}/scripts/mirProcess.sh
-                --path ${__tool_directory__}
-                --fasta $atype.fastaTarFile
-                --species $atype.speciesPath
-                #if $atype.alldata.filter == "no":
-                    --filter ${atype.alldata.sampleID}
-                #end if
-                --readnum $atype.readnum
-                --min $atype.miRNAsMin
-                --max $atype.miRNAsMax
-                --map $atype.multiAlign
-                --sum $atype.sumRPM
-                --least $atype.leastRPM
-                --samnum $atype.samnum
-                --method ${atype.methods.identify}
-                --thread $atype.bthreads
-                --outxt $resultfile
-                --outfasta $outfasta
-                --outmap $outmap
-                --expfile $expfile
-        #end if
+        bash ${__tool_directory__}/scripts/srnaProcess.sh
+            --curpath ${__tool_directory__}
+            --species $refpath
+            #if $sradata.datainput == "yes":
+                --sralist "$sradata.srainput"
+            #end if
+            #if $userdata.datainput == "yes":
+                --userdata $userdata.userinput
+            #end if
+            #if $adapterdata.adapterinput == "yes":
+                --adatper $adapterdata.adapter
+            #end if
+
+            --quality $processing.qulity
+            --min $processing.min
+            --max $processing.max
+
+            --method ${methods.identify}
+
+            --mirreadnum $identification.readnum
+            --mirmin $identification.miRNAsMin
+            --mirmax $identification.miRNAsMax
+            --mirmap $identification.multiAlign
+            --mirsum $identification.sumRPM
+            --mirleast $identification.leastRPM
+            --mirsamnum $identification.samnum
+
+            --thread $bthreads
+
+            --multiqcres $QCres
+            --outputhtml $rmdout
+            --outxt $resultfile
+            --exptar $exptar
     ]]></command>
 
     <inputs>
-        <conditional name="atype">
-            <param name="grouptype" type="select" label="The content you want to analyze" help ="">
-                <option value="preprocess" selected="true">Raw sequencing data preprocessing</option>
-                <option value="identify">miRNA identification and quantification</option>
-            </param>
+        <param name="refpath" type="data" format="simple" label="References of species"
+            help="This file could be obtained from genomePrepare" />
 
-            <when value="preprocess">
-                <conditional name="sradata">
-                    <param name="datainput" type="boolean" truevalue="yes" falsevalue="no" checked="true"
-                    label="Input public data (SRA accession)?" />
-                    <when value="yes">
-                        <param name="srainput" type="text" area="true" size="1x1" label="SRA accession number" 
-                        help="Multiple names should be separated by comma or line break,
-                            e.g. SRR1042171, SRR9302978"/>
-                    </when>
-                </conditional>
-                <conditional name="userdata">
-                    <param name="datainput" type="boolean" truevalue="yes" falsevalue="no" checked="true"
-                    label="Input user's data?" />
-                    <when value="yes">
-                        <param name="userinput" type="data" label="Input the compressed fastq file" help=""/>
-                    </when>
-                </conditional>
-                <conditional name="adapterdata">
-                    <param name="adapterinput" type="boolean" truevalue="yes" falsevalue="no" checked="true"
-                    label="Input adapters?" help='If no, adapters will be detected by miR156 sequence and dnapi' />
-                    <when value="yes">
-                        <param name="adapter" type="data" label="Adapters file" help="Each line contains one ID and adapter" />
-                    </when>
-                </conditional>
-
-        		<param name="qulity" type="integer" value="20" min="20" max="30" label="Quality score cutoff" />
-        		<param name="min" type="integer" value="18" min="10" max="20" label="Minimum read length" />
-        		<param name="max" type="integer" value="26" min="20" max="30" label="Maximum read length" />
-        		<param name="cleanRead" type="integer" value="1000000" label="Minimal read number for clean files" />
-                <param name="athreads" type="integer" value="3"  label="Number of threads" />
-            </when>
-
-            <when value="identify">
-                <param name="fastaTarFile" type="data" format="tar" label="Input compressed fasta file (fasta.tar.gz)"
-                    help="Note: The compressed fasta file can be obtained from two ways -- upload or preprocess in miRNAPredict."/>
-                <param name="speciesPath" type="data" format="txt" label="Input species (path)"
-                    help="Note: The input file contains the name of the species." />
-                <conditional name="alldata">
-                    <param name="filter" type="boolean" truevalue="yes" falsevalue="no" checked="true" 
-                    label="All samples for further analysis?" />
-                    <when value="no">
-                        <param name="sampleID" format="txt" type="data" label="Input sample ID" 
-                        help="Note: Filtering unreasonable samples" />
-                    </when>
-                </conditional>
-
-                <conditional name="methods">
-                    <param name="identify" type="select" multiple="false" display="radio">
-                        <option value="mirdp" selected="true"> miRDP2</option>
-                        <option value="mircat"> miRCat2</option>
-                    </param>
-                </conditional>
-
-                <param name="readnum" type="text" value="1000000" label="Minimal number of mapping reads" />
-                <param name="miRNAsMin" type="text" value="20" min="18" max="21" label="Minimal read length cut-off for miRNAs candidate" />
-                <param name="miRNAsMax" type="text" value="24" min="22" max="26" label="Maximum read length cut-off for miRNAs candidate" />
-                <param name="multiAlign" type="text" value="20" label="Set the alignment number per read" />
-                <param name="sumRPM" type="text" value="50" label="Set the threshold of total abundance of a read in all samples" />
-                <param name="leastRPM" type="text" value="5" label="Set the least value of maximum abundance of a read in all samples" />
-                <param name="samnum" type="text" value="2" label="Set the least samples of a read" />
-                <param name="bthreads" type="integer" value="3" label="Input CPUs number" />
+        <conditional name="sradata">
+            <param name="datainput" type="boolean" truevalue="yes" falsevalue="no" checked="false"
+            label="Input public data (SRA accessions)?" />
+            <when value="yes">
+                <param name="srainput" type="text" area="true" size="1x1" label="SRA accession number"
+                help="Multiple names should be separated by comma or line break, e.g. SRR11347201, SRR11829907"/>
             </when>
         </conditional>
+
+        <conditional name="userdata">
+            <param type="boolean" name="datainput" truevalue="yes" falsevalue="no" checked="true"
+            label="Upload in-house sRNA sequencing data?" />
+            <when value="yes">
+                <param name="userinput" type="data" format="zip" label="Input the compressed fastq file" help=""/>
+            </when>
+        </conditional>
+
+        <conditional name="adapterdata">
+            <param type="boolean" name="adapterinput" truevalue="yes" falsevalue="no" checked="false"
+            label="Input adapters?" help='If no, adapters will be detected by and  DNApi (A de novo adapter prediction algorithm for small RNA sequencing data) and miR156 sequence.' />
+            <when value="yes">
+                <param name="adapter" type="data" label="Adapters file (.fasta)" help="" />
+            </when>
+        </conditional>
+
+        <section name="processing" title="Additional parameters for raw sequencing data preprocessing" expanded="false">
+            <param name="qulity" type="integer" value="20" label="Quality score cutoff (20-30)" />
+            <param name="min" type="integer" value="18" label="Minimum read length (10-20) nt" />
+            <param name="max" type="integer" value="26" label="Maximum read length (20-30) nt" />
+        </section>
+
+        <conditional name="methods">
+            <param name="identify" type="select" multiple="false" label = "Choose a tool for miRNA identification" display="radio">
+                <option value="mirdp" selected="true"> miRDP2</option>
+                <option value="mircat"> miRCat2</option>
+            </param>
+        </conditional>
+
+        <section name="identification" title="Additional parameters for miRNA identification" expanded="false">
+            <param name="readnum" type="text" value="1000000" label="Minimum number of mapping reads" />
+            <param name="miRNAsMin" type="text" value="20" label="Minimum read length cut-off for miRNA candidates (18-21 nt)" />
+            <param name="miRNAsMax" type="text" value="24" label="Maximum read length cut-off for miRNA candidates (21-26 nt)" />
+            <param name="multiAlign" type="text" value="20" label="The maximum number of multi-mapped reads" />
+            <param name="sumRPM" type="text" value="8" label="The threshold of sum abundance of a read" />
+            <param name="leastRPM" type="text" value="5" label="Minimum value of read abundance" />
+            <param name="samnum" type="text" value="1" label="The least samples supporting a read" />
+        </section>
+        <param name="bthreads" type="integer" value="2" label="Number of threads (1-5)"
+            help="It is not recommended to increase the number of threads unless the number of datasets is large." />
+
+        <!-- <section name="advanced" title="parameters of miRNA identification" expanded="false">
+            <conditional name="alldata">
+                <param name="filter" type="boolean" truevalue="yes" falsevalue="no" checked="true"
+                label="All samples for further analysis?" />
+                <when value="no">
+                    <param name="sampleID" format="txt" type="data" label="Input sample ID"
+                    help="Note: Filtering unreasonable samples" />
+                </when>
+            </conditional>
+        </section> -->
+
     </inputs>
 
+    <stdio><exit_code range="1:" level="fatal" description="Error Running miRNAPredict"/></stdio>
+
     <outputs>
-        <data name="QCres" format="html" label="MultiQC results of fastq file">
-            <filter>atype['grouptype'] == "preprocess"</filter>
-        </data>
-        <data name="rmdout" format="html" label="Rmarkdown report from dataProcessing" >
-            <filter>atype['grouptype'] == "preprocess"</filter>
-        </data>
-        <data name="outputFasta" format="tar" label="The processed fasta data from dataProcessing" >
-            <filter>atype['grouptype'] == "preprocess"</filter>
-        </data>
-        <data name="outfasta" format="fasta" label="Filtered fasta files">
-            <filter>atype['grouptype'] == "identify"</filter>
-        </data>
-        <data name="outmap" format="tsv" label="The location of sequences on the genome" >
-            <filter>atype['grouptype'] == "identify"</filter>
-        </data>
-        <data name="expfile" format="tar" label="The expression file (miRNAPredict)" >
-            <filter>atype['grouptype'] == "identify"</filter>
-        </data>
-        <data name="resultfile" format="tsv" label="The resulting file (miRNAPredict)" >
-            <filter>atype['grouptype'] == "identify"</filter>
-        </data>
+        <data name="QCres" format="html" label="${refpath.name} | ${tool.name} | MultiQC results of fastq file" />
+        <data name="rmdout" format="html" label="${refpath.name} | ${tool.name} | HTML report of raw sequencing data preprocessing" />
+        <data name="exptar" format="tar" label="${refpath.name} | ${tool.name} | Read abundance data" />
+        <data name="resultfile" format="tabular" label="${refpath.name} | ${tool.name} | The miRNA candidates from sRNA-Seq data" />
     </outputs>
 
     <help>
 
 |
 
-.. class:: infomark
+.. class:: donemark
 
 **What it does**
 
-This tool consists of two sub-functions:
-
-1. **Raw sequencing data preprocessing**: this sub-function will download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database.
-
-    - The processed data can be directly used for sRNA quantification and identification.
-
-2. Identification: this sub-function generates the quantified reads by the following steps:
-
-    1. The trimmed reads in limited length were aligned to the reference genome.
-
-    2. Reads matching known structural RNAs (rRNAs, tRNAs, snRNAs, and snoRNAs) were removed.
-
-    3. Read counts were normalized by millions of mapped reads (transcripts per million; TPM) in each library.
-
-    4. Low abundance reads were further filtered.
-
-    5. miRNA candidates were identified using `miRDP2`_ or `miRCat2`_.
+This tool aims at download and filter raw sRNA sequencing data automatically from NCBI's SRA (Short Read Archive) database.
 
 .. class:: infomark
 
 **Inputs**
 
-For **Preprocessing**:
-
-- SRA accessions or compressed raw fastq files
-- Adapter sequences for each library
-- The parameters of quality controls, such as quality score, minimum length, maximum length, and minimal read number.
-
-For **Identification**:
-
-- The compressed fasta files
-- Path of genome file
-- The parameters of miRNA identification, such as miRNAs length, multi-mapping, total abundance, maximum abundance, and sample support.
+- Path of genome file.
+- SRA accessions or compressed raw fastq files.
+- (Optional) Adapter sequences for each library.
+- (Optional parameters) The parameters of quality control, such as quality score, minimum length, maximum length, and minimum read number.
+- (Optional parameters) The parameters of miRNA identification, such as miRNAs length, multi-mapping, total abundance, maximum abundance, and sample support.
 
 .. class:: infomark
 
 **Output**
 
-For **Preprocressing**:
-
-- Clean fasta files
-- Quality report about public sRNA-seq data or private sequencing data
-
-For **Identification**:
-
-- GFF annotation file containing the information of pre-miRNAs and mature miRNAs.
-- An HTML document containing the sequences, structures, and expression of pre-miRNAs and mature miRNAs.
+- A report of quality control about public small RNA-Seq data or private sequencing data.
+- An annotation file containing the information of miRNA precursors and mature miRNAs.
+- An HTML document containing the sequences, structures, and expression of miRNA precursors and mature miRNAs.
 
 .. _`miRDP2`: http://srnaworld.com/miRDP2/index.html
 .. _`miRCat2`: http://srna-workbench.cmp.uea.ac.uk/mircat2/
+
+.. class:: infomark
+
+**About**
+
+------
+
+The adapter file as a fasta format:
+
+| >SRR11347201
+| AGATCGGAAGAG
+| >SRR11829907
+| AGATCGGAAGAG
+| ......
+
+------
+
+The quantified reads were generated by the following steps:
+
+    1. The raw reads were filtered by removing adaptors, low-quality sequences, and limited length using the FASTX-toolkit (http://hannonlab.cshl.edu/fastx_toolkit/).
+
+    2. The trimmed reads in limited length were aligned to the reference genome.
+
+    3. Reads matching known structural RNAs (rRNAs, tRNAs, snRNAs, and snoRNAs) were removed.
+
+    4. Read counts were normalized by millions of mapped reads (transcripts per million; TPM) in each library.
+
+    5. Low abundance reads were further filtered.
+
+    6. miRNA candidates were identified using `miRDP2`_ or `miRCat2`_.
 
 |
 
     </help>
 
     <citations>
+        <citation type="doi">10.1371/journal.pone.0164228</citation>
+        <citation type="doi">10.1093/bioinformatics/btw354</citation>
+        <citation type="doi">10.1093/bioinformatics/bts480</citation>
         <citation type="doi">10.1002/0471250953.bi1107s32</citation>
         <citation type="doi">10.1093/bioinformatics/bty972</citation>
         <citation type="doi">10.1093/bioinformatics/btx210</citation>

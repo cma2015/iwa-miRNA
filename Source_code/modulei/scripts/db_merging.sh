@@ -94,8 +94,7 @@ mirbaseC:,PmiREN:,PmiRENC:,sRNAanno:,sRNAannoC:,Pgenes:,PgenesC:,genome:,outxt:,
     fi
 
     ## Extract miRNAs in databases
-    out_dir=`python ${SCRIPTDIR}/db_mining.py \
-    --curpath ${curdir} --species ${species} --database ${dbname} --outformat txt | grep "modulei"`
+    out_dir=`python ${SCRIPTDIR}/db_mining.py --curpath ${curdir} --species ${species} --database ${dbname} --outformat txt | grep "modulei"`
 
     genomepath=`cat ${genome}`
 
@@ -113,7 +112,7 @@ mirbaseC:,PmiREN:,PmiRENC:,sRNAanno:,sRNAannoC:,Pgenes:,PgenesC:,genome:,outxt:,
         bash ${SCRIPTDIR}/version_change.sh --path ${out_dir} --genome ${curdir}/${genomepath} --flatrna ${out_dir}/PlantsmallRNAgenes.txt
     fi
 
-    ## Merge miRNAs
+    # ## Merge miRNAs
     Rscript ${SCRIPTDIR}/db_merge.R ${out_dir} ${dbname} ${curdir}/${genomepath}
     sed "s/<i class='correct'><\/i>/√/g;s/<i class='incorrect'><\/i>/×/g" ${out_dir}/00merge.txt > $outxt
 
@@ -129,4 +128,5 @@ mirbaseC:,PmiREN:,PmiRENC:,sRNAanno:,sRNAannoC:,Pgenes:,PgenesC:,genome:,outxt:,
     cp -r ${out_dir}/png ${rmd%.*}_files/
 
 }
+
 main "$@"

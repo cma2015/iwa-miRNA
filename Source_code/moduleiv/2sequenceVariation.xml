@@ -2,42 +2,45 @@
     <!-- <description> shows the effects of variation site on pre-miRNAs structure and mature miRNAs</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        bash ${__tool_directory__}/sequenceVariation.sh 
+        bash ${__tool_directory__}/scripts/sequenceVariation.sh
             ${__tool_directory__}
-            $premirnaBed 
-            $premirnaSeq 
-            $matureLoc 
-            $SNPs 
+            $mirAnno
+            $SNPs
             $premirnaSNP
     ]]></command>
 
     <inputs>
-        <param name="premirnaSeq" type="data" format="fasta" label="pre-miRNAs sequence used for comparison (.fasta)"/>
-        <param name="premirnaBed" type="data" label="pre-miRNAs annation used for comparison (.bed)"/>
-        <param name="matureLoc" type="data" format="txt" label="mature miRNAs location"/>
-        <param name="SNPs" type="data" format="txt" label="SNP file (.vcf)"/>
+        <param name="mirAnno" format="tabular" type="data" label="miRNA annotation"
+            help="Note: The annotation file can be obtained from miRNASelection or miRNATranslate tool."/>
+        <param name="SNPs" type="data" format="txt" label="SNP file"
+            help="As you can see in following description, this file contains five columns."/>
     </inputs>
 
-    <outputs>  
-        <data name="premirnaSNP" format="pdf" label="Output | Sequence variation on pre-miRNAs structure"/>
-    </outputs>    
+    <outputs>
+        <data name="premirnaSNP" format="pdf" label="${tool.name} | Sequence variation on structures of microRNA precursors"/>
+    </outputs>
 
     <help><![CDATA[
 .. class:: donemark
 
 **What it does**
 
-This tool provides a complete assessment for effect of SNP on the RNA secondary structure and target genes.
+This tool provides a complete assessment for effect of SNP on the RNA secondary structures.
 
 .. class:: infomark
 
 **Inputs**
 
-- The sequences and coordinates of miRNA precursors.
-- The location of mature miRNA in miRNA precursors
-- The SNP file with following format:
+- The annotation file from miRNASelection or miRNATranslate tool.
+- The SNP file with following information in tab delimited format:
 
     | #CHROM	POS	ID	REF	ALT
+    | 1	15510167	ENSVATH00074698	T	C
+    | 1	15631710	ENSVATH00075207	T	C
+    | 1	16231879	ENSVATH00077191	A	G
+    | 1	16240108	ENSVATH00077240	C	T
+    | 1	16414910	ENSVATH00078283	A	T
+    | ......
 
 |
 
