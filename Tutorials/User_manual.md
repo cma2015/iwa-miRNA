@@ -207,11 +207,11 @@ Each miRNA has a report page that contains detailed information customized by fe
 
 The test data contains two sets of *Arabidopsis* small RNA-Seq data, which are stored in the Web server (**Test_data/in-house_test_data.zip**). The following time represents the time spent on the test performed on the Web server using the test data.
 
-|           |                    | Costing time           |
-| --------- | ------------------ | ---------------------- |
-| ModuleI   | **miRNARetrival**  | 48 seconds             |
-|           | **genomePrepare**  | 17 seconds             |
-|           | **miRNAPredict**   | 12.2 minutes (threads) |
-|           | **miRNATranslate** | 10.03 minutes          |
-| ModuleII  | **miRNASelection** | 3.92 minutes           |
-| ModuleIII | **manualCuration** | 15.92 minutes          |
+|           |                    | Costing time               |
+| --------- | ------------------ | -------------------------- |
+| ModuleI   | **miRNARetrival**  | 48 seconds                 |
+|           | **genomePrepare**  | 17 seconds                 |
+|           | **miRNAPredict**   | 12.2 minutes (two threads) |
+|           | **miRNATranslate** | 10.03 minutes              |
+| ModuleII  | **miRNASelection** | 3.92 minutes               |
+| ModuleIII | **manualCuration** | 15.92 minutes              |
