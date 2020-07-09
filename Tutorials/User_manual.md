@@ -88,16 +88,18 @@ Then, iwa-miRNA local server can be accessed via http://localhost:8080
 
 Test data for iwa-miRNA are both available at [GitHub](https://github.com/cma2015/iwa-miRNA)  and  [Web server](https://deepngs.nwafu.edu.cn).
 
-- **For GitHub**, click "**Clone**" (see the figure below), and then download the ZIP compressed file into your local device, and then unzip the file.![github](img/0.1.png)
+- **For GitHub**, click "**Clone**" (see the figure below), and then download the ZIP compressed file into your local device, and then unzip the file. In the Test_data folder, users need to compress in-house_test_data into in-house_test_data.zip format.
+![github](img/0.1.png)
 
 - **For web server**, click **the link** (see the figure below), and then save the file into your local device, and then unzip the file.
+![server](img/0.2.png)
 
-	![server](img/0.2.png)
-
+Note: in-house_test_data.zip as input of miRNAPredict and sample_information.txt as input of manualCuration.
 
 ### Upload test data to your local iwa-miRNA server
 
-User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.![upload1](img/0.3.png) ![upload1](img/0.4.png)![upload1](img/0.5.png)![upload1](img/0.6.png)
+User can upload data using `uploadFile` tool (see the figure below) in the Galaxy interface.
+![upload1](img/0.3.png) ![upload1](img/0.4.png)![upload1](img/0.5.png)![upload1](img/0.6.png)
 
 <p align="right"><a href="#top">&#x25B2; back to top</a></p>
 
