@@ -205,7 +205,7 @@ Each miRNA has a report page that contains detailed information customized by fe
 
 ## Costing time for test data
 
-The test data contain two sets of *Arabidopsis* small RNA-Seq data, which are stored in the web server (**Test_data/in-house_test_data.zip** includes test1.fastq.gz (89MB) and test2.fastq.gz (65MB)). The following times represent the time spent on the test performed on the web server (**16 Cores Inter Xeon E7-4820 (2.00GHz) with 32 threads and 128GB RAM**) using the test data.
+The web server of iwa-miRNA was depolyed on a local machine with 16 Cores Inter Xeon E7-4820(2.00GHz) (32 threads) and 128GB RAM. Using this iwa-miRNA web server, we tested two Arabidospis small RNA sequencing datasets  (Test_data/in-house_test_data.zip include test1.fastq.gz (89MB) and test2.fastq.gz (65MB)). The running time of different modules are shown in the following.
 
 |           |                    | Costing time               |
 | --------- | ------------------ | -------------------------- |
