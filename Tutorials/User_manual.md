@@ -205,7 +205,7 @@ Each miRNA has a report page that contains detailed information customized by fe
 
 ## Costing time for test data
 
-The test data contains two sets of *Arabidopsis* small RNA-Seq data, which are stored in the Web server (**Test_data/in-house_test_data.zip** include test1.fastq.gz (89MB) and test2.fastq.gz (65MB)). The following time represents the time spent on the test performed on the Web server (**16 Cores Inter Xeon E7-4820(2.00GHz) with 32 threads and 128GB RAM**) using the test data.
+The test data contains two sets of *Arabidopsis* small RNA-Seq data, which are stored in the Web server (**Test_data/in-house_test_data.zip** include test1.fastq.gz (89MB) and test2.fastq.gz (65MB)). The following time represents the time spent on the test performed on the Web server (**16 Cores Inter Xeon E7-4820 (2.00GHz) with 32 threads and 128GB RAM**) using the test data.
 
 |           |                    | Costing time               |
 | --------- | ------------------ | -------------------------- |
