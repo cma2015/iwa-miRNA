@@ -1,6 +1,6 @@
-**sRNA-Seq_test_data.zip**
+**sRNA-Seq_test_data**
 
-This file contains raw sequencing reads in FASTQ format, which can be uploaded to iwa-miRNA server and used as inputs of **miRNAPredict** module. In detail, two Arabidopsis sRNA-seq data (SRR11347201 and SRR11829907) were selected, and the first 10 million rows were packaged and named as test1.fastq.gz and test2.fastq.gz.
+This file contains raw sequencing reads in FASTQ format, which can be compressed into **sRNA-Seq_test_data.zip** and used as input of **miRNAPredict** module. In detail, two Arabidopsis sRNA-seq data (SRR11347201 and SRR11829907) were selected, and the first 10 million rows were packaged and named as test1.fastq.gz and test2.fastq.gz.
 
 **sample_information.txt**
 
