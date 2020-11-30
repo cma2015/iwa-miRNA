@@ -119,7 +119,7 @@ mirbaseC:,PmiREN:,PmiRENC:,sRNAanno:,sRNAannoC:,Pgenes:,PgenesC:,genome:,outxt:,
     ## Detailed report of each miRNAs in html file
     mkdir -p ${out_dir}/png
     cp ${SCRIPTDIR}/db_page.Rmd ${out_dir}/db_page.Rmd
-    Rscript -e "rmarkdown::render('${out_dir}/db_page.Rmd',output_dir='${out_dir}')"
+    Rscript -e "rmarkdown::render('${out_dir}/db_page.Rmd',output_dir='${out_dir}', quiet = T)"
     python ${SCRIPTDIR}/db_page.py --outpath ${out_dir}
 
     ## Final report file

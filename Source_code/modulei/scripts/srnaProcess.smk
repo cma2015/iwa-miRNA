@@ -3,7 +3,7 @@
 
 rule sRNA_result:
     input:
-        expand("{fileout}/1fastqc/{sample}_fastqc.html", fileout=config["outpath"], sample=config["samples"]),
+        #expand("{fileout}/1fastqc/{sample}_fastqc.html", fileout=config["outpath"], sample=config["samples"]),
         expand("{fileout}/2collapsedata/{sample}.fasta", fileout=config["outpath"], sample=config["samples"])
 
 rule read_clean:
@@ -35,6 +35,14 @@ rule read_clean:
         fastq_quality_filter -q {params.quality} -p 80 -Q${{phred}} -i $tmpname.tmp1 -o  {output.cfastq}
         rm $tmpname.tmp1
         fastq_to_fasta -r -n -v -Q${{phred}} -i {output.cfastq} -o {output.ffasta}
+ 
+        mkdir -p {wildcards.fileout}/1fastqc
+        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {input}
+        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {output.cfastq}
+
+        wc -l {input} | cut -d " " -f 1 >{wildcards.fileout}/00rawdata/{wildcards.sample}.fastq.count
+        rm {input}
+        wc -l {output.cfastq} | cut -d " " -f 1 >{wildcards.fileout}/1cleandata/{wildcards.sample}_clean.fastq.count
         """
 
 rule length_filter:
@@ -46,7 +54,8 @@ rule length_filter:
         maxval=expand(config["max"])
     shell:
         """
-        sh /home/galaxy/tools/modulei/scripts/length_cutoff.sh {input} {params.minval} {params.maxval} {output}
+        rm {wildcards.fileout}/1cleandata/{wildcards.sample}_clean.fastq
+        sh /home/galaxy/tools/1_MiRNA_Compilation/scripts/length_cutoff.sh {input} {params.minval} {params.maxval} {output}
         """
 
 rule collapse_fa:
@@ -58,16 +67,16 @@ rule collapse_fa:
         fastx_collapser -v -i {input} -o {output}
         """
 
-rule fastqc:
-    input:
-        rawdata = "{fileout}/00rawdata/{sample}.fastq",
-        cleandata = "{fileout}/1cleandata/{sample}_clean.fastq"
-    output: "{fileout}/1fastqc/{sample}_fastqc.html"
-    threads: 1
-    shell:
-        """
-        set -x
-        mkdir -p {wildcards.fileout}/1fastqc
-        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {input.rawdata}
-        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {input.cleandata}
-        """
+#rule fastqc:
+#    input:
+#        rawdata = "{fileout}/00rawdata/{sample}.fastq",
+#        cleandata = "{fileout}/1cleandata/{sample}_clean.fastq"
+#    output: "{fileout}/1fastqc/{sample}_fastqc.html"
+#    threads: 1
+#    shell:
+#        """
+#        set -x
+#        mkdir -p {wildcards.fileout}/1fastqc
+#        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {input.rawdata}
+#        fastqc -q -t 5 -O {wildcards.fileout}/1fastqc {input.cleandata}
+#        """

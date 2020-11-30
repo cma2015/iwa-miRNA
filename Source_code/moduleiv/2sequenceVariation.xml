@@ -2,7 +2,7 @@
     <!-- <description> shows the effects of variation site on pre-miRNAs structure and mature miRNAs</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        bash ${__tool_directory__}/scripts/sequenceVariation.sh
+        bash ${__tool_directory__}/scripts/precursor_variation.sh
             ${__tool_directory__}
             $mirAnno
             $SNPs
@@ -31,8 +31,8 @@ This tool provides a complete assessment for effect of SNP on the RNA secondary 
 
 **Inputs**
 
-- The annotation file from miRNASelection or miRNATranslate tool.
-- The SNP file with following information in tab delimited format:
+- **miRNA annotation**: The annotation file from **miRNASelection** or **miRNATranslate** tool.
+- **SNP file**: The SNP file with following information in **tab delimited format**:
 
     | #CHROM	POS	ID	REF	ALT
     | 1	15510167	ENSVATH00074698	T	C
@@ -41,6 +41,20 @@ This tool provides a complete assessment for effect of SNP on the RNA secondary 
     | 1	16240108	ENSVATH00077240	C	T
     | 1	16414910	ENSVATH00078283	A	T
     | ......
+
+    "#CHROM": chromosome; "POS": The start position in the chromosome; "ID": SNP names; "REF": The allele in the reference genome. "ALT": Any other allele found at that locus.
+	
+
+.. class:: infomark
+
+**Outputs**
+
+**Sequence variation on structures of microRNA precursors**: A pdf file contains RNA structures comparison with SNP effects.
+
+    .. image:: static/assets/html/_images/sequenceVariation_help.png
+        :scale: 50 %
+	:align: center
+
 
 |
 

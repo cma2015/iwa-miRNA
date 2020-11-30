@@ -10,8 +10,8 @@ rule sRNA_result:
 
 rule read_map:
     input:
-        fq =  "{fileout}/00rawdata/{sample}.fastq",
-        cfq = "{fileout}/1cleandata/{sample}_clean.fastq",
+        fq =  "{fileout}/00rawdata/{sample}.fastq.count",
+        cfq = "{fileout}/1cleandata/{sample}_clean.fastq.count",
         clfa = "{fileout}/1cleandata/{sample}_clean.fasta",
         cufa = "{fileout}/2collapsedata/{sample}.fasta"
     output:
@@ -27,10 +27,10 @@ rule read_map:
     shell:
         """
         set -x
-        bowtie -p 5 -v 1 -f -t -m {params.multimap} -S --al {output.gm} {params.speciespath}/Genome/Genome {input.cufa} 1>/dev/null 2>&1
+        bowtie -p 5 -v 1 -f -t --best --strata -m {params.multimap} -S --al {output.gm} {params.speciespath}/Genome/Genome {input.cufa} 1>/dev/null 2>&1
         bowtie -p 5 -v 0 -f -t -S --norc --un {output.clm} {params.speciespath}/trsnsnoRNAs/trsnsnoRNAs {output.gm} 1>/dev/null 2>&1
-        readnum=$((`cat {input.fq} | wc -l`/4))
-        clean=$((`cat {input.cfq} | wc -l`/4))
+        readnum=$((`cat {input.fq}`/4))
+        clean=$((`cat {input.cfq}`/4))
         ratioval=`awk 'BEGIN{{printf ('$clean'/'$readnum')*100}}'`
         cleanlen=`grep ">" {input.clfa} | wc -l`
         gg=`awk '$1~/>/{{split($1,a,"-");b+=a[2]}}END{{print b}}' {output.gm}`

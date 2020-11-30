@@ -1,0 +1,35 @@
+.. iwa-miRNA documentation master file, created by
+   sphinx-quickstart on Sat Dec 29 15:06:23 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to iwa-miRNA's documentation!
+=====================================
+
+Brief introduction
+--------------------
+
+- MicroRNAs (miRNAs), a class of short non-coding RNA, play fundamental roles in most biological processes at post-transcriptional level. The annotation of miRNA is of great importance both for supporting research in genome-scale annotation and as a foundation for functional research. 
+- We present a web-based platform, iwa-miRNA, to allow generate a comprehensive collection of miRNA candidates, and interrogate miRNA annotation in a straightforward way, without the need for computational skills.
+- iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at http://iwa-miRNA.omicstudio.cloud.
+
+How to access help
+--------------------
+
+- For any feedback and tool suggestions, please feel free to leave a message at Github issues. We will try our best to deal with all issues as soon as possible.
+- In addition, if any suggestions are available, feel free to contact: Ting Zhang (zting135@gmail.com) or Chuang Ma (chuangma2006@gmail.com).
+
+Contents:
+------------
+
+.. toctree::
+   :maxdepth: 3
+
+   1_Installation
+   2_Upload_data
+   3_MiRNA_Compilation
+   4_MiRNA_Selection
+   5_Manual_Curation
+   6_Useful_Tools
+   7_Run_time
+

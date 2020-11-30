@@ -5,6 +5,7 @@
             --curpath ${__tool_directory__}
 			--annoinput $annotation
             --sampleInfo $sampleInfo
+            --genomeanno $genomeAnno
             --description $description
 			--htmlout $htmlout
     ]]></command>
@@ -12,8 +13,14 @@
     <inputs>
         <param name="annotation" type="data" format="tabular" label="Selected miRNAs from miRNASelection"
             help=""/>
+            
         <param name="sampleInfo" type="data" format="txt" label="Sample information"
                     help="" />
+
+        <param type="data" name="genomeAnno" format="txt" optional="true"
+            label="Genome annotation file"
+            help="As you can see in following description, this file contains seven columns." />
+
         <param name="description" type="data" format="txt" optional = "true" label="Optional: Gene descriptions"
                     help="" />
     </inputs>
@@ -21,7 +28,7 @@
     <stdio><exit_code range="1:" level="fatal" description="Error Running manualCuration"/></stdio>
 
     <outputs>
-        <data name="htmlout" format="html" label="${tool.name}: The interactive annotation HTML of promising miRNA candidates" />
+        <data name="htmlout" format="html" label="${tool.name} | The interactive annotation HTML of promising miRNA candidates" />
     </outputs>
 
 <help><![CDATA[
@@ -36,16 +43,24 @@ This tool generates detailed summary and report pages for miRNA refinement durin
 
 **Inputs**
 
-- **Selected miRNAs from miRNASelection:** miRNA table from miRNASelection, which includes classification results based on high-throughput criteria and/or machine learning-based approaches;
-
-- **Sample information:** Sample information as following examples:
-
+- **Selected miRNAs from miRNASelection:** miRNA table from **miRNASelection**, which includes classification results based on high-throughput (HT) criteria and/or machine learning (ML)-based approaches;
+- **Sample information:** Tissue information as following examples:
+	
     | SRR11829907	inflorescence
     | SRR11347201	leaf
     | ......
 
-- **Gene descriptions:** Gene descriptions as following examples:
+- **Genome annotation file** with following information in tab delimited format. Genome annotations will be used to label the source of miRNAs. 
 
+	.. image:: static/assets/html/_images/GenomeAnnotation.png
+		:scale: 60 %
+		:align: center
+
+    | PCG: protein coding gene; ncRNA_gene: non-protein coding RNA gene; TE: Transposable element.
+    | lncRNA: long non-coding RNA; LTR: long terminal repeat; RC: Rolling-circle.
+
+- **Gene descriptions:** Gene descriptions as following examples:
+       
     | AT1G18630	GR-RBP6
     | AT4G25980	Peroxidase 43
     | AT5G04040	SDP1
@@ -57,9 +72,28 @@ This tool generates detailed summary and report pages for miRNA refinement durin
 
 .. class:: infomark
 
-**Output**
+**Outputs**
 
- The summary and report pages contain information of miRNA precursors and mature miRNAs, which could assist researchers to select promising candidate miRNAs.
+- **The interactive annotation HTML of promising miRNA candidates**: The summary and report pages containing information of miRNA precursors and mature miRNAs. The meaning of each column in the file is as follows:
+
+    - **ID**: The modified name of miRNA precursors. miRNAs from databases remain their raw names and miRNAs from sRNA-Seq got a new name with species-MIR-N{number}{letter};
+
+    - **HT criteria**: The true/false means whether miRNAs meet the High-throughput (HT) criteria or not.
+
+    - **One class SVM**: miRNA categories defined according to the predictions of one-class Support Vector Machine (SVM) algorithm, which is trained using miRNAs in the positive dataset. "remained_positive": miRNAs in the positive dataset are predicted as miRNAs. "removed_positive": miRNAs in the positive dataset are not predicted as miRNAs. "novel_prediction": miRNA candidates are predicted as miRNAs, and "others": miRNA candidates are not predicted as miRNAs.
+
+    - **Genomic source**: Genomic sources of miRNAs.
+
+    - **Source**: "1", "2", "3", "4" represent annotated miRNAs from miRBase, PmiREN, sRNAanno and Psgenes databases, respectively. "p" denotes miRNAs predicted by ``miRNAPredict`` function in iwa-miRNA.
+
+    - **Stem loop**: **Loc, Len, MFE, AMFE** - The location, length, minimum free energy (MFE), adjusted MFE of stem-loop sequence;
+
+    - **Mature miRNA**: **Arm, Seq, Len, TPM** - The arm, sequence (5'->3'), length, abundance of mature miRNAs;
+
+    - **miRNA precursor**: **Seq count** - Number of collapsed reads mapped to miRNA precursors; **Abundance bias**: The sum of the TPM of miRNA isoforms (isomiRs) was divided by the TPM of miRNA precursors; **Strand bias** - The sum of the TPM of sequences matching miRNA precursors was divided by that matching both strands; **RNAfold** - Whether miRNAs have an effective RNA structure predicted by RNAfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure; **Centroidfold** - Whether miRNAs have an effective RNA structure predicted by Centroidfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure;
+
+    - **Expressed samples**: **Mean** - The average TPM of one miRNA across all sRNA-Seq datasets; **Max** - The max TPM of one miRNA across all sRNA-Seq datasets; **Samples (TPM>1)** - The number of samples with TPM≥1.
+
 
 |
 

@@ -54,8 +54,8 @@ a unified HTML document, which contains the size, length distribution, and compo
 
 **Outputs**
 
-- An HTML document recording the comprehensive information of already annotated miRNAs reported in selected databases.
-- A packaged file containing miRNAs in each database.
+- **Overview of already annotated miRNAs in public databases**: An HTML document recording the comprehensive information of already annotated miRNAs reported in selected databases.
+- **Collection of {species} miRNAs from public databases**: A packaged file containing miRNAs in each database.
 
 .. _`miRBase`: http://www.mirbase.org/
 .. _`PmiREN`: http://www.pmiren.com/

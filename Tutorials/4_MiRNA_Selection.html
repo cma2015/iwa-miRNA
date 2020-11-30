@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MiRNA Selection &mdash; iwa-miRNA v1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Manual Curation" href="5_Manual_Curation.html" />
+    <link rel="prev" title="MiRNA Compilation" href="3_MiRNA_Compilation.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iwa-miRNA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1_Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_Upload_data.html">Upload data to your local iwa-miRNA server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_MiRNA_Compilation.html">MiRNA Compilation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MiRNA Selection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mirnaselection">miRNASelection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use-this-function">How to use this function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detailed-explanation">Detailed explanation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="5_Manual_Curation.html">Manual Curation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_Useful_Tools.html">Useful Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_Run_time.html">Costing time for test data</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iwa-miRNA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>MiRNA Selection</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/4_MiRNA_Selection.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mirna-selection">
+<h1>MiRNA Selection<a class="headerlink" href="#mirna-selection" title="Permalink to this headline">¶</a></h1>
+<p>This module selects a subset of miRNA candidates that are regarded as promising miRNAs, according to the high-throughput criteria and/or using an machine learning (ML)-based approach. For the latter miRNA selection approach, iwa-miRNA builds a one-class Support Vector Machine (SVM) classifier to predict if tested miRNA candidates are potentially real miRNAs or not. iwa-miRNA is user friendly, in that users can tune corresponding parameters according to the sRNA-Seq data at hand. A set of default parameters, derived from our own analysis experience, are also provided to assist non-expert users within their analyses.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="28%" />
+<col width="18%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Tools</strong></th>
+<th class="head"><strong>Input</strong></th>
+<th class="head"><strong>Output</strong></th>
+<th class="head">Applications</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">miRNASelection</span></code></td>
+<td>Output from miRNATranslate</td>
+<td>Selected miRNAs</td>
+<td>Select promising miRNA candidates</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="mirnaselection">
+<h2>miRNASelection<a class="headerlink" href="#mirnaselection" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input">
+<h3>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Candidate miRNAs generated by miRNATranslate</strong>: A comprehensive collection of miRNA candidates from <code class="docutils literal notranslate"><span class="pre">miRNATranslate</span></code>.</li>
+<li><strong>Read abundance data generated by miRNAPredict</strong>: Read sequences and expression levels from <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code>.</li>
+<li>The detailed parameters of high-throughput criteria and machine learning-based approach.</li>
+</ul>
+</div>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Selected miRNAs based on two methods</strong>: An annotation file containing miRNA information and classification results of high-throughput criteria and/or machine learning-based approaches.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-this-function">
+<h3>How to use this function<a class="headerlink" href="#how-to-use-this-function" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>For selections, see the following figure:</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/2.1.png" />
+</div>
+<p>The annotation file containing the information of miRNA precursors, mature miRNAs and the classification results will be returned. For complete preview of this output, please refer to <a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/miRNASelection_output.txt" target="_blank">Output in miRNASelection</a>, the following figure shows a screenshot for the output.</p>
+<div class="figure">
+<img alt="" src="_images/2.11.png" />
+</div>
+<p><strong>Note</strong>: The meaning of each column in the file is as follows:</p>
+<ul class="simple">
+<li><strong>Precursors</strong>: The raw name of miRNA precursors;</li>
+<li><strong>ID</strong>: The modified name of miRNA precursors. miRNAs from databases remain their raw names and miRNAs from sRNA-Seq got a new name with species-MIR-N{number}{letter};</li>
+<li><strong>HTcriteria</strong>: The true/false means whether miRNAs meet the High-throughput (HT) criteria or not;</li>
+<li><strong>One_class_SVM</strong>: miRNA categories defined according to the predictions of one-class SVM algorithm, which is trained using miRNAs in the positive dataset. “remained_positive”: miRNAs in the positive dataset are predicted as miRNAs. “removed_positive”: miRNAs in the positive dataset are not predicted as miRNAs. “novel_prediction”: miRNA candidates are predicted as miRNAs, and “others”: miRNA candidates are not predicted as miRNAs.</li>
+<li><strong>Extended_stem_loop_loc, Extended_stem_loop_seq, Extended_stem_loop_len</strong>: The location, sequence (5’-&gt;3’), length of miRNA precursors;</li>
+<li><strong>Stem_loop_loc, Stem_loop_seq</strong>: The location, sequence (5’-&gt;3’) of stem-loop sequence;</li>
+<li><strong>Loc5p, Seq5p, Len5p</strong>: The location, sequence (5’-&gt;3’), length of 5’-arm miRNAs;</li>
+<li><strong>Loc3p, Seq3p, Len3p</strong>: The location, sequence (5’-&gt;3’), length of 3’-arm miRNAs;</li>
+<li><strong>Mature_arm</strong>: The possible arm of mature miRNA inferred from database query results (miRNARetrieval) and the sequence abundance (miRNAPredict);</li>
+<li><strong>Source</strong>: “1”, “2”, “3”, “4” represent annotated miRNAs from miRBase, PmiREN, sRNAanno and Psgenes databases, respectively. “p” denotes miRNAs predicted by <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code> function in iwa-miRNA.</li>
+<li><strong>TPM5p, TPM3p</strong>: The TPM (Transcripts per million) abundance of 5’-arm and 3’-arm miRNAs;</li>
+<li><strong>Stem_loop_len, Stem_loop_MFE, Stem_loop_AMFE</strong>: The length, minimum free energy (MFE), adjusted MFE of stem-loop sequences;</li>
+<li><strong>The_total_abundance</strong>: The total TPM abundance of miRNA precursors;</li>
+<li><strong>The_number_of_sequences_in_miRNA.miRNA._and_3nt_variant_region, The_number_of_sequences_in_pre.miRNAs</strong>: Number of collapsed reads belonged to miRNA-miRNA*-isomiRs (miRNA isoforms with 3nt positional variants) and miRNA precursors;</li>
+<li><strong>Abundance_bias</strong>: The sum of the TPM of miRNA isoforms (isomiRs) was divided by the TPM of miRNA precursors;</li>
+<li><strong>Strand_bias</strong>: The sum of the TPM of sequences matching miRNA precursors was divided by that matching both strands;</li>
+<li><strong>RNAfold</strong>: Whether miRNAs have an effective RNA structure predicted by RNAfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure;</li>
+<li><strong>Centroidfold</strong>: Whether miRNAs have an effective RNA structure predicted by Centroidfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure;</li>
+<li><strong>Mean</strong>: The average TPM of one miRNA across all sRNA-Seq datasets;</li>
+<li><strong>Max</strong>: The max TPM of one miRNA across all sRNA-Seq datasets;</li>
+<li><strong>Samples</strong>: The number of samples with TPM≥1.</li>
+</ul>
+<p>we have renamed the newly predicted miRNA with a uniform naming scheme and the already annotated miRNA from databases still use the previous names. The final name was included in the <strong>ID</strong> column.</p>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="detailed-explanation">
+<h3>Detailed explanation<a class="headerlink" href="#detailed-explanation" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first"><strong>High-throughput (HT) criteria</strong>: This represents the revised criteria for plant miRNA annotation <a class="footnote-reference" href="#id6" id="id1">[1]</a>, including the length of foldbacks, effective RNA structure of miRNA:miRNA duplex (up to five mismatched positions, only three of which are nucleotides in asymmetric bulges), abundance bias (the sum of the TPM of miRNA, miRNA*,and isomiRs (at most three-nucleotides positional variants) was divided by the TPM of miRNA precursors), strand bias (The sum of the TPM of reads matching the sense strand was divided by that matching both strands), and the length of miRNAs.</p>
+</li>
+<li><p class="first"><strong>Machine learning (ML)-based approaches</strong>: This represents a support vector machine (SVM)-based method for classifying miRNA candidates. Specifically, the features of miRNA precursors and miRNAs are extracted according to previously published tools/scripts (Meng et al.-https://github.com/kobe-liudong/miPlantPreMat <a class="footnote-reference" href="#id7" id="id2">[2]</a>, Cui et al.-https://github.com/cma2015/miRLocator <a class="footnote-reference" href="#id8" id="id3">[3]</a>, and high-throughput criteria) and consist of 218 sequence features, 383 structural features, and expression features (i.e., TPM values across all samples). Positive samples from the databases or user input are used to train the model (one class SVM method in e1071 R package). The miRNAs were categorized based on the model.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The detailed features used for model construction are described as follows :</li>
+</ul>
+<div class="figure">
+<img alt="" src="_images/Feature_list.png" />
+</div>
+<p>The screenshot of 400 features recorded in <a href="https://github.com/cma2015/miRLocator" target="_blank">miRLocator</a> <a class="footnote-reference" href="#id7" id="id4">[2]</a>:</p>
+<div class="figure">
+<img alt="" src="_images/miRLocator_features.png" />
+</div>
+<p>The screenshot of 152 features mentioned in <a href="https://github.com/kobe-liudong/miPlantPreMat" target="_blank">miPlantPreMat</a> <a class="footnote-reference" href="#id8" id="id5">[3]</a>:</p>
+<div class="figure">
+<img alt="" src="_images/miPlantPreMat_features.png" />
+</div>
+</div></blockquote>
+</li>
+</ul>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Axtell MJ, Meyers BC. Revisiting criteria for plant microRNA annotation in the era of big data. Plant Cell 2018;30:272-84.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> Meng J, Liu D, Sun C, Luan Y. Prediction of plant pre-microRNAs and their microRNAs in genome-scale sequences using structure-sequence features and support vector machine. BMC Bioinformatics 2014;15:423.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> Cui H, Zhai J, Ma C. miRLocator: machine learning-based prediction of mature microRNAs within plant pre-miRNA sequences. PLoS One 2015;10:e0142753.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="5_Manual_Curation.html" class="btn btn-neutral float-right" title="Manual Curation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="3_MiRNA_Compilation.html" class="btn btn-neutral" title="MiRNA Compilation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ting Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

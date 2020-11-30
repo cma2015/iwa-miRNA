@@ -7,13 +7,11 @@ data_input <- read.table("corr_pre-mirna_seq_mat.txt", sep = "\t", stringsAsFact
 all_abundance <- data_input[data_input[,1]=="abundance"&data_input[,2]=="all", 3:5]
 colnames(all_abundance) <- c("SRR", "Loc", "abundance")
 all_abundance_mat <- dcast(all_abundance, Loc~SRR, value.var = "abundance", )
-rownames(all_abundance_mat) <- all_abundance_mat[,1]
-all_abundance_mat <- all_abundance_mat[, -1]
-all_abundance_mat <- as.matrix(all_abundance_mat)
+
 all_abundance_mat[is.na(all_abundance_mat)] <- 0
 all_abundance_mat[1:5,]
 
-write.table(all_abundance_mat, "expressionMat.txt", quote = F, sep = "\t")
+write.table(all_abundance_mat, "expressionMat.txt", quote = F, sep = "\t", row.names = F)
 
 # range(apply(all_abundance_mat, 1, max))
 # 

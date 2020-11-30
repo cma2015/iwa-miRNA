@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Manual Curation &mdash; iwa-miRNA v1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Useful Tools" href="6_Useful_Tools.html" />
+    <link rel="prev" title="MiRNA Selection" href="4_MiRNA_Selection.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iwa-miRNA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1_Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_Upload_data.html">Upload data to your local iwa-miRNA server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_MiRNA_Compilation.html">MiRNA Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_MiRNA_Selection.html">MiRNA Selection</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Manual Curation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manualcuration">manualCuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use-this-function">How to use this function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-information">Additional information</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="6_Useful_Tools.html">Useful Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_Run_time.html">Costing time for test data</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iwa-miRNA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Manual Curation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/5_Manual_Curation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="manual-curation">
+<h1>Manual Curation<a class="headerlink" href="#manual-curation" title="Permalink to this headline">¶</a></h1>
+<p>This module provides the information for all miRNA candidates generated during the compilation and selection processes, and creates a summary page for rapid curation of the quality of selected miRNAs.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="27%" />
+<col width="25%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Tools</strong></th>
+<th class="head"><strong>Input</strong></th>
+<th class="head"><strong>Output</strong></th>
+<th class="head">Applications</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">manualCuration</span></code></td>
+<td>Output from MiRNA Selection</td>
+<td>Summary and report pages</td>
+<td>Determine the quality of miRNAs</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="manualcuration">
+<h2>manualCuration<a class="headerlink" href="#manualcuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input">
+<h3>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first"><strong>Selected miRNAs from miRNASelection</strong>: miRNA table from <code class="docutils literal notranslate"><span class="pre">miRNASelection</span></code>, which includes classification results based on high-throughput (HT) criteria and/or machine learning (ML)-based approaches.</p>
+</li>
+<li><p class="first"><strong>Sample information</strong>: upload tissue information to iwa-miRNA server as following example (Arabidopsis: <code class="docutils literal notranslate"><span class="pre">sample_information.txt</span></code>):</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/Sample_information.png" />
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Genome annotation file</strong>: Genome annotations will be used to label the source of miRNAs. We provided Arabidopsis data <code class="docutils literal notranslate"><span class="pre">genome_annotation.txt</span></code> with following format:</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/Genome_annotation.png" />
+</div>
+<p><strong>Note</strong>:</p>
+<ul class="simple">
+<li><strong>PCG</strong> - protein coding gene; <strong>ncRNA_gene</strong>: non-protein coding RNA gene; <strong>TE</strong>: Transposable element.</li>
+<li><strong>lncRNA</strong>: long non-coding RNA; <strong>LTR</strong>: long terminal repeat; <strong>RC</strong>: Rolling-circle.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">(Optional) <strong>Gene description file</strong>: Gene descriptions as following example (Arabidopsis: <code class="docutils literal notranslate"><span class="pre">gene_description.txt</span></code>):</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/Gene_description.png" />
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Note</strong>: If you are not clear about how to upload local data to iwa-miRNA server, please see <code class="docutils literal notranslate"><span class="pre">Upload</span> <span class="pre">data</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">local</span> <span class="pre">iwa-miRNA</span> <span class="pre">server</span></code> for details.</p>
+</div>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>The interactive annotation HTML of promising miRNA candidates</strong>: The summary and report pages containing information of miRNA precursors and mature miRNAs.</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-this-function">
+<h3>How to use this function<a class="headerlink" href="#how-to-use-this-function" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>For selections, please see the following figure:</p>
+<div class="figure">
+<img alt="" src="_images/3.1.png" />
+</div>
+<p><strong>I)</strong> The summary and report pages containing the information of miRNA precursors and mature miRNAs will be returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The complete preview of the results is available at <a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/manualCuration_output.html" target="_blank">Output in manualCuration</a>.</p>
+<div class="figure">
+<img alt="" src="_images/3.11.png" />
+</div>
+<p><strong>Note</strong>: Users can update the list of selected miRNAs in a dynamic manner through adjusting criteria thresholds, or by direct deletion from the summary page. The meaning of each column in the file is as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>ID</strong>: The modified name of miRNA precursors. miRNAs from databases remain their raw names and miRNAs from sRNA-Seq got a new name with species-MIR-N{number}{letter};</li>
+<li><strong>HT criteria</strong>: The true/false means whether miRNAs meet the High-throughput (HT) criteria or not.</li>
+<li><strong>One class SVM</strong>: miRNA categories defined according to the predictions of one-class Support Vector Machine (SVM) algorithm, which is trained using miRNAs in the positive dataset. “remained_positive”: miRNAs in the positive dataset are predicted as miRNAs. “removed_positive”: miRNAs in the positive dataset are not predicted as miRNAs. “novel_prediction”: miRNA candidates are predicted as miRNAs, and “others”: miRNA candidates are not predicted as miRNAs.</li>
+<li><strong>Genomic source</strong>: Genomic sources of miRNAs.</li>
+<li><strong>Source</strong>: “1”, “2”, “3”, “4” represent annotated miRNAs from miRBase, PmiREN, sRNAanno and Psgenes databases, respectively. “p” denotes miRNAs predicted by <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code> function in iwa-miRNA.</li>
+<li><strong>Stem loop</strong>: <strong>Loc, Len, MFE, AMFE</strong> - The location, length, minimum free energy (MFE), adjusted MFE of stem-loop sequence;</li>
+<li><strong>Mature miRNA</strong>: <strong>Arm, Seq, Len, TPM</strong> - The arm, sequence (5’-&gt;3’), length, abundance of mature miRNAs;</li>
+<li><strong>miRNA precursor</strong>: <strong>Seq count</strong> - Number of collapsed reads mapped to miRNA precursors; <strong>Abundance bias</strong>: The sum of the TPM of miRNA isoforms (isomiRs) was divided by the TPM of miRNA precursors; <strong>Strand bias</strong> - The sum of the TPM of sequences matching miRNA precursors was divided by that matching both strands; <strong>RNAfold</strong> - Whether miRNAs have an effective RNA structure predicted by RNAfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure; <strong>Centroidfold</strong> - Whether miRNAs have an effective RNA structure predicted by Centroidfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure;</li>
+<li><strong>Expressed samples</strong>: <strong>Mean</strong> - The average TPM of one miRNA across all sRNA-Seq datasets; <strong>Max</strong> - The max TPM of one miRNA across all sRNA-Seq datasets; <strong>Samples (TPM&gt;1)</strong> - The number of samples with TPM≥1.</li>
+</ul>
+</div></blockquote>
+<p><strong>II)</strong> Each miRNA has a <strong>report page</strong> that contains detailed information customized by feature types, making it easy to understand this miRNA during manual curation.</p>
+<div class="figure">
+<img alt="" src="_images/3.12.png" />
+</div>
+<p><strong>Note</strong>: <strong>A secondary structure plot</strong> is generated to display the location of a mature miRNA within the precursor sequence and quality-profiling results. <strong>Read stacks</strong> are plotted to show the read support of identified miRNAs. <strong>A boxplot</strong> is used to visualize miRNA expression patterns and arm selection events across different samples. <strong>A bipartite network</strong> is constructed to depict miRNA-target interactions predicted by <a href="http://plantgrn.noble.org/psRNATarget/" target="_blank">psRNAtarget</a> <a class="footnote-reference" href="#id6" id="id1">[1]</a>. Users can quickly browse this miRNA and further decide which features make this miRNA candidate not actually a <em>bona fide</em> miRNA.</p>
+</div></blockquote>
+</div>
+<div class="section" id="additional-information">
+<h3>Additional information<a class="headerlink" href="#additional-information" title="Permalink to this headline">¶</a></h3>
+<p><strong>Criteria for plant microRNA annotation</strong>:</p>
+<ul>
+<li><p class="first">Axtell MJ, Meyers BC. (2018) <a class="footnote-reference" href="#id7" id="id2">[2]</a> Revisiting criteria for plant miRNA annotation in the era of big data.</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/2018_miRNA_annotation_criteria.png" />
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">miRDeep-P2 <a class="footnote-reference" href="#id8" id="id3">[3]</a> &amp; PmiREN <a class="footnote-reference" href="#id9" id="id4">[4]</a></p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/Criteria_miRDeep-P2.png" />
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">sRNAanno <a class="footnote-reference" href="#id10" id="id5">[5]</a></p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/Criteria_sRNAanno.png" />
+</div>
+</div></blockquote>
+</li>
+</ul>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Dai X, Zhuang Z, Zhao PX. psRNATarget: a plant small RNA target analysis server (2017 release). Nucleic Acids Res 2018;46:W49-W54.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Axtell MJ, Meyers BC. Revisiting criteria for plant microRNA annotation in the era of big data. Plant Cell 2018;30:272-84.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Kuang Z, Wang Y, Li L, Yang X. miRDeep-P2: accurate and fast analysis of the microRNA transcriptome in plants. Bioinformatics 2019;35:2521-2.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Guo Z, Kuang Z, Wang Y, Zhao Y, Tao Y, Cheng C, et al. PmiREN: a comprehensive encyclopedia of plant miRNAs. Nucleic Acids Res 2020;48:D1114-D21.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>Chen C, Feng J, Liu B, Li J, Feng L, Yu X, et al. sRNAanno — a database repository of uniformly-annotated small RNAs in plants. bioRxiv 2019:771121.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="6_Useful_Tools.html" class="btn btn-neutral float-right" title="Useful Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="4_MiRNA_Selection.html" class="btn btn-neutral" title="MiRNA Selection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ting Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -17,7 +17,7 @@ cd ${out_dir}
 python ${script_path}/databases_mining.py --curpath $1 --species "$2" \
 --databases $3 --outpath ./
 
-Rscript -e "rmarkdown::render('Overview.Rmd')"
+Rscript -e "rmarkdown::render('Overview.Rmd', quiet = T)"
 
 mv Overview.html $outxt
 mkdir -p ${outxt%.*}_files

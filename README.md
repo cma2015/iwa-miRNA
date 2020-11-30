@@ -5,7 +5,7 @@
 
 - iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
-- iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at https://deepngs.nwafu.edu.cn.
+- iwa-miRNA Docker image is available at https://hub.docker.com/r/malab/iwa-mirna. Source codes and user manual are available at https://github.com/cma2015/iwa-miRNA. The web server of iwa-miRNA is accessible at http://iwa-miRNA.omicstudio.cloud/.
 
 - The iwa-miRNA is composed with three functional modules: MiRNA Compilation, MiRNA Selection, and Manual Curation. It also provides users with some useful tools for downstream exploratory analysis. More details regarding these functional modules can be found [here](https://github.com/cma2015/iwa-miRNA/blob/master/Tutorials/Modules.md).
 
@@ -13,11 +13,12 @@
 
 ## How to use iwa-miRNA
 
-- Tutorial for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials/User_manual.md
+- Tutorial for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials/index.html
 - Test datasets referred in the tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Test_data
 
 ## Changelog
 
+- 2020-11-30: Update the description of output results in the tutorial.
 - 2020-06-24: A demo server of iwa-miRNA was released for users running small RNA sequencing datasets.
 - 2020-06-20: Source codes and Docker image of iwa-miRNA were released for the first time.
 

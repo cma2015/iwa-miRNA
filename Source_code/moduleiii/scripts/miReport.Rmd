@@ -30,7 +30,7 @@ info_table_raw <- read.table("final_table.txt", sep = "\t", header = T)
 info_table <- info_table_raw[,c(2,5:ncol(info_table_raw))]
 info_table <- info_table[info_table$ID!="", ]
 
-mature_exp <- read.table("miRNA_in_sample.txt", sep = "\t", stringsAsFactors = F, row.names = 1)
+mature_exp <- read.table("miRNA_in_sample.txt", sep = "\t", stringsAsFactors = F, row.names = 1, header = T)
 rownames(mature_exp) <- gsub("T", "U", rownames(mature_exp))
 
 tmp_fullname <- info_table$Extended_stem_loop_loc
@@ -46,6 +46,7 @@ tmp_df <- data.frame("Location"=as.character(info_vec[c(2,5,7,10)]),
                                              info_vec[c(9,12)])))
 rownames(tmp_df) <- c("miRNA precursors", "Stem loop", "5p", "3p")
 mature_df <- t(mature_exp[c(info_vec$Seq5p, info_vec$Seq3p), ])
+rownames(mature_df) <- colnames(mature_exp)
 mature_df[is.na(mature_df)] <- 0
 arm_ratio <- apply(mature_df, 1, function(x){
   if(max(x[1:2])<3){
@@ -220,7 +221,8 @@ if(file.exists(tmp_path)&file.info(tmp_path)[1,1]>0){
       }
       inputRaw[,1] <- gsub(tmp_name, info_vec$ID, inputRaw[,1])
       inputRaw[,1] <- gsub("\\+", "", inputRaw[,1])
-      colnames(inputRaw)[1:5] <- c("miRNA Acc.", "Target Acc.", "Expect", "Target description", "Inhibition")
+      inputRaw <- inputRaw[, 1:12]
+      colnames(inputRaw) <- c("miRNA_Acc.", "Target_Acc.", "Expectation", "Target description", "miRNA_start", "miRNA_end", "Target_start", "Target_end", "miRNA_aligned_fragment", "alignment", "Target_aligned_fragment", "Inhibition")
       inputRe <- unique(inputRaw[,1:2])
       nodes <- data.frame(id = unique(c(inputRe[,1],inputRe[,2])))%>%
             mutate(node_color = ifelse(id %in% inputRe[,1],
@@ -300,6 +302,12 @@ if(file.exists(tmp_path)&file.info(tmp_path)[1,1]>0){
 Row
 -----------------------------------
 
+### Secondary structures by strucVis {data-width=350}
+
+```{r pressure3, echo=FALSE, fig.cap="strucVis", out.width = '33%'}
+svgPanZoom::svgPanZoom( read_file(paste0("../miRNASelection/data/", tmp_name, '.svg')))
+```
+
 ### The expression level of different types of isomiR {data-width=500}
 
 ```{r}
@@ -315,7 +323,7 @@ if(file.exists(tmp_out)&file.info(tmp_out)[1,1]>0){
   hchart(
     iso_list, 
     "column",
-    hcaes(x=V10, y=V8, group = V2), color=c("#DE3025", "#257ADE")
+    hcaes(x=V10, y=V8, group = V2), color=c("#DE3025", "#257ADE")[1:length(unique(iso_list$V2))]
     ) %>% 
     hc_xAxis(title = list(text = "")) %>% 
     hc_yAxis(title  = list(text = "TPM")) %>% 
@@ -329,3 +337,4 @@ if(file.exists(tmp_out)&file.info(tmp_out)[1,1]>0){
     hc_exporting(enabled = TRUE, filename = "different_types_of_isomiR")
 }
 ```
+

@@ -7,14 +7,10 @@ library(reshape2)
 expre_mat <- read.table("seq_mat.txt", sep = "\t")
 colnames(expre_mat) <- c("SRR", "Seq", "abundance")
 abundance_mat <- dcast(expre_mat, Seq~SRR, value.var = "abundance", )
-rownames(abundance_mat) <- abundance_mat[,1]
-abundance_mat <- abundance_mat[,-1]
-
 abundance_mat[is.na(abundance_mat)] <- 0
 
 exp_mat <- abundance_mat
-
-write.table(exp_mat, "miRNA_in_sample.txt", quote = F, sep = "\t")
+write.table(exp_mat, "miRNA_in_sample.txt", quote = F, sep = "\t", row.names = F)
 
 # sam_name <- unique(sample_information[,1])
 # sam_name <- sam_name[!sam_name%in%"-"]

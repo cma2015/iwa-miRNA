@@ -110,6 +110,7 @@ name:,genome:,gff:,transcript:,protein:,otherrna:,speciesout:,randomname:,versio
         python ${curdir}/scripts/genomeFeature.py ./
         Rscript ${curdir}/scripts/genomeInfo.R Genomic_info.pdf
         samtools faidx Genome/Genome.fa
+        cp Genomic_info.pdf ${infout}
     else
         # Define the output directory
         tmp_name=${ensembl/ /_}

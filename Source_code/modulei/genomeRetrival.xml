@@ -129,7 +129,7 @@ This tool provides two ways for preparing genome data:
 
 .. class:: infomark
 
-**Output**
+**Outputs**
 
     - A file containing the path of formatted genome sequences and annotations. Index files of the reference genome and t/r/sn/snoRNA sequences in this path are used for 'miRNAPredict' analysis.
     - Summary of the number and length of genomic features.

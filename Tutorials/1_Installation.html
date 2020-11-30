@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; iwa-miRNA v1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Upload data to your local iwa-miRNA server" href="2_Upload_data.html" />
+    <link rel="prev" title="Welcome to iwa-miRNA’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iwa-miRNA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation-process">Installation process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-docker-installation">Step 1: Docker installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-iwa-mirna-installation-from-docker-hub">Step 2: iwa-miRNA installation from Docker Hub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-launch-iwa-mirna-local-server">Step 3: Launch iwa-miRNA local server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#choice-of-login-system">Choice of login system</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2_Upload_data.html">Upload data to your local iwa-miRNA server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_MiRNA_Compilation.html">MiRNA Compilation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_MiRNA_Selection.html">MiRNA Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Manual_Curation.html">Manual Curation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_Useful_Tools.html">Useful Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_Run_time.html">Costing time for test data</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iwa-miRNA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/1_Installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation-process">
+<h2>Installation process<a class="headerlink" href="#installation-process" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-1-docker-installation">
+<h3>Step 1: Docker installation<a class="headerlink" href="#step-1-docker-installation" title="Permalink to this headline">¶</a></h3>
+<p><strong>i) Docker installation and start</strong> (<a href="https://docs.docker.com/get-docker/" target="_blank">official installation tutorial</a>)</p>
+<p>For <strong>Windows (Test on Windows 10 Enterprise version):</strong></p>
+<ul class="simple">
+<li>Download <a href="https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe" target="_blank">Docker</a> for windows;</li>
+<li>Double click the EXE file to open it;</li>
+<li>Follow the wizard instruction and complete installation;</li>
+<li>Search docker, select <strong>Docker for Windows</strong> in the search results and click it.</li>
+</ul>
+<p>For <strong>Mac OS X (Test on macOS Sierra version 10.12.6 and macOS High Sierra version 10.13.3):</strong></p>
+<ul class="simple">
+<li>Download <a href="https://download.docker.com/mac/stable/Docker.dmg" target="_blank">Docker</a> for Mac os;</li>
+<li>Double click the DMG file to open it;</li>
+<li>Drag the docker into Applications and complete installation;</li>
+<li>Start docker from Launchpad by click it.</li>
+</ul>
+<p>For <strong>Ubuntu (Test on Ubuntu 18.04 LTS):</strong></p>
+<ul class="simple">
+<li>Go to <a href="https://download.docker.com/linux/ubuntu/dists/" target="_blank">Docker</a>, choose your Ubuntu version, browse to <strong>pool/stable</strong> and choose <strong>amd64, armhf, ppc64el or s390x</strong>. Download the <strong>DEB</strong> file for the Docker version you want to install;</li>
+<li>Install Docker, supposing that the DEB file is download into following path:<strong>”/home/docker-ce&lt;version-XXX&gt;~ubuntu_amd64.deb”</strong></li>
+</ul>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ sudo dpkg -i /home/docker-ce&lt;version-XXX&gt;~ubuntu_amd64.deb
+$ sudo apt-get install -f
+</pre></div>
+</div>
+<p><strong>ii) Verify if Docker is installed correctly</strong></p>
+<p>Once Docker installation is completed, we can run <code class="docutils literal notranslate"><span class="pre">hello-world</span></code> image to verify if Docker is installed correctly. Open terminal in Mac OS X and Linux operating system and open CMD for Windows operating system, then type the following command:</p>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker run hello-world
+</pre></div>
+</div>
+<p><strong>Note:</strong> root permission is required for Linux operating system.</p>
+<ul class="simple">
+<li>Once Docker is installed successfully, you will see the following message:</li>
+</ul>
+<div class="figure">
+<img alt="" src="_images/docker-run.jpg" />
+</div>
+</div>
+<div class="section" id="step-2-iwa-mirna-installation-from-docker-hub">
+<h3>Step 2: iwa-miRNA installation from Docker Hub<a class="headerlink" href="#step-2-iwa-mirna-installation-from-docker-hub" title="Permalink to this headline">¶</a></h3>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span># pull latest iwa-miRNA Docker image from docker hub
+$ docker pull malab/iwa-mirna
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3-launch-iwa-mirna-local-server">
+<h3>Step 3: Launch iwa-miRNA local server<a class="headerlink" href="#step-3-launch-iwa-mirna-local-server" title="Permalink to this headline">¶</a></h3>
+<div class="code shell highlight-default notranslate"><div class="highlight"><pre><span></span>$ docker run -it -p 8080:8080 malab/iwa-mirna /bin/bash
+$ sh /home/galaxy/run.sh
+</pre></div>
+</div>
+<p>Then, iwa-miRNA local server can be accessed via <a class="reference external" href="http://localhost:8080">http://localhost:8080</a></p>
+<div class="figure">
+<img alt="" src="_images/0.0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="choice-of-login-system">
+<h2>Choice of login system<a class="headerlink" href="#choice-of-login-system" title="Permalink to this headline">¶</a></h2>
+<p><strong>Under login</strong>: All analysis data, such as inputs, parameters, intermediate results, and outputs, can be permanently recorded in the “History” panel of iwa-miRNA, making complex small RNA sequencing data analysis reproducible and amenable to collaborative modes.</p>
+<p><strong>Without login</strong>: Users can also choose not to use the login system, if they would like to uninterruptedly process data in one browser window.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="2_Upload_data.html" class="btn btn-neutral float-right" title="Upload data to your local iwa-miRNA server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to iwa-miRNA’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ting Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

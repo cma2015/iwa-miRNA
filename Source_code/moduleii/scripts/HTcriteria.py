@@ -26,7 +26,7 @@ def tag_id_abu(fa_file):
 
 def extract_map_read(read_map_file ,input_dict):
     df_sran = pd.read_csv(read_map_file, sep='\t', header=None,
-    names=['ID','chr','start','end','strand','RPM','SNP'])
+    names=['ID','chr','start','end','strand','TPM','SNP'])
     separate_key_df = {}
     for ikey in input_dict:
         pre_location = ikey.split(':')
@@ -37,7 +37,7 @@ def extract_map_read(read_map_file ,input_dict):
         (df_sran['end'] <= pre_end+3))
         ## extract reads from file
         sub_frame = df_sran[sub_frame_index]
-        sub_frame = sub_frame[['ID','start','end','strand','RPM','SNP']]
+        sub_frame = sub_frame[['ID','start','end','strand','TPM','SNP']]
         sub_frame = sub_frame.sort_values(by=['start','end'],axis=0, ascending=True)
         separate_key_df[ikey] = sub_frame
     return separate_key_df
@@ -105,8 +105,8 @@ def iso_type(ref_location,query_location):
 def iso_snp_type(ref_location,query_location,tmp_mutant):
     type_out = '-'
     seed_dist = int(tmp_mutant) + query_location[0] - ref_location[0]
-    if query_location[1] - ref_location[1] == 1 and int(tmp_mutant) == query_location[1]-query_location[0] +1:
-        type_out = 'nt_add3'
+    if query_location[1] - ref_location[1] == 1 and seed_dist == ref_location[1]-ref_location[0]+2:
+        type_out = 'nt_add'
     if query_location[0] == ref_location[0] and query_location[1] == ref_location[1]:
         type_out = 'seed_snp'
         if 9 <= seed_dist <= (ref_location[1]-ref_location[0]+1):
@@ -675,7 +675,7 @@ with open( '{}/{}'.format(out_path, "out_pool_merge.txt"), 'w') as out_file:
     if inline_len >12:
         tmp_name = ['Precursors', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq', 'Extended_stem_loop_len',
                     'Stem_loop_loc', 'Stem_loop_seq', 'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm',
-                    ['-']*(inline_len-12), 'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
+                    ['-']*(inline_len-12), 'Source', 'TPM5p', 'TPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
                     'Stem_loop_AMFE', 'The_total_abundance', 'The_number_of_sequences_in_miRNA/miRNA*_and_3nt_variant_region',
                     'The_number_of_sequences_in_pre-miRNAs', 'Abundance_bias', 'Strand_bias',
                     'RNAfold', 'Centroidfold']
@@ -688,10 +688,10 @@ with open( '{}/{}'.format(out_path, "out_pool_merge.txt"), 'w') as out_file:
                 tmp_tname.append(i)
         out_file.write('\t'.join(tmp_tname) + '\n')
     else:
-        out_file.write('\t'.join(['Pre-miRNAs', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq',
+        out_file.write('\t'.join(['Precursors', 'Extended_stem_loop_loc', 'Extended_stem_loop_seq',
                                   'Extended_stem_loop_len', 'Stem_loop_loc', 'Stem_loop_seq',
                                   'Loc5p', 'Seq5p', 'Len5p', 'Loc3p', 'Seq3p', 'Len3p', 'Mature_arm',
-                                  'Source', 'RPM5p', 'RPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
+                                  'Source', 'TPM5p', 'TPM3p', 'Stem_loop_len', 'Stem_loop_MFE',
                                   'Stem_loop_AMFE', 'The_total_abundance', 'The_number_of_sequences_in_miRNA/miRNA*_and_3nt_variant_region',
                                   'The_number_of_sequences_in_pre-miRNAs', 'Abundance_bias', 'Strand_bias',
                                   'RNAfold', 'Centroidfold']) + '\n')

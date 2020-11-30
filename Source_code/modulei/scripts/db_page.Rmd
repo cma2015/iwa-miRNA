@@ -52,7 +52,7 @@ premirTab <- premirTab[, -ncol(premirTab)]
 premirTab <- cbind(premirTab, Delete="<button class=\"btnDelete\">Delete</button>")
 linkname <- gsub(":", "_", premirTab[,2])
 premirTab[,1] <- paste0("<a href=\"javascript:void(0)\" onclick=\"mirnaplot('",linkname,"')\">", premirTab[,1],"</a>")
-dbsum <- sum(colnames(premirTab)%in%c("miRBase", "PmiREN", "sRNAanno", "Psgenes", "Novel"))
+dbsum <- sum(colnames(premirTab)%in%c("miRBase", "PmiREN", "sRNAanno", "Psgenes", "sRNA_Seq"))
 dbloc <- ncol(premirTab)-dbsum-1
 
 for(numt in (dbloc+1):(ncol(premirTab)-1)){
@@ -64,8 +64,10 @@ premirTab <- premirTab[,c(1,4,dbloc:ncol(premirTab))]
 
 ```
 
-Quality control  {data-orientation=columns data-icon="fa-area-chart"}
+Results  {data-orientation=columns data-icon="fa-area-chart"}
 ================================
+
+There are three sections in this HTML report. In **Overview and Summary Information**, we list the aggregated miRNAs that identified by four databases and small RNA-seq data. By clicking on the link in the table, the **RNAfold** and **CentroidFold** sections interactively show the RNA structure of RNAfold and CentroidFold prediction.
 
 Column 1 {data-width=400}
 -------------------------------------
@@ -99,14 +101,9 @@ datatable(
     rownames = FALSE,
     callback = JS("$('#linktable tbody').on('click','.btnDelete',function(){table.row( $(this).parents('tr') ).remove().draw();});"))%>%
   formatStyle(TRUE, `text-align` = 'center')
-
-                          # list(targets = 2:4,render = JS("function(data, type, row, meta) {",
-                          #                              "return type === 'display' && data.length > 10 ?",
-                          #                              "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;",
-                          #                              "}"))
 ```
+<p style="font-size:14px;"> The table displays a collection of miRNAs from public databases and small RNA-Seq data. `Precursors`: The name of miRNA precursors; `pLen`: The length of miRNA precusors; `miRBase/PmiREN/sRNAanno/Psgenes`: Whether miRNAs are included in these databases. TRUE means being included, and NO means no; `sRNA_Seq`: Whether miRNAs are predicted in small RNA-Seq data (sRNA-Seq). </p>
 
-> The table displays the overview information of Precursor miRNAs. Each row presents one candidate pre-miRNAs with name, location in genome, strand information, abundance, and bias.
 
 Column 2 {data-width=200}
 --------------------------------------------

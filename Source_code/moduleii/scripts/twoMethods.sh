@@ -64,7 +64,6 @@ main(){
     cp -r ${mirmerge%.*}/* ${out_dir}/
 
     cd ${out_dir}/miRNASelection
-
     python ${script_path}/HTcriteria.py -c ${out_dir}/miRNASelection -f ../miRNAPredict/reads_18_26.fa -t ../miRNAPredict/reads_18_26.txt -m ${mirmerge}
     Rscript ${script_path}/HTcriteria.R ${out_dir}/miRNASelection/out_pool_merge.txt ${out_dir}/miRNASelection/pc_criteria.txt ${stemloop} ${structure} ${abias} ${sbias} ${minlen} ${maxlen}
 
@@ -88,8 +87,23 @@ main(){
     Rscript ${script_path}/mergeOutput.R pc_criteria.txt ML_result.txt out_pool_merge.txt NameChange_out.txt expressionMat.txt final_table.txt
 
     awk -F"\t" 'NR>1{print $11"\n"$14}' final_table.txt | sort -u >mature_miRNAs.fa
+
+    speciespath=`cat ${out_dir}/miRNATranslate/speciespath.txt`
+
+    if [ -s psRNAtarget_MIT.out ];then
+        if [ `grep -c "miRNA_Acc." psRNAtarget_MIT.out` -ne '0' ];then
+            echo "pass!"
+        else
+            python ${script_path}/PsRNAtarget.py ${speciespath} ps_path.sh
+        fi
+    else
+        python ${script_path}/PsRNAtarget.py ${speciespath} ps_path.sh
+    fi    
+
     python ${script_path}/matureMat.py ${out_dir}/miRNAPredict
     Rscript ${script_path}/matureMat.R
+
+    awk -F"\t" 'NR>1{print ">"$5"_5p\n"$11"\n>"$5"_3p\n"$14}' final_table.txt >mature_miRNAs.fa
 
     ## Output
     cd ${out_dir}/miRNASelection

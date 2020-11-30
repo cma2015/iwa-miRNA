@@ -59,8 +59,23 @@
 
 This tool provides two strategies to select promising miRNA candidates:
 
-    i) High-throughput criteria;
-    ii) Machine learning-based approaches.
+	i) **High-throughput (HT) criteria**: This represents the revised criteria for plant miRNA annotation (Axtell and Meyers 2018), including **the length of foldbacks**, **effective RNA structure of miRNA:miRNA duplex** (up to five mismatched positions, only three of which are nucleotides in asymmetric bulges), **abundance bias** (the overall abundance of miRNA, miRNA*,and isomiRs (at most three-nucleotides positional variants) divided by the total abundance of all matching reads at a miRNA precursor), **strand bias** (The total abundance of reads matching the sense strand divided by the total abundance of reads matching both strands), and **the length of miRNAs**.
+
+	ii) **Machine learning (ML)-based approaches**: This represents a support vector machine (SVM)-based method for classifying miRNA candidates. Specifically, the features of miRNA precursors and miRNAs are extracted according to previously published tools/scripts (Meng et al.-https://github.com/kobe-liudong/miPlantPreMat, Cui et al.-https://github.com/cma2015/miRLocator, and high-throughput criteria). Positive samples from the databases or user input are used to train the model (one class SVM method in *e1071* R package). The miRNAs were categorized based on the model.
+	
+	The detailed features used for model construction are described as follows (205 features from **miPlantPreMat** and 191 features **miRLocator**):
+
+	205 features of miRNA precursors from **miPlantPreMat**:
+	
+	.. image:: static/assets/html/_images/miPlantPreMat_features.png
+		:scale: 70 %
+		:align: center
+
+	191 features of miRNAs from **miRLocator**:
+	
+	.. image:: static/assets/html/_images/miRLocator_features.png
+		:scale: 70 %
+		:align: center
 
 .. class:: infomark
 
@@ -74,7 +89,29 @@ This tool provides two strategies to select promising miRNA candidates:
 
 **Output**
 
-An annotation file containing miRNA information and classification results of high-throughput criteria and/or machine learning-based approaches.
+	- **Selected miRNAs based on two methods**: An annotation file containing miRNA information and classification results of high-throughput criteria and/or machine learning-based approaches. The description of each column in this file is as follows:
+	
+		- **Precursors**: The raw name of miRNA precursors; 
+		- **ID**: The modified name of miRNA precursors. miRNAs from databases remain their raw names and miRNAs from sRNA-Seq got a new name with species-MIR-N{number}{letter}; 
+		- **HTcriteria**: The true/false means whether miRNAs meet the High-throughput (HT) criteria or not; 
+		- **One_class_SVM**: miRNA categories defined according to the predictions of one-class Support Vector Machine (SVM) algorithm, which is trained using miRNAs in the positive dataset. “remained_positive”: miRNAs in the positive dataset are predicted as miRNAs. “removed_positive”: miRNAs in the positive dataset are not predicted as miRNAs. “novel_prediction”: miRNA candidates are predicted as miRNAs, and “others”: miRNA candidates are not predicted as miRNAs; 
+		- **Extended_stem_loop_loc, Extended_stem_loop_seq, Extended_stem_loop_len**: The location, sequence (5'->3'), length of miRNA precursors; 
+		- **Stem_loop_loc, Stem_loop_seq**: The location, sequence (5'->3') of stem-loop sequence; 
+		- **Loc5p, Seq5p, Len5p**: The location, sequence (5'->3'), length of 5'-arm miRNAs; 
+		- **Loc3p, Seq3p, Len3p**: The location, sequence (5'->3'), length of 3'-arm miRNAs; 
+		- **Mature_arm**: The possible arm of mature miRNA inferred from database query results (miRNARetrieval) and the sequence abundance (miRNAPredict);
+		- **Source**: "1", "2", "3", "4" represent annotated miRNAs from miRBase, PmiREN, sRNAanno and Psgenes databases, respectively. "p" denotes miRNAs predicted by miRNAPredict function in iwa-miRNA;
+		- **TPM5p, TPM3p**: The TPM (Transcripts per million) abundance of 5'-arm and 3'-arm miRNAs; 
+		- **Stem_loop_len, Stem_loop_MFE, Stem_loop_AMFE**: The length, minimum free energy (MFE), adjusted MFE of stem-loop sequences;
+		- **The_total_abundance**: The total TPM abundance of miRNA precursors;
+		- **The_number_of_sequences_in_miRNA.miRNA._and_3nt_variant_region, The_number_of_sequences_in_pre.miRNAs**: Number of collapsed reads belonged to miRNA-miRNA*-isomiRs (miRNA isoforms with 3nt positional variants) and miRNA precursors;
+		- **Abundance_bias**: The sum of the TPM of miRNA isoforms (isomiRs) was divided by the TPM of miRNA precursors; 
+		- **Strand_bias**: The sum of the TPM of sequences matching miRNA precursors was divided by that matching both strands; 
+		- **RNAfold**: Whether miRNAs have an effective RNA structure predicted by RNAfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure; 
+		- **Centroidfold**: Whether miRNAs have an effective RNA structure predicted by Centroidfold. The miRNA/miRNA* duplexes with up to five mismatched positions (including up to three nucleotides in asymmetric bulges) are considered to have an effective RNA structure;
+		- **Mean**: The average TPM of one miRNA across all sRNA-Seq datasets;
+		- **Max**: The max TPM of one miRNA across all sRNA-Seq datasets; 
+		- **Samples**: The number of samples with TPM≥1.
 
 |
 

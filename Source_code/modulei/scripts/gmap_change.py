@@ -18,7 +18,7 @@ loc_name = {}
 with open( options.psl ) as input_psl:
     for eli in input_psl.readlines():
         eli = eli.strip().split('\t')
-        loc_line = ':'.join([eli[13], eli[15], eli[16], eli[8]])
+        loc_line = ':'.join([eli[13], str(int(eli[15])+1), eli[16], eli[8]])
         loc_name[loc_line] = eli[9]
         if eli[9] not in out_dict and loc_line not in tmp_dict:
             out_dict[eli[9]] = loc_line

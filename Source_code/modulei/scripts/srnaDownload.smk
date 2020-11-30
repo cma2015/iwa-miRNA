@@ -22,14 +22,14 @@ rule download_sra:
             srreach=${{srrnam//+/ }}
             for eachsam in $srreach
             do
-                {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch ${{eachsam}} -O ./
+                proxychains4 {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch -t fasp -a "/home/iwa/.aspera/connect/bin/ascp|/home/iwa/.aspera/connect/etc/asperaweb_id_dsa.openssh" ${{eachsam}} -O ./
                 {params.ipath}/scripts/sratoolkit.2.9.1/bin/fastq-dump --split-3 ./${{eachsam}}.sra
                 cat ${{eachsam}}.fastq >>{wildcards.fileout}/{wildcards.sample}_merge.fastq
                 rm ./${{eachsam}}.sra ./${{eachsam}}.fastq
             done
             mv {wildcards.fileout}/{wildcards.sample}_merge.fastq {output}
         else
-            {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch ${{srrnam}} -O ./
+            proxychains4 {params.ipath}/scripts/sratoolkit.2.9.1/bin/prefetch -t fasp -a "/home/iwa/.aspera/connect/bin/ascp|/home/iwa/.aspera/connect/etc/asperaweb_id_dsa.openssh" ${{srrnam}} -O ./
             {params.ipath}/scripts/sratoolkit.2.9.1/bin/fastq-dump --split-3 ./${{srrnam}}.sra
             rm ./${{srrnam}}.sra
             mv $srrnam.fastq {output} 

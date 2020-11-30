@@ -1,8 +1,8 @@
-<tool id="MIRNAplot" name="associationAnalysis" version="20.05">
+<tool id="miRNAplot" name="associationAnalysis" version="20.05">
     <!-- <description>performs interactive analysis and visualization of miRNAs.</description> -->
 
     <command><![CDATA[
-		bash ${__tool_directory__}/scripts/mirnaAssociation.sh
+		bash ${__tool_directory__}/scripts/miRNA_association.sh
             --curpath ${__tool_directory__}
             --miranno $mirAnno
             --genomeanno $genomeAnno
@@ -31,45 +31,29 @@
 
 **What it does**
 
-This function is designed to interactively analyze and visualize the characteristics of annotated miRNA,
+This function is designed to interactively analyze and visualize the characteristics of annotated miRNAs,
 including the feature distribution of miRNAs with different lengths; the number and abundance of different miRNA lengths;
-the length of different genomic features, such as genes, TEs, and lncRNAs;
+the length of different genomic features, such as genes, TEs (transposable element), and lncRNAs;
 distribution of miRNA length and abundances among different genomic features.
 
 .. class:: infomark
 
 **Input**
 
-1. Annotation file of miRNAs derived from miRNASelection or miRNATranslate tool.
+- Annotation file of miRNAs derived from **miRNASelection** or **miRNATranslate** tool.
+- Genome annotations will be used to label the source of miRNAs. **Genome annotation file** with following information in tab delimited format.
 
-2. Genome annotations will be used to label the source of miRNAs.
+	.. image:: static/assets/html/_images/GenomeAnnotation.png
+		:scale: 60 %
+		:align: center
+
+    | PCG: protein coding gene; ncRNA_gene: non-protein coding RNA gene; TE: Transposable element.
+    | lncRNA: long non-coding RNA; LTR: long terminal repeat; RC: Rolling-circle.
 
 .. class:: infomark
 
 **Output**
   *associationAnalysis* provides visualization and summarization of miRNAs in interactive and animated charts.
-
-.. class:: infomark
-
-**About**
-
-Genome annotation file with following information in tab delimited format.
-
- | Chr   Start   End ID  Strand  Type    Subtype
- | 1	3630	5899	AT1G01010    +	PCG	PCG
- | 1	6787	9130	AT1G01020	-	PCG	PCG
- | 1	11100	11372	AT1G03987	+	ncRNA_gene	lncRNA
- | 1	11648	13714	AT1G01030	-	PCG	PCG
- | 1	11897	11976	ATCOPIA24	.	TE	LTR/Copia
- | 1	16883	17009	ATREP4	.	TE	RC/Helitron
- | 1	17024	18924	ATREP3	.	TE	RC/Helitron
- | 1	23120	31227	AT1G01040	+	PCG	PCG
- | ......
-
-PCG: protein coding gene;
-ncRNA_gene: non-protein coding RNA gene;
-lncRNA: long non-coding RNA;
-TE: Transposable element.
 
 |
 

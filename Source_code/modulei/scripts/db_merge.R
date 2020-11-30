@@ -8,8 +8,8 @@ species_path <- args[2]
 
 raw_data <- matrix(ncol = 12)
 colnames(raw_data) <- 1:12
-da_vec <- c("miRBase", "PmiREN", "sRNAanno", "Psgenes", "Novel")
-da_abr <- c("1","2","3","4", "+")
+da_vec <- c("miRBase", "PmiREN", "sRNAanno", "Psgenes", "sRNA_Seq")
+da_abr <- c("1","2","3","4", "p")
 
 database_list = vector()
 if ("miRBase.txt" %in% database_name){
@@ -47,11 +47,11 @@ if  ("PlantsmallRNAgenes.txt" %in% database_name) {
 
 if  ("prediction.txt" %in% database_name) {
   tmp_data <- read.table(paste0(cur_path, "/prediction.txt"), header = T)[,c(1:7,9:11,13)]
-  tmp_data <- cbind(tmp_data, "Novel")
-  cat(ncol(tmp_data), "Novel\n")
+  tmp_data <- cbind(tmp_data, "sRNA_Seq")
+  cat(ncol(tmp_data), "sRNA_Seq\n")
   colnames(tmp_data) <- colnames(raw_data)
   raw_data <- rbind(raw_data, tmp_data)
-  database_list <- c(database_list, "Novel")
+  database_list <- c(database_list, "sRNA_Seq")
 }
 
 rm_dup <- function(loctest, loclist){
@@ -101,7 +101,7 @@ loc_number <- uniq_mature[mature_index]
 final_mat <- matrix(ncol = 12 + length(database_list), nrow = length(loc_number))
 colnames(final_mat) <- c("Precursors", "pLoc", "pSeq", "pLen", 
                          "Loc5p", "Seq5p", "Len5p", "Loc3p", 
-                         "Seq3p", "Len3p", 'Mature_arm',database_list, "db_num")
+                         "Seq3p", "Len3p", 'Mature_arm',database_list, "Source")
 rownames(final_mat) <- loc_number
 final_mat[,12:(ncol(final_mat)-1)] <- "<i class='incorrect'></i>"
 
@@ -137,7 +137,7 @@ new_loc <- t(apply(final_mat, 1, function(x){
 
 write.table(new_loc, paste0(cur_path, "/tmp.bed"), quote = F, col.names = F, row.names = F, sep = "\t")
 
-aa <- system(paste0("bedtools getfasta -s -name -fi ", species_path, "/Genome/Genome.fa",
+tmp_order <- system(paste0("bedtools getfasta -s -name -fi ", species_path, "/Genome/Genome.fa",
               " -bed ", cur_path, "/tmp.bed -fo ", cur_path, "/tmp_seq.fa"), intern = T)
 
 seq_input <- read.fasta(paste0(cur_path, "/tmp_seq.fa"), as.string = T)

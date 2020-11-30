@@ -1,7 +1,7 @@
 <tool id="merging" name="miRNATranslate" version="20.05">
     <!-- <description>translates annotated and predicted miRNAs into the genomic coordinate system</description> -->
     <command><![CDATA[
-        bash ${__tool_directory__}/scripts/mirTranslate.sh
+        bash ${__tool_directory__}/scripts/miRNA_translate.sh
             --curpath ${__tool_directory__}
             --dbfile $dbfile
             --pdfile $pdfile
@@ -19,8 +19,8 @@
     <stdio><exit_code range="1:" level="fatal" description="Error Running ${tool.name}"/></stdio>
 
     <outputs>
-        <data name="outxt" format="tabular" label="${refpath.name} | ${tool.name} | Merged miRNA candidates form annotated and predicted miRNAs" />
-        <data name="outhtml" format="html" label="${refpath.name} | ${tool.name} | Reports of merged miRNA candidates" />
+        <data name="outxt" format="tabular" label="${refpath.name} | ${tool.name} | Merged miRNA candidates from already annotated and newly predicted miRNAs" />
+        <data name="outhtml" format="html" label="${refpath.name} | ${tool.name} | HTML report of merged miRNA candidates" />
     </outputs>
 
 <help>
@@ -37,13 +37,35 @@ This function is designed to translate annotated and predicted miRNAs into the g
 
 **Inputs**
 
-Output from **miRNARetrival** and **miRNAPredict**.
+	- **miRNA candidates from miRNARetrieval**: Input **Collection of {species} miRNAs from public databases** from **miRNARetrival**.
+	- **miRNA candidates from miRNAPredict**: Input **The miRNA candidates from sRNA-Seq data** from **miRNAPredict**.	
+	- **References of species**: The file containing the path of formatted genome sequences and annotations.
 
 .. class:: infomark
 
-**Output**
+**Outputs**
 
-A list of miRNA and miRNA precursors with a uniform format, which have 12 columns containing the location, sequence, length of miRNA precursors, 5' arm, 3'arm, the arm of mature miRNAs, and miRNA source.
+	- **Merged miRNA candidates from already annotated and newly predicted miRNAs**: A list of miRNA and miRNA precursors with a uniform format, which have 12 columns containing the location, sequence, length of miRNA precursors, 5' arm, 3'arm, the arm of mature miRNAs, and miRNA source. The description of each column in this file is as follows: 
+	
+		- **Precursors**: The name of miRNA precursors; 
+		- **pLoc, pSeq, pLen**: The location, sequence (5'->3'), length of miRNAprecusors; 
+		- **Loc5p, Seq5p, Len5p**: The location, sequence (5'->3'), length of 5'-arm miRNAs; 
+		- **Loc3p, Seq3p, Len3p**: The location, sequence (5'->3'), length of 3'-arm miRNAs; 
+		- **Mature_arm**: The possible arm of mature miRNAs inferred from database query results (miRNARetrieval) and the sequence abundance (miRNAPredict). 
+		- **miRBase/PmiREN/sRNAanno/Psgenes**: Whether miRNAs are included in these databases. A check mark means being included, cross means no. 
+		- **sRNA_Seq**: Whether miRNAs are predicted in small RNA-Seq data (sRNA-Seq). 
+		- **Source**: The symbols representing databases and sRNA-Seq. "1": miRBase, "2": PmiREN, "3": sRNAanno; "4": Psgenes, "p": sRNA-Seq.
+	- **HTML report of merged miRNA candidates**: An HTML report providing the collection situation and RNA structure of miRNAs.
+
+.. class:: infomark
+
+**Workflow diagram**
+
+.. image:: static/assets/html/_images/miRNATranslate.png
+        :scale: 60 %
+	:align: center
+
+miRNAs from different databases are firstly aligned with user-specified/submitted genome sequences using GMAP, and then combined into a single table, together with predicted miRNAs from sRNA-Seq datasets. The same miRNAs were identified according to the genomic coordinates of 5p and 3p arms. 
 
 |
 

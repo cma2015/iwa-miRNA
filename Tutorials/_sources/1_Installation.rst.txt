@@ -1,0 +1,101 @@
+Installation
+=======================
+
+Installation process
+--------------------
+
+Step 1: Docker installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**i) Docker installation and start** (|official_installation_tutorial|)
+
+For **Windows (Test on Windows 10 Enterprise version):**
+
+-  Download |docker_windows| for windows;
+
+-  Double click the EXE file to open it;
+
+-  Follow the wizard instruction and complete installation;
+
+-  Search docker, select **Docker for Windows** in the search results and click it.
+
+For **Mac OS X (Test on macOS Sierra version 10.12.6 and macOS High Sierra version 10.13.3):**
+
+-  Download |docker_mac| for Mac os;
+
+-  Double click the DMG file to open it;
+
+-  Drag the docker into Applications and complete installation;
+
+-  Start docker from Launchpad by click it.
+
+For **Ubuntu (Test on Ubuntu 18.04 LTS):**
+
+-  Go to |docker_ubuntu|, choose your Ubuntu version, browse to **pool/stable** and choose **amd64, armhf, ppc64el or s390x**. Download the **DEB** file for the Docker version you want to install;
+
+-  Install Docker, supposing that the DEB file is download into following path:**"/home/docker-ce\<version-XXX\>~ubuntu_amd64.deb"**
+
+.. code:: shell
+
+    $ sudo dpkg -i /home/docker-ce<version-XXX>~ubuntu_amd64.deb      
+    $ sudo apt-get install -f
+
+**ii) Verify if Docker is installed correctly**
+
+Once Docker installation is completed, we can run ``hello-world`` image to verify if Docker is installed correctly. Open terminal in Mac OS X and Linux operating system and open CMD for Windows operating system, then type the following command:
+
+.. code:: shell
+
+    $ docker run hello-world
+
+**Note:** root permission is required for Linux operating system.
+
+-  Once Docker is installed successfully, you will see the following message:
+
+.. figure:: img/docker-run.jpg
+ :alt: 
+
+Step 2: iwa-miRNA installation from Docker Hub
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: shell
+
+    # pull latest iwa-miRNA Docker image from docker hub
+    $ docker pull malab/iwa-mirna
+
+Step 3: Launch iwa-miRNA local server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: shell
+
+    $ docker run -it -p 8080:8080 malab/iwa-mirna /bin/bash
+    $ sh /home/galaxy/run.sh
+
+Then, iwa-miRNA local server can be accessed via http://localhost:8080
+
+.. figure:: img/0.0.png
+   :alt: 
+
+Choice of login system
+-----------------------
+
+**Under login**: All analysis data, such as inputs, parameters, intermediate results, and outputs, can be permanently recorded in the “History” panel of iwa-miRNA, making complex small RNA sequencing data analysis reproducible and amenable to collaborative modes. 
+
+**Without login**: Users can also choose not to use the login system, if they would like to uninterruptedly process data in one browser window.
+
+.. |official_installation_tutorial| raw:: html
+
+    <a href="https://docs.docker.com/get-docker/" target="_blank">official installation tutorial</a>
+
+.. |docker_windows| raw:: html
+
+    <a href="https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe" target="_blank">Docker</a>
+
+.. |docker_mac| raw:: html
+
+    <a href="https://download.docker.com/mac/stable/Docker.dmg" target="_blank">Docker</a>
+
+.. |docker_ubuntu| raw:: html
+
+    <a href="https://download.docker.com/linux/ubuntu/dists/" target="_blank">Docker</a>
+

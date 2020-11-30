@@ -1,0 +1,26 @@
+Costing time for test data
+===========================
+
+The web server of iwa-miRNA was deployed on the Aliyun cloud with 16-cores (3.1GHz) Intel Xeon Platinum processors, 64GB memory and 5M bandwidth. Using this iwa-miRNA web server, we tested two Arabidospis small RNA sequencing datasets (|in-house_test_data.zip| include test1.fastq.gz (inflorescence; 90MB in size) and test2.fastq.gz (leaf; 65MB in size)). The running time of different modules are shown in the following.
+
++--------------------+----------------------+------------------------------+
+|                    |                      | Costing time                 |
++====================+======================+==============================+
+| MiRNA Compilation  | **miRNARetrival**    | 32 seconds                   |
++--------------------+----------------------+------------------------------+
+|                    | **genomePrepare**    | 13 seconds                   |
++--------------------+----------------------+------------------------------+
+|                    | **miRNAPredict**     | 13.9 minutes (two threads)   |
++--------------------+----------------------+------------------------------+
+|                    | **miRNATranslate**   | 12.1 minutes                 |
++--------------------+----------------------+------------------------------+
+| MiRNA Selection    | **miRNASelection**   | 11.5 minutes                 |
++--------------------+----------------------+------------------------------+
+| Manual Curation    | **manualCuration**   | 13.8 minutes                 |
++--------------------+----------------------+------------------------------+
+
+
+.. |in-house_test_data.zip| raw:: html 
+
+    <a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_data.zip" target="_blank">in-house_test_data.zip</a>
+

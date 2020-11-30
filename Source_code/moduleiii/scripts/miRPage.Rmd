@@ -30,28 +30,28 @@ options(stringsAsFactors = F)
 
 ```{r }
 options(stringsAsFactors = F)
-info_table <- read.table("final_table.txt", sep = "\t", header = T)
-info_table[info_table[, "RPM5p"]=="-", "RPM5p"] <- "0"
-info_table[info_table[, "RPM3p"]=="-", "RPM3p"] <- "0"
+info_table <- read.table("final_table_source.txt", sep = "\t", header = T)
+info_table[info_table[, "TPM5p"]=="-", "TPM5p"] <- "0"
+info_table[info_table[, "TPM3p"]=="-", "TPM3p"] <- "0"
 info_table$Mean <- round(info_table$Mean, 2)
 info_table$Max <- round(info_table$Max, 2)
 
-colname_list <- c("ID", "HTcriteria", "One_class_SVM", "Source","Stem_loop_loc", "Stem_loop_len", "Stem_loop_MFE", "Stem_loop_AMFE",
-                     "Mature_arm", "Seq5p", "Len5p", "RPM5p", "The_number_of_sequences_in_pre.miRNAs", "Abundance_bias", "Strand_bias",
+colname_list <- c("ID", "HTcriteria", "One_class_SVM", "Genomic_source","Source","Stem_loop_loc", "Stem_loop_len", "Stem_loop_MFE", "Stem_loop_AMFE",
+                     "Mature_arm", "Seq5p", "Len5p", "TPM5p", "The_number_of_sequences_in_pre.miRNAs", "Abundance_bias", "Strand_bias",
                      "RNAfold", "Centroidfold", "Mean", "Max", "Samples")
 df <- info_table[, colname_list]
 
-replaceCol <- c("Mature_arm", "Seq5p", "Len5p", "RPM5p")
+replaceCol <- c("Mature_arm", "Seq5p", "Len5p", "TPM5p")
 for(i in 1:nrow(df)){
   if(info_table[i, "Mature_arm"]=="5p"){
     df[i, replaceCol] <- info_table[i, replaceCol]
   } else if(info_table[i, "Mature_arm"]=="3p"){
-    df[i, replaceCol] <- info_table[i, c("Mature_arm", "Seq3p", "Len3p", "RPM3p")]
+    df[i, replaceCol] <- info_table[i, c("Mature_arm", "Seq3p", "Len3p", "TPM3p")]
   } else {
-    if(as.numeric(info_table[i, "RPM5p"])>=as.numeric(info_table[i, "RPM3p"])){
-      df[i, replaceCol] <- c('5p', info_table[i, c("Seq5p", "Len5p", "RPM5p")])
+    if(as.numeric(info_table[i, "TPM5p"])>=as.numeric(info_table[i, "TPM3p"])){
+      df[i, replaceCol] <- c('5p', info_table[i, c("Seq5p", "Len5p", "TPM5p")])
     }else{
-      df[i, replaceCol] <- c('3p', info_table[i, c("Seq3p", "Len3p", "RPM3p")])
+      df[i, replaceCol] <- c('3p', info_table[i, c("Seq3p", "Len3p", "TPM3p")])
     }
   }
 }
@@ -99,6 +99,7 @@ table_frame <-
               th(rowspan = 2, style = th_style, 'ID'),
               th(rowspan = 2, style = th_style, 'HT criteria'),
               th(rowspan = 2, style = th_style, 'One class SVM'),
+              th(rowspan = 2, style = th_style, 'Genomic source'),
               th(rowspan = 2, style = th_style, 'Source'),
               th(class = 'dt-center', style = th_style, colspan = 4, 'Stem loop'),
               th(class = 'dt-center', style = th_style, colspan = 4, 'Mature miRNA'),
@@ -142,6 +143,7 @@ table_options <- function() {
 
 df$One_class_SVM <- factor(df$One_class_SVM, levels = unique(df$One_class_SVM))
 df$Source <- factor(df$Source, levels = unique(df$Source))
+df$Genomic_source <- factor(df$Genomic_source, levels = unique(df$Genomic_source))
 
 datatable(
   df,
@@ -155,7 +157,8 @@ datatable(
   container = table_frame(),
   options = table_options(),
   extensions = c('Buttons', 'Select'),
-  callback = JS("$('#linktable tbody').on('click','.btnDelete',function(){table.row( $(this).parents('tr') ).remove().draw();});")) #%>% formatStyle(tissue_name, backgroundColor = styleInterval(brks, clrs))
+  callback = JS("$('#linktable tbody').on('click','.btnDelete',function(){table.row( $(this).parents('tr') ).remove().draw();});")) %>% 
+  formatStyle("Genomic_source", backgroundColor = styleEqual(unique(df$Genomic_source), c("lightblue", "lightgreen", "lightpink", "lightgrey", "lightred", "lightyellow")[1:length(unique(df$Genomic_source))]))
 ```
 
 > The table displays the overview information of Precursor miRNAs. Each row presents one candidate pre-miRNAs with name, location in genome, strand information, abundance, and bias.

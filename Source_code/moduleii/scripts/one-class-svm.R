@@ -20,7 +20,7 @@ if(length(args)==5){
     positives <- positivesDf[positivesDf[,1]%in%positives, 2]
   }
 }else{
-  positives <- positivesDf[positivesDf$Source!="+",]$Extended_stem_loop_loc
+  positives <- positivesDf[positivesDf$Source!="p",]$Extended_stem_loop_loc
 }
 # unlabels <- setdiff(rownames(featureMat), positives)
 # scale 
@@ -58,7 +58,7 @@ table(positive.label)
 class_result1 <- rep("removed_positive", length(positive.label))
 class_result1[positive.label] <- "remained_positive"
 
-if(sum(positivesDf$Source=="+")>0){
+if(sum(positivesDf$Source=="p")>0){
   predict.label <- predict(svm.model, predictMat)
   table(predict.label)
   class_result2 <- rep("others", length(predict.label))

@@ -78,8 +78,10 @@ method:,mirreadnum:,mirmin:,mirmax:,mirmap:,mirsum:,mirleast:,mirsamnum:,thread:
     species_path=${curdir}/${tmp_species}
 
     ## Write sample name to yaml
-    if [ ! -z $userdata ] && [ $userdata != "None" ]; then
-        cd 00rawdata && unzip ${userdata} && cd ..
+    if [ ! -z $userdata ] && [ $userdata != "None" ] ; then
+        cd 00rawdata && unzip ${userdata}
+	tree -L 2 -f -i | grep "gz" | while read line;do mv ${line} ${line##*/};done
+	cd ${out_dir}
         gunzip -k ./00rawdata/*
         # for folder in 00rawdata/*
         # do
@@ -93,7 +95,7 @@ method:,mirreadnum:,mirmin:,mirmax:,mirmap:,mirsum:,mirleast:,mirsamnum:,thread:
         #     fi
         # done
     fi
-
+    cd ${out_dir}
     if [ $thread -gt 5 ];then
         limited=5;
     else
@@ -179,6 +181,8 @@ method:,mirreadnum:,mirmin:,mirmax:,mirmap:,mirsum:,mirleast:,mirsamnum:,thread:
     done
 
     snakemake --snakefile ${script_path}/mirProcess.smk --configfile ./config.yml --cores ${limited} --latency-wait 120
+    rm -r 00rawdata 1cleandata 2collapsedata 3mapData
+    
     cat 3readlength/*.txt > Length_count.txt
     ##
     rmp_extract.py --path ./4rpmData/ --total $mirsum --least $mirleast --sample $mirsamnum --output ./5mirdpOut/reads_18_26.fa --log rmp_log.txt
@@ -191,8 +195,16 @@ method:,mirreadnum:,mirmin:,mirmax:,mirmap:,mirsum:,mirleast:,mirsamnum:,thread:
 
     cat ./5mirdpOut/mapping_location.sam ./5mirdpOut/mismapping.sam | \
     awk '$1!~/@/{OFS="\t";if(NF==8){print $1,$4,$5+1,$5+length($6),$3,$2,"-"}else{print $1,$4,$5+1,$5+length($6),$3,$2,$9}}' - >./5mirdpOut/reads_18_26.txt
-    rm ./5mirdpOut/mapping_location.sam ./5mirdpOut/mismapping.sam
     cp ./5mirdpOut/reads_18_26.txt reads_18_26.txt
+
+    bowtie -p ${limited} -v 0 -f -t -a -m $mirmap -S --un ./5mirdpOut/unreads_18_26.fa \
+        ${species_path}/Genome/Genome ./5mirdpOut/reads_18_26.fa >./5mirdpOut/mapping_location.sam
+    bowtie -p ${limited} -v 1 -f -t -m $mirmap -a -S ${species_path}/Genome/Genome ./5mirdpOut/unreads_18_26.fa \
+    >./5mirdpOut/mismapping.sam
+    cat ./5mirdpOut/mapping_location.sam ./5mirdpOut/mismapping.sam >mapping.sam
+    
+    samtools view -bS mapping.sam > mapping.bam
+    rm ./5mirdpOut/mapping_location.sam ./5mirdpOut/mismapping.sam mapping.sam
 
     ## Identification tool
     if [ $method == "mirdp" ];then
@@ -243,7 +255,7 @@ method:,mirreadnum:,mirmin:,mirmax:,mirmap:,mirsum:,mirleast:,mirsamnum:,thread:
     ### end identification
     ### output data
     cp ${curdir}/scripts/srnaProcess.Rmd ${out_dir}
-    Rscript -e "rmarkdown::render('${out_dir}/srnaProcess.Rmd')"
+    Rscript -e "rmarkdown::render('${out_dir}/srnaProcess.Rmd', quiet = T)"
     mkdir -p ${outputhtml%.*}_files
     mv srnaProcess_files ${outputhtml%.*}_files/srnaProcess_files
     cp srnaProcess.html ${outputhtml}

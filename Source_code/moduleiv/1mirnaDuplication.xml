@@ -2,7 +2,7 @@
     <!-- <description> extracts the homologous miRNAs genes</description> -->
 
     <command detect_errors="exit_code"><![CDATA[
-        bash ${__tool_directory__}/scripts/mirnaDuplication.sh
+        bash ${__tool_directory__}/scripts/duplication_type_miRNAs.sh
             --curpath ${__tool_directory__}
             --pcgfasta $pcgfasta
             --pcggff $pcggff
@@ -40,17 +40,20 @@ and others types of duplications.
 
 **Inputs**
 
-- The sequences and coordinates of protein-coding genes
-- miRNA annotation file from miRNASelection or miRNATranslate
+- **Protein sequences of protein-coding genes**.
+- **The GFF3 annotation of protein-coding genes**: The sequences and coordinates of protein-coding genes.
+- **miRNA annotation**: miRNA annotation file from **miRNASelection** or **miRNATranslate**.
 
 .. class:: infomark
 
-**Output**
+**Outputs**
 
-The duplication events of miRNAs and miRNA pairs in syntenic blocks.
+- **Duplication events of miRNAs**: The detailed duplication events of each miRNA.  
+        - Note: The different types of gene duplications contain **whole genome /segmental** (i.e. collinear genes in collinear blocks), **tandem** (consecutive repeat), **proximal** (in nearby chromosomal region but not adjacent), and **dispersed** (other modes than segmental, tandem and proximal) duplications. The rest is named as singleton.
+- **Plot of miRNA duplication events**: The bar plot gives a graphical image of duplication events.
+- **miRNAs in syntenic blocks**: The file contains detailed miRNA pairs generated from whole genome /segmental duplications.
 
-Note: The different types of gene duplications contain whole genome /segmental (i.e. collinear genes in collinear blocks), tandem (consecutive repeat),
-proximal (in nearby chromosomal region but not adjacent), and dispersed (other modes than segmental, tandem and proximal) duplications.
+
 
 ]]></help>
 

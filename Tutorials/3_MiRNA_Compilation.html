@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MiRNA Compilation &mdash; iwa-miRNA v1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MiRNA Selection" href="4_MiRNA_Selection.html" />
+    <link rel="prev" title="Upload data to your local iwa-miRNA server" href="2_Upload_data.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> iwa-miRNA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1_Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_Upload_data.html">Upload data to your local iwa-miRNA server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MiRNA Compilation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mirnaretrival">miRNARetrival</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-use-this-function">How to use this function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#genomeprepare">genomePrepare</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">How to use this function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mirnapredict">miRNAPredict</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-diagram">Workflow diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">How to use this function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mirnatranslate">miRNATranslate</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Workflow diagram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">How to use this function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4_MiRNA_Selection.html">MiRNA Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_Manual_Curation.html">Manual Curation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_Useful_Tools.html">Useful Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_Run_time.html">Costing time for test data</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">iwa-miRNA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>MiRNA Compilation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/3_MiRNA_Compilation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mirna-compilation">
+<h1>MiRNA Compilation<a class="headerlink" href="#mirna-compilation" title="Permalink to this headline">¶</a></h1>
+<p>This module generates a comprehensive collection of miRNA candidates by aggregating already annotated miRNAs from four plant miRNA databases (i.e., <a href="http://www.mirbase.org" target="_blank">miRBase</a>, <a href="http://www.pmiren.com" target="_blank">PmiREN</a>, <a href="http://plantsrnas.org" target="_blank">sRNAanno</a>, and <a href="http://plantsmallrnagenes.science.psu.edu" target="_blank">PsRNA</a>) and predicted miRNAs from user-submitted sRNA-Seq data. Four functions are implemented, including <code class="docutils literal notranslate"><span class="pre">miRNARetrival</span></code>, <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code>, <code class="docutils literal notranslate"><span class="pre">genomeRetrival</span></code>, and <code class="docutils literal notranslate"><span class="pre">miRNATranslate</span></code>. The details are as follows:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="26%" />
+<col width="26%" />
+<col width="38%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>Tool</strong></th>
+<th class="head"><strong>Input</strong></th>
+<th class="head"><strong>Output</strong></th>
+<th class="head"><strong>Applications</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">miRNARetrival</span></code></td>
+<td>Name of species and miRNA databases</td>
+<td>Already annotated miRNAs</td>
+<td>Aggregate annotated miRNAs provided by different miRNA databases</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code></td>
+<td>SRA accession numbers or uploaded fastq file</td>
+<td>Predicted miRNAs</td>
+<td>Predict miRNAs from sRNA-Seq data</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">genomeRetrival</span></code></td>
+<td>Name of species or genome sequences and annotation</td>
+<td>Path of formatted genome sequences and annotation</td>
+<td>Get genome sequences and annotation</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">miRNATranslate</span></code></td>
+<td>Output from miRNARetrival and miRNAPredict</td>
+<td>miRNA and miRNA precursors with a uniform format</td>
+<td>Translate annotated and predicted miRNAs into the genomic coordinate system</td>
+</tr>
+</tbody>
+</table>
+<p>In the following, we will use screenshots to show how to use this module correctly.</p>
+<div class="section" id="mirnaretrival">
+<h2>miRNARetrival<a class="headerlink" href="#mirnaretrival" title="Permalink to this headline">¶</a></h2>
+<p>This function was designed to retrieve miRNA annotations (e.g., names, sequences, genomic coordinates, and so on) automatically from four miRNA databases (<a href="http://www.mirbase.org" target="_blank">miRBase</a>, <a href="http://www.pmiren.com" target="_blank">PmiREN</a>, <a href="http://plantsrnas.org" target="_blank">sRNAanno</a>, and <a href="http://plantsmallrnagenes.science.psu.edu" target="_blank">PsRNA</a>).</p>
+<div class="section" id="input">
+<h3>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Select a species (e.g., <strong>Arabidopsis thaliana</strong>)</li>
+<li>sRNA databases (e.g., miRBase, PmiREN, sRNAanno, and PsRNA (PlantsmallRNAgenes))</li>
+</ul>
+</div>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>An interactive HTML document (<strong>Overview of already annotated miRNAs in public databases</strong>)</li>
+<li>A packaged file containing miRNA information corresponding to <em>the table in the above HTML document</em> (<strong>Collection of {species} miRNAs from public databases</strong>)</li>
+</ul>
+</div>
+<div class="section" id="how-to-use-this-function">
+<h3>How to use this function<a class="headerlink" href="#how-to-use-this-function" title="Permalink to this headline">¶</a></h3>
+<p>Select species and databases, then click <code class="docutils literal notranslate"><span class="pre">Execute</span></code> button to run this function (see following figure).</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/1.1.png" />
+</div>
+</div></blockquote>
+<p>An interactive HTML document will be returned to users, the example output for this function is available at <a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/Overview.html" target="_blank">here</a>, the following figure shows a screenshot.</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/1.10.png" />
+</div>
+<ul class="simple">
+<li><strong>Detailed information of miRNAs</strong>: <em>Precursors</em> represents miRNA names; <em>pLocation</em> and <em>pLength</em> represent the location, length of miRNA precursors, respectively; <em>Mature_arm</em> represents the reported mature arm in database; <em>Location5p, Sequence5p, Length5p</em> represent the location, sequence, length of 5p-arm miRNAs, respectively; <em>Location3p, Sequence3p, Length3p</em> represent the location, sequence, length of 3p-arm miRNA, respectively. <em>Conf</em> represents whether miRNA is marked as “high confidence” in miRBase.</li>
+<li><strong>miRNA categories</strong>: miRNA categories classified according to the <em>Conf</em> column, <em>precursors name</em>, <em>precursors type</em>, and <em>Source</em> in miRBase, PmiREN, sRNAanno, and PsRNA, respectively.</li>
+<li><strong>miRNA family size and total number of families</strong>: Summary of miRNA families according to the <em>Precursors</em> column.</li>
+<li><strong>miRNA family size</strong>: TreeMap of miRNA families according to the <em>Precursors</em> column.</li>
+<li><strong>Length distribution</strong>: Length distribution of miRNA precursors according to the <em>pLength</em> column.</li>
+<li><strong>Length and distribution of all miRNAs</strong>: Summary of miRNA length according to the <em>Length5p and Length3p</em> column.</li>
+<li><strong>Length and distribution of mature miRNAs</strong> (only in PmiREN and sRNAanno): Summary of length of mature miRNA according to the <em>Mature_arm, Length5p, and Length3p</em> column.</li>
+<li><strong>Composition of the first base</strong>: Summary of first base according to the <em>Sequence5p and Sequence3p</em> column.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="genomeprepare">
+<h2>genomePrepare<a class="headerlink" href="#genomeprepare" title="Permalink to this headline">¶</a></h2>
+<p>This function was designed to fetch genome sequences in FASTA format and corresponding annotations in GFF3/GTF format automatically, and then building index for the genome sequences. To run this function, users can choose <strong>Download from EnsemblPlants database</strong> or <strong>Upload from local disk</strong>:</p>
+<div class="section" id="id1">
+<h3>How to use this function<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">For <strong>species included in EnsemblPlants database</strong>, users choose <strong>Download from EnsemblPlants database</strong>, and genome sequences and corresponding annotation files will be automatically downloaded from Ensembl Plants with user-specific version. We take <strong>*Arabidopsis thaliana*</strong> as an example to show how to use this function (see following figure):</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/1.2.png" />
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">For <strong>species not included in EnsemblPlants</strong>, users are required to input the Latin species name and upload required data from local disk (see following figure).</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/1.21.png" />
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="mirnapredict">
+<h2>miRNAPredict<a class="headerlink" href="#mirnapredict" title="Permalink to this headline">¶</a></h2>
+<p>This function predicts miRNAs from raw small RNA sequencing data, which includes download and filter raw sRNA sequencing data automatically from NCBI SRA (Short Read Archive) database and/or private datasets.</p>
+<div class="section" id="id2">
+<h3>Input<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>References of species</strong>: Path of genome file.</li>
+<li>SRA accessions or compressed raw fastq files.</li>
+<li>(Optional) Adapter sequences for each library. The adapter file as a fasta format:</li>
+</ul>
+<div class="figure">
+<img alt="" src="_images/adapter.png" />
+</div>
+<ul class="simple">
+<li>(Optional parameters) The parameters of quality control, such as quality score, minimum length, maximum length, and minimum read number.</li>
+<li>(Optional parameters) The parameters of miRNA identification, such as miRNAs length, multi-mapping, total abundance, maximum abundance, and sample support.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>Output<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>MultiQC results of fastq file</strong>: An HTML report providing quality control about public small RNA-Seq data or private sequencing data.</li>
+<li><strong>HTML report of raw sequencing data preprocessing</strong>: An HTML report providing read number, adaptors, and barcode information in each library.</li>
+<li><strong>Read abundance data</strong>: A packaged file containing the sequences and abundance (Transcripts per million; TPM).</li>
+<li><strong>The miRNA candidates from sRNA-Seq data</strong>: An annotation file containing the information of miRNA precursors and mature miRNAs.</li>
+</ul>
+</div>
+<div class="section" id="workflow-diagram">
+<h3>Workflow diagram<a class="headerlink" href="#workflow-diagram" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<img alt="" src="_images/miRNAPredict.png" />
+</div>
+</div>
+<div class="section" id="id4">
+<h3>How to use this function<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Users are required to input the SRA accession number or upload compressed raw sequencing data (fq.gz) in ZIP format (see following figure). The example data used in this tutorial are listed in <code class="docutils literal notranslate"><span class="pre">sRNA-Seq_test_data.zip</span></code>. If you are not clear about how to upload local data to iwa-miRNA server, please see <code class="docutils literal notranslate"><span class="pre">Upload</span> <span class="pre">data</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">local</span> <span class="pre">iwa-miRNA</span> <span class="pre">server</span></code> for details.</p>
+<blockquote>
+<div><div class="figure">
+<img alt="" src="_images/1.3.png" />
+</div>
+<p><strong>Note</strong>: iwa-miRNA can automatically search for adapter sequences, but for large-scale data processing, <strong>we recommend that users provide adapter sequences to prevent erroneous results</strong>.</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>HTML documents and prediction results will be returned:</dt>
+<dd><p class="first"><strong>I)</strong> Quality control report generated by <a href="https://multiqc.info/" target="_blank">multiQC</a></p>
+<div class="figure">
+<img alt="" src="_images/1.31.png" />
+</div>
+<p><strong>II)</strong> An HTML document recording a summary table and line chart of the number of reads in data processing will be returned (see the figure below). We also provided a complete preview of the results (<a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/miRNAPredict_report.html" target="_blank">Output in miRNAPredict</a>).</p>
+<div class="figure">
+<img alt="" src="_images/1.32.png" />
+</div>
+<p><strong>Note:</strong> <strong>Summary table</strong> displays read number, adaptors, and barcode information for each library. The meaning of each column in the table is as follows:</p>
+<ul class="simple">
+<li><strong>Adapter</strong>: The adapter sequence;</li>
+<li><strong>Phred</strong>: Phred score;</li>
+<li><strong>Barcode</strong>: Whether there is a barcode in each library, “-” means no;</li>
+<li><strong>Raw reads</strong>: Number of reads generated by sequencing;</li>
+<li><strong>Clean reads</strong>: Number of reads that are filtered by adapters and quality scores;</li>
+<li><strong>Ratio</strong>: Clean reads/Raw reads;</li>
+<li><strong>Length-limited</strong>: Number of reads satisfying the length criteria (Default: 18-26 nucleotide);</li>
+<li><strong>Aligned</strong>: Number of reads between 18 and 26 nt in length and at most one mismatch during mapping (-v 1 –best –strata);</li>
+<li><strong>Remove t/r/sn/snoRNA</strong>: Number of mapped reads after removing reads corresponding to tRNAs, rRNAs, snRNAs and snoRNAs;</li>
+<li><strong>Collapsed reads</strong>: Number of unique reads after reads collapsing;</li>
+<li><strong>Most abundant read</strong>: The sequence with the highest count;</li>
+<li><strong>Most abundant read count</strong>: The highest count.</li>
+</ul>
+<p><strong>III)</strong> A file containing the location, sequences, length of miRNA candidates, miRNA precursors, 5’ arm, and 3’arm (see the figure below). We also provided a complete preview of the results (<a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/miRNAPredict_output.txt" target="_blank">Output2 in miRNAPredict</a>).</p>
+<div class="figure">
+<img alt="" src="_images/1.33.png" />
+</div>
+<p><strong>Note:</strong> The meaning of each column in the file is as follows:</p>
+<ul class="last simple">
+<li><strong>Precursors</strong>: The ID of miRNA precursor, which is composed of chromosome, start site, stop site, and strand with “:”.</li>
+<li><strong>pLocation, pSequence, pLength</strong>: The location, sequence, length of miRNA precursor, respectively.</li>
+<li><strong>Location5p, Sequence5p, Length5p, Abundance5p</strong>: The location, sequence, length, TPM value of 5p-arm miRNAs, respectively.</li>
+<li><strong>Location3p, Sequence3p, Length3p, Abundance3p</strong>: The location, sequence, length, TPM value of 3p-arm miRNA, respectively.</li>
+<li><strong>Mature_arm</strong>: The possible arm of mature miRNA inferred from the sequence abundance.</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="mirnatranslate">
+<h2>miRNATranslate<a class="headerlink" href="#mirnatranslate" title="Permalink to this headline">¶</a></h2>
+<p>This function translates annotated miRNAs into the genomic coordinate system of the target genome by performing miRNA precursor-to-genomic alignment using GMAP.</p>
+<div class="section" id="id5">
+<h3>Input<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>miRNA candidates from miRNARetrieval</strong>: Input Collection of {species} miRNAs from public databases from <code class="docutils literal notranslate"><span class="pre">miRNARetrival</span></code>.</li>
+<li><strong>miRNA candidates from miRNAPredict</strong>: Input The miRNA candidates from sRNA-Seq data from <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code>.</li>
+<li><strong>References of species</strong>: The file containing the path of formatted genome sequences and annotations.</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>Output<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Merged miRNA candidates from already annotated and newly predicted miRNAs</strong>: A list of miRNA and miRNA precursors with a uniform format, which have 12 columns containing the location, sequence, length of miRNA precursors, 5’ arm, 3’arm, the arm of mature miRNAs, and miRNA source.</li>
+<li><strong>HTML report of merged miRNA candidates</strong>: An HTML report providing the collection situation and RNA structure of miRNAs.</li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>Workflow diagram<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<img alt="" src="_images/miRNATranslate.png" />
+</div>
+<p>miRNAs from different databases are firstly aligned with user-specified/submitted genome sequences using GMAP, and then combined into a single table, together with predicted miRNAs from sRNA-Seq datasets. The same miRNAs were identified according to the genomic coordinates of 5p and 3p arms.</p>
+</div>
+<div class="section" id="id8">
+<h3>How to use this function<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This function takes miRNA candidates from <code class="docutils literal notranslate"><span class="pre">miRNARetrival</span></code> and <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code> as inputs (see following figure)</p>
+<div class="figure">
+<img alt="" src="_images/1.4.png" />
+</div>
+<p><strong>I)</strong> The miRNA candidates will be returned as a TAB separated matrix with 12 columns: the location, sequence, length of miRNA precursor, 5’ arm, 3’arm, the arm of mature miRNA, and miRNA source. The complete preview of this results is available at <a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/miRNATranslate_output.txt" target="_blank">Output in miRNATranslate</a>.</p>
+<div class="figure">
+<img alt="" src="_images/1.41.png" />
+</div>
+<p><strong>Note</strong>: The meaning of each column in the file is as follows:</p>
+<ul class="simple">
+<li><strong>Precursors</strong>: The name of miRNA precursors;</li>
+<li><strong>pLoc, pSeq, pLen</strong>: The location, sequence (5’-&gt;3’), length of miRNA precusors;</li>
+<li><strong>Loc5p, Seq5p, Len5p</strong>: The location, sequence (5’-&gt;3’), length of 5’-arm miRNAs;</li>
+<li><strong>Loc3p, Seq3p, Len3p</strong>: The location, sequence (5’-&gt;3’), length of 3’-arm miRNAs;</li>
+<li><strong>Mature_arm</strong>: The possible arm of mature miRNAs inferred from database query results (<code class="docutils literal notranslate"><span class="pre">miRNARetrieval</span></code>) and the sequence abundance (<code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code>);</li>
+<li><strong>miRBase/PmiREN/sRNAanno/Psgenes</strong>: Whether miRNAs are included in these databases. A check mark means being included, cross means no;</li>
+<li><strong>sRNA_Seq</strong>: Whether miRNAs are predicted in small RNA-Seq data (sRNA-Seq);</li>
+<li><strong>Source</strong>: “1”, “2”, “3”, “4” represent annotated miRNAs from miRBase, PmiREN, sRNAanno and Psgenes databases, respectively. “p” denotes miRNAs predicted by <code class="docutils literal notranslate"><span class="pre">miRNAPredict</span></code> function in iwa-miRNA.</li>
+</ul>
+<p><strong>II)</strong> An HTML document recording the merged miRNAs and the RNA secondary structure plot of miRNA precursors will be returned (see the figure below). Users can make a further decision based on their knowledge through flexible operations, such as adjusting thresholds of filters, and selecting and deleting miRNA candidates. The web server provides a complete preview of the results (<a href="http://iwa-miRNA.omicstudio.cloud/static/assets/Test_results/Aggregation.html" target="_blank">Output2 in miRNATranslate</a>).</p>
+<div class="figure">
+<img alt="" src="_images/1.42.png" />
+</div>
+<p><strong>Note</strong>: There are three sections in this HTML report. In <strong>Overview and Summary Information</strong>, we list the aggregated miRNAs that identified by four databases and small RNA-Seq data. By clicking on the link in the table, the <strong>RNAfold</strong> and <strong>CentroidFold</strong> sections interactively show the RNA structure of RNAfold and CentroidFold prediction.</p>
+<ul class="simple">
+<li><strong>Precursors</strong>: The name of miRNA precursors;</li>
+<li><strong>pLen</strong>: The length of miRNA precusors;</li>
+<li><strong>miRBase/PmiREN/sRNAanno/Psgenes</strong>: Whether miRNAs are included in these databases. TRUE means being included, and NO means no;</li>
+<li><strong>sRNA_Seq</strong>: Whether miRNAs are predicted in small RNA-Seq data (sRNA-Seq);</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="4_MiRNA_Selection.html" class="btn btn-neutral float-right" title="MiRNA Selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="2_Upload_data.html" class="btn btn-neutral" title="Upload data to your local iwa-miRNA server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Ting Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
