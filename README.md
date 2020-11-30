@@ -9,11 +9,11 @@
 
 - The iwa-miRNA is composed with three functional modules: MiRNA Compilation, MiRNA Selection, and Manual Curation. It also provides users with some useful tools for downstream exploratory analysis. More details regarding these functional modules can be found [here](https://github.com/cma2015/iwa-miRNA/blob/master/Tutorials/Modules.md).
 
-<img src="Tutorials/img/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:18%">
+<img src="Tutorials/_images/Graphical_summary.png" alt="Graphical summary of iwa-miRNA" style="zoom:18%">
 
 ## How to use iwa-miRNA
 
-- Tutorial for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Tutorials/index.html
+- Tutorial for iwa-miRNA: http://iwa-miRNA.omicstudio.cloud/static/assets/html/index.html
 - Test datasets referred in the tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Test_data
 
 ## Changelog
