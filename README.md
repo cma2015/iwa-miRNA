@@ -21,8 +21,8 @@
 - SVM: support vector machine;
 - HT criteria: high-throughput criteria;
 - PsRNA: [plant small RNA genes](http://plantsmallrnagenes.science.psu.edu/);
-- MFE, minimal free energy;
-- AMFE, adjusted minimal free energy;
+- MFE: minimal free energy;
+- AMFE: adjusted minimal free energy;
 - sRNA-Seq: small RNA sequencing.
 
 ## Changelog
