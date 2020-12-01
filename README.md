@@ -16,6 +16,15 @@
 - Tutorial for iwa-miRNA: http://iwa-miRNA.omicstudio.cloud/static/assets/html/index.html
 - Test datasets referred in the tutorials for iwa-miRNA: https://github.com/cma2015/iwa-miRNA/tree/master/Test_data
 
+## Abbreviations in iwa-miRNA
+
+- SVM: support vector machine;
+- HT criteria: high-throughput criteria;
+- PsRNA: [plant small RNA genes](http://plantsmallrnagenes.science.psu.edu/);
+- MFE, minimal free energy;
+- AMFE, adjusted minimal free energy;
+- sRNA-Seq: small RNA sequencing.
+
 ## Changelog
 
 - 2020-11-30: Update the description of output results in the tutorial.
