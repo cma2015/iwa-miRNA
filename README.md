@@ -1,7 +1,7 @@
 
 # iwa-miRNA:  A Web-based Platform for Interactive Annotation of Plant MiRNAs
 
-[![webserver](https://img.shields.io/badge/Web_server-ready-red.svg)](https://deepngs.nwafu.edu.cn/) [![docker](https://img.shields.io/badge/Docker_image-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) [![source](https://img.shields.io/badge/Source_code-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Source_code) [![testdata](https://img.shields.io/badge/Test_data-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Test_data)
+[![webserver](https://img.shields.io/badge/Web_server-ready-red.svg)](http://iwa-miRNA.omicstudio.cloud/) [![docker](https://img.shields.io/badge/Docker_image-ready-red.svg)](https://hub.docker.com/r/malab/iwa-mirna/) [![source](https://img.shields.io/badge/Source_code-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Source_code) [![testdata](https://img.shields.io/badge/Test_data-support-blue.svg)](https://github.com/cma2015/iwa-miRNA/tree/master/Test_data)
 
 - iwa-miRNA allows users to generate a comprehensive collection of miRNA candidates, and to interrogate miRNA annotation in a straightforward way, without the need for computational skills.
 
