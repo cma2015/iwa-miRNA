@@ -38,4 +38,4 @@
 
 ## Citation
 
-Ting Zhang, Jingjing Zhai, Xiaorong Zhang, Lei Ling, Menghan Li, Shang Xie, Minggui Song, Chuang Ma. Interactive web-based annotation of plant miRNAs with iwa-miRNA. Genomics, Proteomics & Bioinformatics (Accepted)
+T. Zhang, J. Zhai, X. Zhang, L. Ling, M. Li, S. Xie, M. Song, C. Ma, Interactive Webbased Annotation of Plant MicroRNAs with iwa-miRNA, *Genomics, Proteomics & Bioinformatics* (2021), doi: https://doi.org/10.1016/j.gpb.2021.02.010
